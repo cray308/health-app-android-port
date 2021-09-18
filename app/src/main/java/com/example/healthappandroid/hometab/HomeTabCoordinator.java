@@ -9,7 +9,7 @@ import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.shareddata.AppUserData;
 import com.example.healthappandroid.common.workouts.ExerciseManager;
 import com.example.healthappandroid.common.workouts.Workout;
-import com.example.healthappandroid.hometab.addWorkout.WorkoutActivity;
+import com.example.healthappandroid.hometab.addWorkout.views.WorkoutActivity;
 import com.example.healthappandroid.hometab.addWorkout.WorkoutCoordinator;
 import com.example.healthappandroid.hometab.data.HomeViewModel;
 import com.example.healthappandroid.hometab.view.HomeFragment;

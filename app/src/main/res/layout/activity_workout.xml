@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/systemGroupedBackground"
-    tools:context=".hometab.addWorkout.WorkoutActivity">
+    tools:context=".hometab.addWorkout.views.WorkoutActivity">
 
     <Button
         android:id="@+id/workoutBackBtn"

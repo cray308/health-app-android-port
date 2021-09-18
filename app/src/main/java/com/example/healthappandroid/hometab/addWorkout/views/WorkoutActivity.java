@@ -1,4 +1,4 @@
-package com.example.healthappandroid.hometab.addWorkout;
+package com.example.healthappandroid.hometab.addWorkout.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,6 @@ import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.workouts.ExerciseEntry;
 import com.example.healthappandroid.common.workouts.Workout;
 import com.example.healthappandroid.hometab.addWorkout.utils.WorkoutNotifService;
-import com.example.healthappandroid.hometab.addWorkout.views.ExerciseContainer;
-import com.example.healthappandroid.hometab.addWorkout.views.ExerciseView;
 
 import java.time.Instant;
 

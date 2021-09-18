@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".hometab.addWorkout.WorkoutActivity" android:launchMode="singleTop"/>
+        <activity android:name=".hometab.addWorkout.views.WorkoutActivity" android:launchMode="singleTop"/>
     </application>
 
 </manifest>

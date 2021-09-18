@@ -14,7 +14,7 @@ import android.os.SystemClock;
 import androidx.core.app.NotificationCompat;
 
 import com.example.healthappandroid.R;
-import com.example.healthappandroid.hometab.addWorkout.WorkoutActivity;
+import com.example.healthappandroid.hometab.addWorkout.views.WorkoutActivity;
 
 public abstract class WorkoutNotifService {
     public static final String ChannelId = "HealthAppAndroid_channel";
