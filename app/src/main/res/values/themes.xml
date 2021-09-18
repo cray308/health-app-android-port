@@ -1,0 +1,39 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.HealthAppAndroid" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+    <!--
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+
+        <item name="colorSystemBackground">@color/systemBackground</item>
+        <item name="ColorSecondarySystemBackground">@color/secondarySystemBackground</item>
+        <item name="colorTertiarySystemBackground">@color/tertiarySystemBackground</item>
+        <item name="colorSystemGroupedBackground">@color/systemGroupedBackground</item>
+        <item name="colorSecondarySystemGroupedBackground">@color/secondarySystemGroupedBackground</item>
+        <item name="colorTertiarySystemGroupedBackground">@color/tertiarySystemGroupedBackground</item>
+        <item name="colorLabel">@color/label</item>
+        <item name="colorSecondaryLabel">@color/secondaryLabel</item>
+        <item name="colorTertiaryLabel">@color/tertiaryLabel</item>
+        <item name="colorQuaternaryLabel">@color/quaternaryLabel</item>
+        <item name="colorSeparator">@color/separator</item>
+        <item name="colorSystemGray">@color/systemGray</item>
+        <item name="colorSystemGray2">@color/systemGray2</item>
+        <item name="colorSystemBlue">@color/systemBlue</item>
+        <item name="colorSystemGreen">@color/systemGreen</item>
+        <item name="colorSystemOrange">@color/systemOrange</item>
+        <item name="colorSystemRed">@color/systemRed</item>
+        <item name="colorSystemTeal">@color/systemTeal</item>
+        <item name="colorChartBlue">@color/chartBlue</item>
+        <item name="colorChartGreen">@color/chartGreen</item>
+        <item name="colorChartOrange">@color/chartOrange</item>
+        <item name="colorChartPink">@color/chartPink</item>
+        
+    </style>
+    !-->
+</resources>

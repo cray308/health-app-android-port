@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/systemGroupedBackground"
+    tools:context=".settingstab.SettingsFragment">
+
+    <ScrollView
+        android:id="@+id/settings_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/settingsStack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="0dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Change workout plan"
+                android:textColor="@color/label"
+                android:textSize="13sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="2dp" />
+
+            <RadioGroup
+                android:id="@+id/settingsPlanPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@id/noPlanSegment"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/noPlanSegment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="None"
+                    android:textColor="@color/label"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/baseBuildingSegment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Base building"
+                    android:textColor="@color/label"
+                    android:textSize="11sp" />
+
+                <RadioButton
+                    android:id="@+id/continuationSegment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Continuation"
+                    android:textColor="@color/label"
+                    android:textSize="12sp" />
+            </RadioGroup>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <com.example.healthappandroid.common.views.InputView
+                android:id="@+id/settingsMaxSquats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldHint="Max Squat"/>
+
+            <com.example.healthappandroid.common.views.InputView
+                android:id="@+id/settingsMaxPullup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldHint="Max Pull-up"/>
+
+            <com.example.healthappandroid.common.views.InputView
+                android:id="@+id/settingsMaxBench"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldHint="Max Bench"/>
+
+            <com.example.healthappandroid.common.views.InputView
+                android:id="@+id/settingsMaxDeadlift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldHint="Max Deadlift"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+            <Button
+                android:id="@+id/settingsSaveButton"
+                style="@null"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:text="Save Settings"
+                android:textAllCaps="false"
+                android:textColor="@color/systemBlue"
+                android:textSize="17sp"
+                app:iconTint="@null" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+            <Button
+                android:id="@+id/settingsDeleteButton"
+                style="@null"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:text="Delete Data"
+                android:textAllCaps="false"
+                android:textColor="@color/systemRed"
+                android:textSize="17sp"
+                app:iconTint="@null" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

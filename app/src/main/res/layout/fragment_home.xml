@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/systemGroupedBackground"
+    tools:context=".hometab.view.HomeFragment">
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/confettiView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC8E8E8E"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/greetingLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/label"
+                android:textSize="28sp"/>
+
+            <Space android:layout_width="match_parent" android:layout_height="5dp" />
+
+            <LinearLayout
+                android:id="@+id/weeklyWorkoutsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Workouts this week"
+                    android:textColor="@color/label"
+                    android:textSize="22sp" />
+
+                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/separator"/>
+
+                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+
+                <LinearLayout
+                    android:id="@+id/weeklyWorkoutsStack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+
+            <LinearLayout
+                android:id="@+id/customWorkoutStack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="vertical">
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/separator"/>
+
+                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Custom Workout"
+                    android:textColor="@color/label"
+                    android:textSize="22sp" />
+
+                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+
+                <com.example.healthappandroid.common.views.StatusButton
+                    android:id="@+id/customWkTestMax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonLabel="Test Max"
+                    app:hideCheckbox="true"
+                    app:hideHeader="true" />
+
+                <com.example.healthappandroid.common.views.StatusButton
+                    android:id="@+id/customWkEndurance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonLabel="Endurance"
+                    app:hideCheckbox="true"
+                    app:hideHeader="true" />
+
+                <com.example.healthappandroid.common.views.StatusButton
+                    android:id="@+id/customWkStrength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonLabel="Strength"
+                    app:hideCheckbox="true"
+                    app:hideHeader="true" />
+
+                <com.example.healthappandroid.common.views.StatusButton
+                    android:id="@+id/customWkSE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonLabel="SE"
+                    app:hideCheckbox="true"
+                    app:hideHeader="true" />
+
+                <com.example.healthappandroid.common.views.StatusButton
+                    android:id="@+id/customWkHIC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:buttonLabel="HIC"
+                    app:hideCheckbox="true"
+                    app:hideHeader="true" />
+            </LinearLayout>
+
+            <Space android:layout_width="match_parent" android:layout_height="20dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
