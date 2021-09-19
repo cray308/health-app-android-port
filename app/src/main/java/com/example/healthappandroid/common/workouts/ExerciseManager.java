@@ -14,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class ExerciseManager {
     private static class DictWrapper {
-        JSONObject root;
-        JSONObject lib;
+        final JSONObject root;
+        final JSONObject lib;
 
         static final String[] libraryKeys = {"st", "se", "en", "hi"};
 

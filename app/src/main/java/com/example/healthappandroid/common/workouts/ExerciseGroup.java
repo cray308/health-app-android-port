@@ -2,11 +2,11 @@ package com.example.healthappandroid.common.workouts;
 
 import android.util.Log;
 
+import com.example.healthappandroid.common.helpers.ViewHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 public class ExerciseGroup {
     public static final byte TypeRounds = 0;
@@ -39,9 +39,9 @@ public class ExerciseGroup {
     public String createHeader() {
         if (type == TypeRounds && reps > 1) {
             int completed = completedReps == reps ? reps : completedReps + 1;
-            return String.format(Locale.US, "Round %d of %d", completed, reps);
+            return ViewHelper.format("Round %d of %d", completed, reps);
         } else if (type == TypeAMRAP) {
-            return String.format(Locale.US, "AMRAP %d mins", reps);
+            return ViewHelper.format("AMRAP %d mins", reps);
         }
         return null;
     }

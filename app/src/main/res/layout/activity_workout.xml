@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/systemGroupedBackground"
     tools:context=".hometab.addWorkout.views.WorkoutActivity">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -24,6 +23,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true"
+        android:background="@color/systemGroupedBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

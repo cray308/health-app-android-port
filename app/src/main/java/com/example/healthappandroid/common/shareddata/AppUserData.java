@@ -20,7 +20,7 @@ public class AppUserData {
     public int tzOffset;
     public byte currentPlan = -1;
     public byte completedWorkouts;
-    public short[] liftMaxes = {0, 0, 0, 0};
+    public final short[] liftMaxes = {0, 0, 0, 0};
 
     public static AppUserData shared;
 

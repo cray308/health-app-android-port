@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/systemGroupedBackground"
     tools:context=".hometab.view.HomeFragment">
 
     <nl.dionsegijn.konfetti.KonfettiView
@@ -22,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:background="@color/systemGroupedBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Workouts this week"
+                    android:text="@string/weeklyWorkoutsHeader"
                     android:textColor="@color/label"
                     android:textSize="22sp" />
 
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Custom Workout"
+                    android:text="@string/customWorkoutsHeader"
                     android:textColor="@color/label"
                     android:textSize="22sp" />
 

@@ -6,7 +6,7 @@ import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.shareddata.AppUserData;
 
 public class SettingsTabCoordinator {
-    public SettingsFragment fragment = new SettingsFragment();
+    public final SettingsFragment fragment = new SettingsFragment();
 
     public void start() {
         fragment.delegate = this;

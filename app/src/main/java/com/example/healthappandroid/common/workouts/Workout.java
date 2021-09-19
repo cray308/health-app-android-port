@@ -31,7 +31,7 @@ public class Workout {
     public static final long MinWorkoutDuration = 15;
 
     public byte type;
-    public byte day;
+    public final byte day;
     public int index;
     public long startTime;
     public long duration;

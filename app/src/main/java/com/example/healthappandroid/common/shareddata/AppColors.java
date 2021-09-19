@@ -12,10 +12,9 @@ public abstract class AppColors {
     public static int orange = 0;
     public static int green = 0;
     public static int red = 0;
-    public static int teal = 0;
     public static int labelDisabled = 0;
     public static int labelNormal = 0;
-    public static int[] chartColors = {0, 0, 0, 0};
+    public static final int[] chartColors = {0, 0, 0, 0};
 
     public static void setColors(Context context) {
         gray = ContextCompat.getColor(context, R.color.systemGray);
@@ -23,7 +22,6 @@ public abstract class AppColors {
         orange = ContextCompat.getColor(context, R.color.systemOrange);
         green = ContextCompat.getColor(context, R.color.systemGreen);
         red = ContextCompat.getColor(context, R.color.systemRed);
-        teal = ContextCompat.getColor(context, R.color.systemTeal);
         labelDisabled = ContextCompat.getColor(context, R.color.secondaryLabel);
         labelNormal = ContextCompat.getColor(context, R.color.label);
         chartColors[0] = ContextCompat.getColor(context, R.color.chartBlue);

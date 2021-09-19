@@ -5,8 +5,8 @@ import com.example.healthappandroid.common.shareddata.AppUserData;
 import java.util.TimeZone;
 
 public abstract class DateHelper {
-    public static long daySeconds = 86400;
-    public static long weekSeconds = 604800;
+    public final static long daySeconds = 86400;
+    public final static long weekSeconds = 604800;
 
     public static long twoYearsAgo() {
         return AppUserData.shared.weekStart - 63244800;

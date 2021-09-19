@@ -19,7 +19,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:backgroundTint="@color/secondarySystemGroupedBackground"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textAllCaps="false"
             android:textColor="@color/systemBlue"
             android:textSize="17sp"
@@ -35,7 +35,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:backgroundTint="@color/secondarySystemGroupedBackground"
-            android:text="Go"
+            android:text="@string/go"
             android:textAllCaps="false"
             android:textColor="@color/systemBlue"
             android:textSize="17sp"
@@ -47,7 +47,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="8dp"
-        android:text="Choose workout"
+        android:text="@string/setupWorkoutPickerTitle"
         android:textColor="@color/label"
         android:textSize="13sp" />
         <Spinner

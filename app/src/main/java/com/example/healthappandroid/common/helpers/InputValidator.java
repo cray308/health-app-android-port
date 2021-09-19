@@ -1,9 +1,11 @@
 package com.example.healthappandroid.common.helpers;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 
+import com.example.healthappandroid.R;
 import com.example.healthappandroid.common.views.InputView;
 
 import java.util.Arrays;

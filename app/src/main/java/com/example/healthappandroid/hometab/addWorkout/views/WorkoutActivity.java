@@ -1,5 +1,6 @@
 package com.example.healthappandroid.hometab.addWorkout.views;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,8 +76,9 @@ public class WorkoutActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Button btn = (Button) view;
-            if (btn.getText().equals("Start")) {
-                btn.setText("End");
+            Resources res = getResources();
+            if (btn.getText().equals(res.getString(R.string.start))) {
+                btn.setText(res.getString(R.string.end));
                 btn.setTextColor(AppColors.red);
                 workout.startTime = Instant.now().getEpochSecond();
                 handleTap(0, 0, Workout.EventOptionStartGroup);

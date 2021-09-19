@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/systemGroupedBackground">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,6 +11,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="8dp"
         android:orientation="vertical"
+        android:background="@color/systemGroupedBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:backgroundTint="@color/secondarySystemGroupedBackground"
-            android:text="Finish"
+            android:text="@string/updates_maxes_finish_text"
             android:textAllCaps="false"
             android:textColor="@color/systemGray"
             android:enabled="false"

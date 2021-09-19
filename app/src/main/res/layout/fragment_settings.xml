@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/systemGroupedBackground"
     tools:context=".settingstab.SettingsFragment">
 
     <ScrollView
@@ -12,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:background="@color/systemGroupedBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Change workout plan"
+                android:text="@string/planPickerTitle"
                 android:textColor="@color/label"
                 android:textSize="13sp" />
 
@@ -50,7 +50,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="None"
+                    android:text="@string/planPickerLeftText"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
@@ -59,7 +59,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Base building"
+                    android:text="@string/planPickerCenterText"
                     android:textColor="@color/label"
                     android:textSize="11sp" />
 
@@ -68,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Continuation"
+                    android:text="@string/planPickerRightText"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
             </RadioGroup>
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:text="Save Settings"
+                android:text="@string/settingsSaveButtonTitle"
                 android:textAllCaps="false"
                 android:textColor="@color/systemBlue"
                 android:textSize="17sp"
@@ -127,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:text="Delete Data"
+                android:text="@string/settingsDeleteButtonTitle"
                 android:textAllCaps="false"
                 android:textColor="@color/systemRed"
                 android:textSize="17sp"

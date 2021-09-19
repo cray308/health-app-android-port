@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.healthappandroid.common.helpers.DateHelper;
+import com.example.healthappandroid.common.helpers.InputValidator;
 import com.example.healthappandroid.common.shareddata.AppColors;
 import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.shareddata.AppUserData;

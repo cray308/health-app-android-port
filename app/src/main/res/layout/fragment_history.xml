@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/systemBackground"
     tools:context=".historytab.view.HistoryFragment">
 
     <ScrollView
@@ -12,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:background="@color/systemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="6 Months"
+                    android:text="@string/historySegmentLeft"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
@@ -47,7 +47,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="1 Year"
+                    android:text="@string/historySegmentCenter"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
@@ -56,7 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="2 Years"
+                    android:text="@string/historySegmentRight"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
             </RadioGroup>

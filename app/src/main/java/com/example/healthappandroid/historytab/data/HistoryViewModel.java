@@ -27,9 +27,9 @@ public class HistoryViewModel {
     }
 
     public static class WorkoutTypeChartViewModel {
-        public Entry[][] entries = {null, null, null, null, null};
-        public String[] legendLabels = {"", "", "", ""};
-        public int[] totalByType = {0, 0, 0, 0};
+        public final Entry[][] entries = {null, null, null, null, null};
+        public final String[] legendLabels = {"", "", "", ""};
+        public final int[] totalByType = {0, 0, 0, 0};
         public float yMax;
 
         public String getDuration(int minutes) {
@@ -44,21 +44,21 @@ public class HistoryViewModel {
     }
 
     public static class LiftChartViewModel {
-        public Entry[][] entries = {null, null, null, null};
-        public String[] legendLabels = {"", "", "", ""};
-        public int[] totalByExercise = {0, 0, 0, 0};
+        public final Entry[][] entries = {null, null, null, null};
+        public final String[] legendLabels = {"", "", "", ""};
+        public final int[] totalByExercise = {0, 0, 0, 0};
         public float yMax;
     }
 
     public static class WeekDataModel {
         public static class WeekModel {
-            public int year;
-            public int month;
-            public int day;
-            public int totalWorkouts;
-            public int[] durationByType = {0, 0, 0, 0};
-            public int[] cumulativeDuration = {0, 0, 0, 0};
-            public int[] weightArray = {0, 0, 0, 0};
+            public final int year;
+            public final int month;
+            public final int day;
+            public final int totalWorkouts;
+            public final int[] durationByType = {0, 0, 0, 0};
+            public final int[] cumulativeDuration = {0, 0, 0, 0};
+            public final int[] weightArray = {0, 0, 0, 0};
 
             public WeekModel(WeeklyData d) {
                 int timeStrength = d.timeStrength;
@@ -86,14 +86,14 @@ public class HistoryViewModel {
         }
 
         public int size;
-        public WeekModel[] arr = new WeekModel[128];
+        public final WeekModel[] arr = new WeekModel[128];
     }
 
     public byte formatType;
-    public TotalWorkoutsChartViewModel totalWorkoutsViewModel = new TotalWorkoutsChartViewModel();
-    public WorkoutTypeChartViewModel workoutTypeViewModel = new WorkoutTypeChartViewModel();
-    public LiftChartViewModel liftViewModel = new LiftChartViewModel();
-    public WeekDataModel data = new WeekDataModel();
+    public final TotalWorkoutsChartViewModel totalWorkoutsViewModel = new TotalWorkoutsChartViewModel();
+    public final WorkoutTypeChartViewModel workoutTypeViewModel = new WorkoutTypeChartViewModel();
+    public final LiftChartViewModel liftViewModel = new LiftChartViewModel();
+    public final WeekDataModel data = new WeekDataModel();
 
     public void formatDataForTimeRange(int index) {
         formatType = FormatShort;

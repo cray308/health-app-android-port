@@ -14,7 +14,7 @@ public class HomeViewModel {
     static final byte TimeAfternoon = 1;
     static final byte TimeEvening = 2;
 
-    public String[] workoutNames = {null, null, null, null, null, null, null};
+    public final String[] workoutNames = {null, null, null, null, null, null, null};
     public byte timeOfDay;
 
     public HomeViewModel() { updateTimeOfDay(); }

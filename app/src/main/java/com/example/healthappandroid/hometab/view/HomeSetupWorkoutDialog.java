@@ -34,8 +34,8 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
     private static final String paramsKey = "HomeSetupWorkoutDialogParams";
 
     public static class Params implements Parcelable {
-        public byte type;
-        public String[] names;
+        public final byte type;
+        public final String[] names;
 
         public Params(byte type, String[] names) {
             this.type = type;
@@ -105,8 +105,8 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         if (c == null) return;
 
         picker.setOnItemSelectedListener(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(c,
-                android.R.layout.simple_spinner_item, params.names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            c, android.R.layout.simple_spinner_item, params.names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         picker.setAdapter(adapter);
         picker.setSelection(0);
