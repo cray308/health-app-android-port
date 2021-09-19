@@ -15,36 +15,39 @@ public abstract class PersistenceService extends RoomDatabase {
     public static PersistenceService shared;
 
     public static void setup(long tzDifference) {
+        WeeklyDataDao dao = PersistenceService.shared.dao();
         if (tzDifference != 0)
-            shared.changeTimestamps(tzDifference);
-        shared.performStartupUpdate();
+            shared.changeTimestamps(dao, tzDifference);
+        shared.performStartupUpdate(dao);
         AppCoordinator.shared.historyCoordinator.fetchData();
     }
 
     public static void createFromDB(Context context) {
-        shared = Room.databaseBuilder(context, PersistenceService.class, DBName)
-                .createFromAsset("test.db").build();
+        shared = Room.databaseBuilder(
+            context, PersistenceService.class, DBName).createFromAsset("test.db").build();
     }
 
     public static void create(Context context) {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
 
-    public void deleteEntries(WeeklyData[] data) {
+    public void deleteEntries(WeeklyDataDao dao, WeeklyData[] data) {
         if (data.length != 0)
-            dao().delete(data);
+            dao.delete(data);
     }
 
-    public void saveChanges(WeeklyData[] data) { dao().updateWeeks(data); }
+    public void saveChanges(WeeklyDataDao dao, WeeklyData[] data) {
+        dao.updateWeeks(data);
+    }
 
-    private void performStartupUpdate() {
+    private void performStartupUpdate(WeeklyDataDao dao) {
         int count;
-        WeeklyData[] data = dao().getDataInInterval(0, DateHelper.twoYearsAgo());
-        deleteEntries(data);
+        WeeklyData[] data = dao.getDataInInterval(0, DateHelper.twoYearsAgo());
+        deleteEntries(dao, data);
 
-        data = dao().getDataInIntervalSorted(0, AppUserData.shared.weekStart);
+        data = dao.getDataInIntervalSorted(0, AppUserData.shared.weekStart);
         count = data.length;
-        WeeklyData currWeek = getCurrentWeek();
+        WeeklyData currWeek = getCurrentWeek(dao);
         boolean newEntryForCurrentWeek = false;
         if (currWeek == null) {
             newEntryForCurrentWeek = true;
@@ -54,21 +57,24 @@ public abstract class PersistenceService extends RoomDatabase {
 
         if (count == 0) {
             if (newEntryForCurrentWeek)
-                dao().insertWeeks(new WeeklyData[]{currWeek});
+                dao.insertWeeks(new WeeklyData[]{currWeek});
             return;
         }
 
         WeeklyData[] newWeeks = new WeeklyData[128];
         WeeklyData last = data[count - 1];
         int newEntryCount = 0;
-        for (long currStart = last.start + DateHelper.weekSeconds; currStart < AppUserData.shared.weekStart; currStart += DateHelper.weekSeconds) {
+        for (long currStart = last.start + DateHelper.weekSeconds;
+             currStart < AppUserData.shared.weekStart;
+             currStart += DateHelper.weekSeconds) {
             WeeklyData thisWeek = new WeeklyData();
             thisWeek.start = currStart;
             thisWeek.copyLiftMaxes(last);
             newWeeks[newEntryCount++] = thisWeek;
         }
 
-        WeeklyData[] dataToSave = new WeeklyData[newEntryForCurrentWeek ? newEntryCount + 1 : newEntryCount];
+        int savedSize = newEntryForCurrentWeek ? newEntryCount + 1 : newEntryCount;
+        WeeklyData[] dataToSave = new WeeklyData[savedSize];
         System.arraycopy(newWeeks, 0, dataToSave, 0, newEntryCount);
 
         if (newEntryForCurrentWeek) {
@@ -76,21 +82,21 @@ public abstract class PersistenceService extends RoomDatabase {
             dataToSave[newEntryCount] = currWeek;
         }
 
-        dao().insertWeeks(dataToSave);
+        dao.insertWeeks(dataToSave);
     }
 
-    private void changeTimestamps(long difference) {
+    private void changeTimestamps(WeeklyDataDao dao, long difference) {
         int count;
-        WeeklyData[] data = dao().getAll();
+        WeeklyData[] data = dao.getAll();
         count = data.length;
         if (count == 0) return;
         for (int i = 0; i < count; ++i) {
             data[i].start += difference;
         }
-        saveChanges(data);
+        saveChanges(dao, data);
     }
 
-    public WeeklyData getCurrentWeek() {
-        return dao().findCurrentWeek(AppUserData.shared.weekStart);
+    public WeeklyData getCurrentWeek(WeeklyDataDao dao) {
+        return dao.findCurrentWeek(AppUserData.shared.weekStart);
     }
 }

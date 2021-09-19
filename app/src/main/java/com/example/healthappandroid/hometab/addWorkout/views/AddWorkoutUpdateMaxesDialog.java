@@ -8,12 +8,16 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.healthappandroid.R;
 import com.example.healthappandroid.common.helpers.InputValidationDelegate;
 import com.example.healthappandroid.common.helpers.InputValidator;
 import com.example.healthappandroid.common.shareddata.AppColors;
+import com.example.healthappandroid.common.workouts.Workout;
 import com.example.healthappandroid.hometab.addWorkout.WorkoutCoordinator;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment implements InputValidationDelegate {
@@ -21,6 +25,7 @@ public class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment imple
     private Button finishButton;
 
     public WorkoutCoordinator delegate;
+    public Workout workout;
 
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,21 +38,23 @@ public class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment imple
         super.onViewCreated(view, savedInstanceState);
 
         int[] ids = {R.id.updateMaxSquat, R.id.updateMaxPullUp,
-                R.id.updateMaxBench, R.id.updateMaxDeadlift};
+            R.id.updateMaxBench, R.id.updateMaxDeadlift};
         finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(finishListener);
         for (int i = 0; i < 4; ++i)
-            validators[i] = new InputValidator((short) 999,
-                    view.findViewById(ids[i]), this);
+            validators[i] = new InputValidator((short) 999, view.findViewById(ids[i]), this);
+        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+        if (dialog != null)
+            dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private final View.OnClickListener finishListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            short[] weights = {validators[0].result, validators[1].result,
-                    validators[2].result, validators[3].result};
-            delegate.completedWorkout(getParentFragmentManager(),
-                    AddWorkoutUpdateMaxesDialog.this, weights, false);
+            workout.newLifts = new short[4];
+            for (int i = 0; i < 4; ++i)
+                workout.newLifts[i] = validators[i].result;
+            delegate.completedWorkout(getActivity(), AddWorkoutUpdateMaxesDialog.this, false);
         }
     };
 

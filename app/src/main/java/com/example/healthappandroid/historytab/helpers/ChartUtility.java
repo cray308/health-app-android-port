@@ -1,9 +1,10 @@
 package com.example.healthappandroid.historytab.helpers;
 
+import android.view.View;
+
 import com.example.healthappandroid.common.shareddata.AppColors;
+import com.example.healthappandroid.historytab.view.ChartContainer;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -15,22 +16,13 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class ChartUtility {
-    public static void setupChartView(
-            LineChart view, IndexAxisValueFormatter xAxisFormatter, LegendEntry[] legendEntries) {
+    public static void setupChartView(LineChart view, IndexAxisValueFormatter xAxisFormatter) {
         view.setNoDataText("No data is available");
         YAxis leftAxis = view.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(AppColors.labelNormal);
         view.getAxisRight().setEnabled(false);
-        Legend legend = view.getLegend();
-        legend.setMaxSizePercent(0.2f);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        legend.setDrawInside(false);
-        legend.setTextSize(16);
-        legend.setTextColor(AppColors.labelNormal);
-        legend.setCustom(legendEntries);
-        legend.setEnabled(false);
+        view.getLegend().setEnabled(false);
         XAxis xAxis = view.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGridLineWidth((float) 1.5);
@@ -65,15 +57,9 @@ public abstract class ChartUtility {
         return data;
     }
 
-    public static void setupLegendEntries(LegendEntry[] entries, int[] colors, int count) {
-        for (int i = 0; i < count; ++i) {
-            entries[i] = new LegendEntry("", Legend.LegendForm.DEFAULT, 20,
-                    Float.NaN, null, colors[i]);
-        }
-    }
-
-    public static void disableLineChartView(LineChart view) {
-        view.getLegend().setEnabled(false);
+    public static void disableLineChartView(ChartContainer container) {
+        container.getLegend().setVisibility(View.GONE);
+        LineChart view = container.getChartView();
         view.setData(null);
         view.notifyDataSetChanged();
     }
@@ -84,14 +70,16 @@ public abstract class ChartUtility {
     }
 
     public static void updateChart(boolean isSmall, int count,
-                                   LineChart v, LineData data, float axisMax) {
-        v.getAxisLeft().setAxisMaximum(axisMax);
-        v.getXAxis().setLabelCount(isSmall ? count : 6);
-        v.getLegend().setEnabled(true);
+                                   ChartContainer container, float axisMax) {
+        LineChart view = container.getChartView();
+        view.getAxisLeft().setAxisMaximum(axisMax);
+        view.getXAxis().setLabelCount(isSmall ? count : 6);
+        container.getLegend().setVisibility(View.VISIBLE);
+        LineData data = container.getData();
         data.setDrawValues(isSmall);
-        v.setData(data);
+        view.setData(data);
         data.notifyDataChanged();
-        v.notifyDataSetChanged();
-        v.animateX(isSmall ? 1500 : 2500);
+        view.notifyDataSetChanged();
+        view.animateX(isSmall ? 1500 : 2500);
     }
 }

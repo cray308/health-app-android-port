@@ -12,14 +12,13 @@ import com.example.healthappandroid.common.shareddata.AppColors;
 import com.example.healthappandroid.historytab.data.HistoryViewModel;
 import com.example.healthappandroid.historytab.helpers.ChartUtility;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.Arrays;
 
-public class WorkoutTypeChart extends LinearLayout {
+public class WorkoutTypeChart extends LinearLayout implements ChartContainer {
     public static class Formatter extends IndexAxisValueFormatter {
         private final HistoryViewModel.WorkoutTypeChartViewModel viewModel;
 
@@ -33,8 +32,9 @@ public class WorkoutTypeChart extends LinearLayout {
     }
 
     public LineChart chartView;
+    public LinearLayout legendContainer;
+    private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     public HistoryViewModel.WorkoutTypeChartViewModel viewModel;
-    private final LegendEntry[] legendEntries = {null, null, null, null};
     private final LineDataSet[] dataSets = {null, null, null, null, null};
     private LineData data;
 
@@ -51,14 +51,17 @@ public class WorkoutTypeChart extends LinearLayout {
     private void setup() {
         inflate(getContext(), R.layout.workout_type_chart, this);
         chartView = findViewById(R.id.workoutTypeChart);
+        legendContainer = findViewById(R.id.legendContainer);
+        legendEntries[0] = findViewById(R.id.firstEntry);
+        legendEntries[1] = findViewById(R.id.secondEntry);
+        legendEntries[2] = findViewById(R.id.thirdEntry);
+        legendEntries[3] = findViewById(R.id.fourthEntry);
     }
 
     public void setup(HistoryViewModel.WorkoutTypeChartViewModel viewModel,
                         IndexAxisValueFormatter xAxisFormatter) {
         this.viewModel = viewModel;
         Formatter formatter = new Formatter(viewModel);
-
-        ChartUtility.setupLegendEntries(legendEntries, AppColors.chartColors, 4);
 
         dataSets[0] = ChartUtility.createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {
@@ -76,7 +79,7 @@ public class WorkoutTypeChart extends LinearLayout {
         }, 4);
         data.setValueFormatter(formatter);
 
-        ChartUtility.setupChartView(chartView, xAxisFormatter, legendEntries);
+        ChartUtility.setupChartView(chartView, xAxisFormatter);
         chartView.getAxisLeft().setValueFormatter(formatter);
 
         AreaChartRenderer renderer = new AreaChartRenderer(chartView);
@@ -86,9 +89,13 @@ public class WorkoutTypeChart extends LinearLayout {
     public void update(int count, boolean isSmall) {
         dataSets[0].setValues(Arrays.asList(viewModel.entries[0]));
         for (int i = 1; i < 5; ++i) {
-            legendEntries[i - 1].label = viewModel.legendLabels[i - 1];
+            legendEntries[i - 1].label.setText(viewModel.legendLabels[i - 1]);
             ChartUtility.updateDataSet(isSmall, dataSets[i], viewModel.entries[i]);
         }
-        ChartUtility.updateChart(isSmall, count, chartView, data, viewModel.yMax);
+        ChartUtility.updateChart(isSmall, count, this, viewModel.yMax);
     }
+
+    public LineChart getChartView() { return chartView; }
+    public LinearLayout getLegend() { return legendContainer; }
+    public LineData getData() { return data; }
 }

@@ -19,5 +19,8 @@
     <declare-styleable name="ChartSeparator">
         <attr name="sepHeader" format="string"/>
     </declare-styleable>
+    <declare-styleable name="HistoryChartLegendEntry">
+        <attr name="formColor" format="color"/>
+    </declare-styleable>
 
 </resources>

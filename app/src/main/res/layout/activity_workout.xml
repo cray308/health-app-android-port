@@ -4,65 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/systemGroupedBackground"
     tools:context=".hometab.addWorkout.views.WorkoutActivity">
-
-    <Button
-        android:id="@+id/workoutBackBtn"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="@color/systemGroupedBackground"
-        android:text="Button"
-        app:icon="@drawable/arrow_back_ios"
-        app:iconTint="@color/systemBlue"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/toolbar"
+        android:background="@color/secondarySystemBackground"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:menu="@menu/workout_items"
         app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="@null" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Home"
-        android:textColor="@color/systemBlue"
-        android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/workoutBackBtn"
-        app:layout_constraintTop_toTopOf="@+id/workoutBackBtn" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="0dp"
             android:orientation="vertical">
-
-            <Button
-                android:id="@+id/workoutStartStopBtn"
-                android:layout_width="150dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:text="Start"
-                android:textAllCaps="false"
-                android:textColor="@color/systemGreen"
-                android:textSize="15sp"
-                app:iconTint="@null" />
-
-            <Space android:layout_width="match_parent" android:layout_height="20dp" />
-
+        <Space android:layout_width="match_parent" android:layout_height="20dp"/>
         <LinearLayout
             android:id="@+id/workoutGroupsStack"
             android:layout_width="match_parent"
@@ -72,10 +42,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginBottom="0dp"
             android:orientation="vertical"/>
-
-            <Space android:layout_width="match_parent" android:layout_height="20dp" />
+            <Space android:layout_width="match_parent" android:layout_height="20dp"/>
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

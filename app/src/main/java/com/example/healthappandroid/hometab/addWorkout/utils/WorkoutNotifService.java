@@ -18,10 +18,13 @@ import com.example.healthappandroid.hometab.addWorkout.views.WorkoutActivity;
 
 public abstract class WorkoutNotifService {
     public static final String ChannelId = "HealthAppAndroid_channel";
-    private static final String[] BroadcastFilters = {"com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"};
-    public static final String IntentExtraKey = "TimerExtraByte";
+    private static final String[] Messages = {"Finished exercise!", "Finished AMRAP circuit!"};
+    private static final String[] Filters = {
+        "com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"
+    };
 
     private static final int Flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+    private static final int Defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
     public static final byte NotificationFinishExercise = 0;
     public static final byte NotificationFinishCircuit = 1;
@@ -51,23 +54,25 @@ public abstract class WorkoutNotifService {
         receivers[NotificationFinishExercise] = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                System.out.println("exerciseReceiver");
-                NotificationCompat.Builder b = createNotification(
-                        context, NotificationFinishExercise);
+                NotificationCompat.Builder b = createNotification(context,
+                                                                  NotificationFinishExercise);
                 notificationMgr.notify(identifier++, b.build());
+                WorkoutActivity activity = (WorkoutActivity) context;
+                activity.finishedExercise();
             }
         };
         receivers[NotificationFinishCircuit] = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                System.out.println("circuitReceiver");
-                NotificationCompat.Builder b = createNotification(
-                        context, NotificationFinishCircuit);
+                NotificationCompat.Builder b = createNotification(context,
+                                                                  NotificationFinishCircuit);
                 notificationMgr.notify(identifier++, b.build());
+                WorkoutActivity activity = (WorkoutActivity) context;
+                activity.finishedGroup();
             }
         };
         for (int i = 0; i < 2; ++i)
-            outerContext.registerReceiver(receivers[i], new IntentFilter(BroadcastFilters[i]));
+            outerContext.registerReceiver(receivers[i], new IntentFilter(Filters[i]));
     }
 
     public static void cleanup(Context context) {
@@ -75,40 +80,32 @@ public abstract class WorkoutNotifService {
             context.unregisterReceiver(receivers[i]);
             receivers[i] = null;
         }
+        notificationMgr.cancelAll();
         notificationMgr = null;
         alarmMgr = null;
     }
 
     public static void scheduleAlarm(Context context, long secondsFromNow, byte type) {
-        System.out.println("Scheduling alarm for " + type);
-        Intent intent = new Intent(BroadcastFilters[type]);
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
         if (type == NotificationFinishCircuit)
-            secondsFromNow += 500;
-        PendingIntent pIntent = PendingIntent.getBroadcast(
-                context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);
+            secondsFromNow += 1000;
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, new Intent(Filters[type]),
+                                                           PendingIntent.FLAG_IMMUTABLE);
+        alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);
     }
 
-    public static NotificationCompat.Builder createNotification(Context context, byte type) {
-        String message;
-        if (type == NotificationFinishExercise) {
-            message = "Finished exercise!";
-        } else {
-            message = "Finished AMRAP circuit!";
-        }
+    private static NotificationCompat.Builder createNotification(Context context, byte type) {
         Intent intent = new Intent(context, WorkoutActivity.class);
-        intent.setAction("notifAction");
-        intent.putExtra(IntentExtraKey, type);
+        intent.setAction("timerAction");
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, Flags);
         return new NotificationCompat.Builder(context, ChannelId)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setDefaults(Defaults)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pIntent)
                 .setContentTitle("Workout Update")
-                .setContentText(message);
+                .setContentText(Messages[type]);
     }
 }

@@ -8,9 +8,15 @@ public class HistoryTabCoordinator {
     public final HistoryFragment fragment = new HistoryFragment();
     private final HistoryViewModel viewModel;
 
-    public HistoryTabCoordinator() { viewModel = fragment.viewModel; }
+    public HistoryTabCoordinator() {
+        viewModel = fragment.viewModel;
+    }
 
-    public void fetchData() { new HistoryFetchTask().execute(viewModel.data); }
+    public void fetchData() {
+        new HistoryFetchTask().execute(viewModel.data);
+    }
 
-    public void finishedLoadingHistoryData() { fragment.performForegroundUpdate(); }
+    public void finishedLoadingHistoryData() {
+        fragment.performForegroundUpdate();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.healthappandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("MainActivity onCreate()");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         SharedPreferences prefs = getSharedPreferences("AppDelPrefs", Context.MODE_PRIVATE);
         boolean hasLaunched = prefs.getBoolean(hasLaunchedKey, false);

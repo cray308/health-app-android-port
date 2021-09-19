@@ -78,9 +78,9 @@ public class HistoryFragment extends Fragment {
 
     private void updateCharts() {
         if (viewModel.data.size == 0) {
-            ChartUtility.disableLineChartView(totalWorkoutsChart.chartView);
-            ChartUtility.disableLineChartView(workoutTypeChart.chartView);
-            ChartUtility.disableLineChartView(liftingChart.chartView);
+            ChartUtility.disableLineChartView(totalWorkoutsChart);
+            ChartUtility.disableLineChartView(workoutTypeChart);
+            ChartUtility.disableLineChartView(liftingChart);
             return;
         }
 

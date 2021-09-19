@@ -29,7 +29,7 @@ public class ChartSeparator extends ConstraintLayout {
 
         if (attrs != null) {
             TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                    attrs, R.styleable.ChartSeparator, 0, 0);
+                attrs, R.styleable.ChartSeparator, 0, 0);
             try {
                 labelText = a.getString(R.styleable.ChartSeparator_sepHeader);
             } finally {

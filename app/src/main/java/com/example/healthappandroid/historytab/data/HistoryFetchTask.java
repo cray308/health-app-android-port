@@ -23,7 +23,6 @@ public class HistoryFetchTask extends AsyncTask<HistoryViewModel.WeekDataModel, 
 
     @Override
     protected void onPostExecute(Void unused) {
-        super.onPostExecute(unused);
         AppCoordinator.shared.historyCoordinator.finishedLoadingHistoryData();
     }
 }

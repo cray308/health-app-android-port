@@ -1,9 +1,11 @@
 package com.example.healthappandroid.hometab;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.shareddata.AppUserData;
@@ -36,31 +38,34 @@ public class HomeTabCoordinator {
         if (dialog != null)
             dialog.dismiss();
 
-        Activity main = fragment.getActivity();
+        FragmentActivity main = fragment.getActivity();
         if (main == null) return;
 
-        child = new WorkoutCoordinator(w);
+        child = new WorkoutCoordinator(w, this);
         main.startActivity(new Intent(main, WorkoutActivity.class));
     }
 
     public void showWeeklyGoalDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())
-                .setTitle("Nicely done!")
-                .setMessage("Great job meeting your workout goal this week.");
-        builder.setPositiveButton("OK", null);
+            .setTitle("Nicely done!")
+            .setMessage("Great job meeting your workout goal this week.")
+            .setPositiveButton("OK", null);
         builder.create().show();
     }
 
-    public void finishedAddingWorkout(int totalCompletedWorkouts) {
+    public void finishedAddingWorkout(FragmentActivity activity, int totalCompletedWorkouts) {
         child = null;
+        activity.finish();
         fragment.updateWorkoutsList();
         if (viewModel.shouldShowConfetti(totalCompletedWorkouts))
-            fragment.showConfetti();
+            new Handler().postDelayed(fragment::showConfetti, 750);
     }
 
     public void checkForChildCoordinator() {
-        if (child != null)
-            child.handleFinishedWorkout(AppCoordinator.shared.fm);
+        if (child != null) {
+            child.stopWorkoutFromBackButtonPress();
+            child = null;
+        }
     }
 
     public void addWorkoutFromPlan(int index) {
@@ -102,8 +107,8 @@ public class HomeTabCoordinator {
         modal.show(AppCoordinator.shared.fm, "HomeSetupWorkoutDialog");
     }
 
-    public void finishedSettingUpCustomWorkout(BottomSheetDialogFragment modal, byte type,
-                                                    int index, short[] params) {
+    public void finishedSettingUpCustomWorkout(BottomSheetDialogFragment modal,
+                                               byte type, int index, short[] params) {
         Workout w = ExerciseManager.getWorkoutFromLibrary(
                 fragment.getContext(), type, index, params[0], params[1], params[2]);
         if (w != null)

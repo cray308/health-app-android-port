@@ -6,59 +6,48 @@ import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.shareddata.AppUserData;
 import com.example.healthappandroid.common.shareddata.PersistenceService;
 import com.example.healthappandroid.common.shareddata.WeeklyData;
+import com.example.healthappandroid.common.shareddata.WeeklyDataDao;
 import com.example.healthappandroid.common.workouts.Workout;
 
-public class UpdateCurrentWeekTask extends AsyncTask<Void, Void, Void> {
-    private final int totalCompletedWorkouts;
-    private final long duration;
-    private final byte type;
-    short[] lifts;
-
-    public UpdateCurrentWeekTask(Workout w, short[] lifts, int totalCompletedWorkouts) {
-        this.totalCompletedWorkouts = totalCompletedWorkouts;
-        type = w.type;
-        duration = (long) ((w.stopTime - w.startTime) / 60.0);
-        this.lifts = lifts;
-    }
-
+public class UpdateCurrentWeekTask extends AsyncTask<Workout, Void, Workout> {
     @Override
-    protected Void doInBackground(Void... unused) {
-        if (duration < 15) return null;
-        WeeklyData curr = PersistenceService.shared.getCurrentWeek();
-        switch (type) {
+    protected Workout doInBackground(Workout... args) {
+        Workout workout = args[0];
+        WeeklyDataDao dao = PersistenceService.shared.dao();
+        if (workout.duration < Workout.MinWorkoutDuration) return workout;
+        WeeklyData curr = PersistenceService.shared.getCurrentWeek(dao);
+        switch (workout.type) {
             case Workout.TypeSE:
-                curr.timeSE += duration;
+                curr.timeSE += workout.duration;
                 break;
             case Workout.TypeHIC:
-                curr.timeHIC += duration;
+                curr.timeHIC += workout.duration;
                 break;
             case Workout.TypeStrength:
-                curr.timeStrength += duration;
+                curr.timeStrength += workout.duration;
                 break;
             case Workout.TypeEndurance:
-                curr.timeEndurance += duration;
+                curr.timeEndurance += workout.duration;
                 break;
         }
 
-        if (lifts != null) {
-            curr.bestSquat = lifts[0];
-            curr.bestPullup = lifts[1];
-            curr.bestBench = lifts[2];
-            curr.bestDeadlift = lifts[3];
+        if (workout.newLifts != null) {
+            curr.bestSquat = workout.newLifts[0];
+            curr.bestPullup = workout.newLifts[1];
+            curr.bestBench = workout.newLifts[2];
+            curr.bestDeadlift = workout.newLifts[3];
         }
 
         curr.totalWorkouts += 1;
-        PersistenceService.shared.saveChanges(new WeeklyData[]{curr});
-        return null;
+        PersistenceService.shared.saveChanges(dao, new WeeklyData[]{curr});
+        return workout;
     }
 
     @Override
-    protected void onPostExecute(Void unused) {
-        super.onPostExecute(unused);
-        if (lifts != null) {
-            AppUserData.shared.updateWeightMaxes(lifts);
+    protected void onPostExecute(Workout workout) {
+        if (workout.newLifts != null) {
+            AppUserData.shared.updateWeightMaxes(workout.newLifts);
             AppCoordinator.shared.updateMaxWeights();
         }
-        AppCoordinator.shared.homeCoordinator.finishedAddingWorkout(totalCompletedWorkouts);
     }
 }

@@ -1,25 +1,30 @@
 package com.example.healthappandroid.hometab.addWorkout.views;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthappandroid.R;
 import com.example.healthappandroid.common.shareddata.AppColors;
 import com.example.healthappandroid.common.shareddata.AppCoordinator;
 import com.example.healthappandroid.common.workouts.ExerciseEntry;
 import com.example.healthappandroid.common.workouts.Workout;
+import com.example.healthappandroid.hometab.addWorkout.WorkoutCoordinator;
 import com.example.healthappandroid.hometab.addWorkout.utils.WorkoutNotifService;
 
 import java.time.Instant;
 
 public class WorkoutActivity extends AppCompatActivity {
-    private Workout workout;
+    public WorkoutCoordinator delegate;
+    public Workout workout;
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
 
@@ -27,17 +32,17 @@ public class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null)
+            bar.setDisplayHomeAsUpEnabled(true);
 
-        System.out.println("chris - WorkoutActivity onCreate!!!");
-        workout = AppCoordinator.shared.homeCoordinator.child.workout;
+        delegate = AppCoordinator.shared.homeCoordinator.child;
+        workout = delegate.workout;
         setTitle(workout.title);
 
         WorkoutNotifService.setup(this);
-
-        Button backBtn = findViewById(R.id.workoutBackBtn);
-        backBtn.setOnClickListener(backListener);
-        Button startBtn = findViewById(R.id.workoutStartStopBtn);
-        startBtn.setOnClickListener(startStopListener);
 
         groupsStack = findViewById(R.id.workoutGroupsStack);
 
@@ -54,19 +59,17 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         WorkoutNotifService.cleanup(this);
-        if (workout.stopType == 0)
-            workout.stopType = Workout.StopTypeManual;
         super.onDestroy();
     }
 
-    private final View.OnClickListener backListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            workout.stopTime = Instant.now().getEpochSecond() + 1;
-            workout.stopType = Workout.StopTypeManual;
-            WorkoutActivity.this.finish();
-        }
-    };
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.workout_items, menu);
+        MenuItem item = menu.findItem(R.id.action_startStop);
+        StartStopView view = (StartStopView) item.getActionView();
+        view.btn.setOnClickListener(startStopListener);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     private final View.OnClickListener startStopListener = new View.OnClickListener() {
         @Override
@@ -78,9 +81,8 @@ public class WorkoutActivity extends AppCompatActivity {
                 workout.startTime = Instant.now().getEpochSecond();
                 handleTap(0, 0, Workout.EventOptionStartGroup);
             } else {
-                workout.stopTime = Instant.now().getEpochSecond() + 1;
-                workout.stopType = Workout.StopTypeManual;
-                WorkoutActivity.this.finish();
+                workout.setDuration();
+                delegate.stoppedWorkout(WorkoutActivity.this);
             }
         }
     };
@@ -89,7 +91,7 @@ public class WorkoutActivity extends AppCompatActivity {
         int tag = view.getId();
         int groupIdx = (tag & 0xff00) >> 8;
         int exerciseIdx = (tag & 0xff) - 1;
-        handleTap(groupIdx, exerciseIdx, Workout.EventOptionNone);
+        handleTap(groupIdx, exerciseIdx, (byte) 0);
     };
 
     public void handleTap(int groupIdx, int exerciseIdx, byte option) {
@@ -102,8 +104,7 @@ public class WorkoutActivity extends AppCompatActivity {
         switch (workout.findTransitionForEvent(this, v, option)) {
             case Workout.TransitionCompletedWorkout:
                 finishedWorkout = true;
-                workout.stopTime = Instant.now().getEpochSecond() + 1;
-                workout.stopType = Workout.StopTypeCompleted;
+                workout.setDuration();
                 break;
             case Workout.TransitionFinishedCircuitDeleteFirst:
                 firstContainer = (ExerciseContainer) groupsStack.getChildAt(1);
@@ -122,19 +123,14 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
         if (finishedWorkout)
-            finish();
+            delegate.completedWorkout(this, null, true);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        byte type = intent.getByteExtra(
-                WorkoutNotifService.IntentExtraKey, WorkoutNotifService.NotificationFinishExercise);
+    public void finishedGroup() {
+        handleTap(workout.index, 255, Workout.EventOptionFinishGroup);
+    }
 
-        if (type == WorkoutNotifService.NotificationFinishExercise) {
-            handleTap(workout.index, workout.group.index, Workout.EventOptionNone);
-        } else {
-            handleTap(workout.index, 255, Workout.EventOptionFinishGroup);
-        }
+    public void finishedExercise() {
+        handleTap(workout.index, workout.group.index, (byte) 0);
     }
 }

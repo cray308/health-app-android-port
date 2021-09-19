@@ -24,6 +24,8 @@ import com.example.healthappandroid.common.shareddata.AppColors;
 import com.example.healthappandroid.common.views.InputView;
 import com.example.healthappandroid.common.workouts.Workout;
 import com.example.healthappandroid.hometab.HomeTabCoordinator;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Arrays;
@@ -154,6 +156,9 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
             space.setMinimumHeight(20);
             inputViewStack.addView(space);
         }
+        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+        if (dialog != null)
+            dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private final View.OnClickListener cancelListener = view -> dismiss();

@@ -13,11 +13,26 @@
         android:layout_height="wrap_content"
         app:sepHeader="Workouts Each Week" />
 
-    <Space android:layout_width="match_parent" android:layout_height="5dp"/>
-
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/totalWorkoutsChart"
         android:layout_width="match_parent"
-        android:layout_height="390dp"/>
+        android:layout_height="340dp"
+        android:layout_marginTop="5dp"/>
+
+    <LinearLayout
+        android:id="@+id/legendContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.example.healthappandroid.historytab.view.HistoryChartLegendEntry
+            android:id="@+id/legendEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:formColor="@color/systemBlue" />
+
+    </LinearLayout>
 
 </LinearLayout>

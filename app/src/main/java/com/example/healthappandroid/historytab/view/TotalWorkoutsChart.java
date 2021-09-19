@@ -13,7 +13,6 @@ import com.example.healthappandroid.R;
 import com.example.healthappandroid.common.shareddata.AppColors;
 import com.example.healthappandroid.historytab.data.HistoryViewModel;
 import com.example.healthappandroid.historytab.helpers.ChartUtility;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.DefaultValueFormatter;
@@ -21,12 +20,13 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-public class TotalWorkoutsChart extends LinearLayout {
+public class TotalWorkoutsChart extends LinearLayout implements ChartContainer {
     public LineChart chartView;
+    public LinearLayout legendContainer;
+    private HistoryChartLegendEntry legendEntry;
     public HistoryViewModel.TotalWorkoutsChartViewModel viewModel;
     private LineData data;
     private LineDataSet dataSet;
-    private final LegendEntry[] legendEntries = {null};
 
     public TotalWorkoutsChart(Context context) {
         super(context);
@@ -41,31 +41,37 @@ public class TotalWorkoutsChart extends LinearLayout {
     private void setup() {
         inflate(getContext(), R.layout.total_workouts_chart, this);
         chartView = findViewById(R.id.totalWorkoutsChart);
+        legendContainer = findViewById(R.id.legendContainer);
+        legendEntry = findViewById(R.id.legendEntry);
     }
 
     public void setup(HistoryViewModel.TotalWorkoutsChartViewModel viewModel,
                       IndexAxisValueFormatter xAxisFormatter) {
         this.viewModel = viewModel;
 
-        ChartUtility.setupLegendEntries(legendEntries, new int[]{AppColors.teal}, 1);
         Drawable fill = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         dataSet = ChartUtility.createDataSet(AppColors.red);
         dataSet.setFillDrawable(fill);
         dataSet.setDrawFilled(true);
         dataSet.setFillAlpha(191);
         data = ChartUtility.createChartData(new LineDataSet[]{dataSet}, 1);
-        ChartUtility.setupChartView(chartView, xAxisFormatter, legendEntries);
+        ChartUtility.setupChartView(chartView, xAxisFormatter);
     }
 
     public void update(int count, boolean isSmall) {
         chartView.getAxisLeft().removeAllLimitLines();
-        legendEntries[0].label = viewModel.legendLabel;
+        legendEntry.label.setText(viewModel.legendLabel);
         LimitLine limitLine = new LimitLine(viewModel.avgWorkouts);
         limitLine.enableDashedLine(5, 5, 0);
-        limitLine.setLineColor(legendEntries[0].formColor);
+        limitLine.setLineWidth(2);
+        limitLine.setLineColor(AppColors.blue);
         chartView.getAxisLeft().addLimitLine(limitLine);
         ChartUtility.updateDataSet(isSmall, dataSet, viewModel.entries);
         data.setValueFormatter(new DefaultValueFormatter(2));
-        ChartUtility.updateChart(isSmall, count, chartView, data, viewModel.yMax);
+        ChartUtility.updateChart(isSmall, count, this, viewModel.yMax);
     }
+
+    public LineChart getChartView() { return chartView; }
+    public LinearLayout getLegend() { return legendContainer; }
+    public LineData getData() { return data; }
 }

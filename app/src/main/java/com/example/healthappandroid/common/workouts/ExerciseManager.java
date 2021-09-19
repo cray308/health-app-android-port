@@ -58,7 +58,9 @@ public abstract class ExerciseManager {
     private static DictWrapper createRootAndLibDict(Context context) {
         DictWrapper container = null;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open("workoutData.json"), StandardCharsets.UTF_8));
+            InputStreamReader input = new InputStreamReader(
+                context.getAssets().open("workoutData.json"), StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(input);
             StringBuilder contents = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null)
@@ -76,7 +78,6 @@ public abstract class ExerciseManager {
 
     public static void setWeeklyWorkoutNames(Context context, byte plan, int week, String[] names) {
         DictWrapper data = createRootAndLibDict(context);
-
         JSONArray currWeek = data.getCurrentWeekForPlan(plan, week);
         if (currWeek == null) return;
 
@@ -96,15 +97,14 @@ public abstract class ExerciseManager {
                 Log.e("setWeeklyWorkoutNames", "Error while parsing JSON", e);
             }
         }
-        System.out.println("Done");
     }
 
     public static Workout getWeeklyWorkoutAtIndex(Context context, byte plan, int week, int index) {
         Workout w = null;
         DictWrapper data = createRootAndLibDict(context);
-
         JSONArray currWeek = data.getCurrentWeekForPlan(plan, week);
         if (currWeek == null) return null;
+
         try {
             JSONObject day = currWeek.getJSONObject(index);
 
@@ -127,16 +127,15 @@ public abstract class ExerciseManager {
 
     public static String[] getWorkoutNamesForType(Context context, byte type) {
         String[] results;
-        DictWrapper data = createRootAndLibDict(context);
-
         int len;
+        DictWrapper data = createRootAndLibDict(context);
         JSONArray libArr = data.getLibraryArrayForType(type);
         if (libArr == null || ((len = libArr.length()) == 0)) return null;
 
         if (type == Workout.TypeStrength)
             len = 2;
-
         results = new String[len];
+
         for (int i = 0; i < len; ++i) {
             try {
                 JSONObject week = libArr.getJSONObject(i);
@@ -157,7 +156,8 @@ public abstract class ExerciseManager {
 
         try {
             JSONObject foundWorkout = libArr.getJSONObject(index);
-            w = new Workout(foundWorkout, (byte) -1, type, index, sets, reps, weight);
+            byte day = -1;
+            w = new Workout(foundWorkout, day, type, index, sets, reps, weight);
         } catch (JSONException e) {
             Log.e("getWorkoutFromLibrary", "Error while parsing JSON", e);
         }
