@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
@@ -42,7 +41,6 @@ public class HomeFragment extends Fragment {
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
     private KonfettiView confettiView;
-    private ScrollView scrollView;
 
     public HomeFragment() {}
 
@@ -56,7 +54,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         greetingLabel = view.findViewById(R.id.greetingLabel);
-        scrollView = view.findViewById(R.id.scrollView);
         timeNames = getResources().getStringArray(R.array.timesOfDay);
         int[] customBtnIds = {R.id.customButton1, R.id.customButton2, R.id.customButton3,
             R.id.customButton4, R.id.customButton5};
@@ -142,7 +139,6 @@ public class HomeFragment extends Fragment {
     };
 
     public void showConfetti() {
-        scrollView.setVisibility(View.INVISIBLE);
         confettiView.setVisibility(View.VISIBLE);
         confettiView.build()
             .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
@@ -152,10 +148,9 @@ public class HomeFragment extends Fragment {
             .setTimeToLive(5000)
             .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
             .addSizes(new Size(12, 5f))
-            .setPosition(-50f, confettiView.getWidth() + 50f, -50f, -50f)
-            .streamFor(64, 4500);
+            .setPosition(150f, null, -50f, null)
+            .streamFor(128, 4500);
         new Handler().postDelayed(() -> {
-            scrollView.setVisibility(View.VISIBLE);
             confettiView.setVisibility(View.GONE);
             if (delegate != null)
                 delegate.showWeeklyGoalDialog();
