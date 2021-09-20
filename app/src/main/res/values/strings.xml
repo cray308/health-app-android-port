@@ -1,24 +1,126 @@
 <resources>
     <string name="app_name">HealthAppAndroid</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="updates_maxes_finish_text">Finish</string>
+    <string-array name="titles">
+        <item>Home</item>
+        <item>Workout History</item>
+        <item>App Settings</item>
+    </string-array>
+    <string-array name="notifications">
+        <item>Finished exercise!</item>
+        <item>Finished AMRAP circuit!</item>
+    </string-array>
+    <string-array name="timesOfDay">
+        <item>Good morning!</item>
+        <item>Good afternoon!</item>
+        <item>Good evening!</item>
+    </string-array>
+    <string-array name="wordMonths">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+    <string-array name="numMonths">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="workoutTypes">
+        <item>Strength</item>
+        <item>HIC</item>
+        <item>SE</item>
+        <item>Endurance</item>
+    </string-array>
+    <string-array name="liftTypes">
+        <item>Squat</item>
+        <item>Pull-up</item>
+        <item>Bench</item>
+        <item>Deadlift</item>
+    </string-array>
+
+    <string name="channelDescription">Intra-workout updates</string>
+    <string name="workoutNotificationTitle">Workout Update</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="go">Go</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
     <string name="tab_home">Home</string>
     <string name="tab_history">History</string>
     <string name="tab_settings">Settings</string>
-    <string name="historySegmentLeft">6 Months</string>
-    <string name="historySegmentCenter">1 Year</string>
-    <string name="historySegmentRight">2 Years</string>
+
     <string name="weeklyWorkoutsHeader">Workouts this week</string>
     <string name="customWorkoutsHeader">Add Custom Workout</string>
+    <string name="workoutTypeTestMax">Test Max</string>
+    <string name="workoutTypeEndurance">Endurance</string>
+    <string name="workoutTypeStrength">Strength</string>
+    <string name="workoutTypeSE">SE</string>
+    <string name="workoutTypeHIC">HIC</string>
+    <string name="homeAlertTitle">Nicely done!</string>
+    <string name="homeAlertMessage">Great job meeting your workout goal this week.</string>
+
+    <string name="historySegment1">6 Months</string>
+    <string name="historySegment2">1 Year</string>
+    <string name="historySegment3">2 Years</string>
+    <string name="chartHeaderWorkoutType">Activity Time Each Week (By Type)</string>
+    <string name="chartHeaderLifts">Lift Progress</string>
+    <string name="chartHeaderTotalWorkouts">Workouts Each Week</string>
+    <string name="chartEmptyText">No data is available</string>
+    <string name="totalWorkoutsLegend">Avg Workouts (%1$.2f)</string>
+    <string name="workoutTypeLegend">%1$s (Avg: %2$s)</string>
+    <string name="liftLegend">%1$s (Avg: %2$.1f)</string>
+
     <string name="planPickerTitle">Change workout plan</string>
-    <string name="planPickerLeftText">None</string>
-    <string name="planPickerCenterText">Base building</string>
-    <string name="planPickerRightText">Continuation</string>
+    <string name="settingsSegment1">None</string>
+    <string name="settingsSegment2">Base building</string>
+    <string name="settingsSegment3">Continuation</string>
+    <string name="maxWeightSquat">Max Squat Weight</string>
+    <string name="maxWeightPullUp">Max Pull-up Weight</string>
+    <string name="maxWeightBench">Max Bench Weight</string>
+    <string name="maxWeightDeadLift">Max Deadlift Weight</string>
+    <string name="inputFieldError">Input must be between %1$d and %2$d</string>
     <string name="settingsSaveButtonTitle">Save Settings</string>
     <string name="settingsDeleteButtonTitle">Delete Data</string>
-    <string name="cancel">Cancel</string>
-    <string name="go">Go</string>
+    <string name="settingsAlertTitle">Are you sure\?</string>
+    <string name="settingsAlertMessageSave">This will save the currently entered data.</string>
+    <string name="settingsAlertMessageDelete">This will delete all workout history.</string>
+
     <string name="setupWorkoutPickerTitle">Choose workout</string>
+    <string name="setupWorkoutSets">Sets</string>
+    <string name="setupWorkoutReps">Reps</string>
+    <string name="setupWorkoutMaxWeight">Max Weight Percentage</string>
+    <string name="setupWorkoutDuration">Duration (minutes)</string>
+
     <string name="start">Start</string>
     <string name="end">End</string>
+    <string name="updates_maxes_finish_text">Finish</string>
+    <string name="workoutTitleTestDay">test day</string>
+    <string name="exerciseHeader">Set %1$d of %2$d</string>
+    <string name="exerciseTitleRest">Rest: %1$d s</string>
+    <string name="exerciseTitleReps">%1$s x %2$d</string>
+    <string name="exerciseTitleRepsWithWeight">%1$s x %2$d \@ %3$d lbs</string>
+    <string name="exerciseTitleDurationMinutes">%1$s for %2$.1f min</string>
+    <string name="exerciseTitleDurationSeconds">%1$s for %2$d s</string>
+    <string name="exerciseTitleDistance">Run/row %1$d/%2$d m</string>
+    <string name="circuitHeaderRounds">Round %1$d of %2$d</string>
+    <string name="circuitHeaderAMRAP">AMRAP %1$d min</string>
 </resources>

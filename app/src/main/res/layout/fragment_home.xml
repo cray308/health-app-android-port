@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".hometab.view.HomeFragment">
+    tools:context=".homeTab.view.HomeFragment">
 
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/confettiView"
@@ -18,10 +18,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:background="@color/systemGroupedBackground"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,10 +31,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="0dp"
+            android:layout_marginRight="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -41,17 +41,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/label"
-                android:textSize="28sp"/>
-
-            <Space android:layout_width="match_parent" android:layout_height="5dp" />
+                android:textSize="28sp" />
 
             <LinearLayout
                 android:id="@+id/weeklyWorkoutsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical">
 
@@ -62,11 +58,12 @@
                     android:textColor="@color/label"
                     android:textSize="22sp" />
 
-                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
-
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/separator"/>
-
-                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/separator" />
 
                 <LinearLayout
                     android:id="@+id/weeklyWorkoutsStack"
@@ -75,21 +72,21 @@
                     android:orientation="vertical" />
             </LinearLayout>
 
-            <Space android:layout_width="match_parent" android:layout_height="5dp"/>
-
             <LinearLayout
                 android:id="@+id/customWorkoutStack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical">
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/separator"/>
-
-                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/separator" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -98,50 +95,51 @@
                     android:textColor="@color/label"
                     android:textSize="22sp" />
 
-                <Space android:layout_width="match_parent" android:layout_height="5dp"/>
-
-                <com.example.healthappandroid.common.views.StatusButton
-                    android:id="@+id/customWkTestMax"
+                <com.example.healthAppAndroid.common.views.StatusButton
+                    android:id="@+id/customButton1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="Test Max"
+                    android:layout_marginTop="5dp"
+                    app:buttonLabel="@string/workoutTypeTestMax"
                     app:hideCheckbox="true"
                     app:hideHeader="true" />
 
-                <com.example.healthappandroid.common.views.StatusButton
-                    android:id="@+id/customWkEndurance"
+                <com.example.healthAppAndroid.common.views.StatusButton
+                    android:id="@+id/customButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="Endurance"
+                    app:buttonLabel="@string/workoutTypeEndurance"
                     app:hideCheckbox="true"
                     app:hideHeader="true" />
 
-                <com.example.healthappandroid.common.views.StatusButton
-                    android:id="@+id/customWkStrength"
+                <com.example.healthAppAndroid.common.views.StatusButton
+                    android:id="@+id/customButton3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="Strength"
+                    app:buttonLabel="@string/workoutTypeStrength"
                     app:hideCheckbox="true"
                     app:hideHeader="true" />
 
-                <com.example.healthappandroid.common.views.StatusButton
-                    android:id="@+id/customWkSE"
+                <com.example.healthAppAndroid.common.views.StatusButton
+                    android:id="@+id/customButton4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="SE"
+                    app:buttonLabel="@string/workoutTypeSE"
                     app:hideCheckbox="true"
                     app:hideHeader="true" />
 
-                <com.example.healthappandroid.common.views.StatusButton
-                    android:id="@+id/customWkHIC"
+                <com.example.healthAppAndroid.common.views.StatusButton
+                    android:id="@+id/customButton5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="HIC"
+                    app:buttonLabel="@string/workoutTypeHIC"
                     app:hideCheckbox="true"
                     app:hideHeader="true" />
             </LinearLayout>
 
-            <Space android:layout_width="match_parent" android:layout_height="20dp"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
 
         </LinearLayout>
     </ScrollView>

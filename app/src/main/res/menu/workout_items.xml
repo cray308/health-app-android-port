@@ -5,5 +5,5 @@
         android:id="@+id/action_startStop"
         android:title="@string/start"
         app:showAsAction="always"
-        app:actionViewClass="com.example.healthappandroid.hometab.addWorkout.views.StartStopView"/>
+        app:actionViewClass="com.example.healthAppAndroid.homeTab.addWorkout.views.StartStopView"/>
 </menu>

@@ -4,27 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".settingstab.SettingsFragment">
+    tools:context=".settingsTab.SettingsFragment">
 
     <ScrollView
-        android:id="@+id/settings_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:background="@color/systemGroupedBackground"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/settingsStack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="0dp"
             android:orientation="vertical">
 
             <TextView
@@ -34,82 +31,73 @@
                 android:textColor="@color/label"
                 android:textSize="13sp" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="2dp" />
-
             <RadioGroup
-                android:id="@+id/settingsPlanPicker"
+                android:id="@+id/planPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@id/noPlanSegment"
+                android:layout_marginTop="2dp"
+                android:checkedButton="@id/segmentNoPlan"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/noPlanSegment"
+                    android:id="@+id/segmentNoPlan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/planPickerLeftText"
+                    android:text="@string/settingsSegment1"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
                 <RadioButton
-                    android:id="@+id/baseBuildingSegment"
+                    android:id="@+id/segmentBaseBuilding"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/planPickerCenterText"
+                    android:text="@string/settingsSegment2"
                     android:textColor="@color/label"
                     android:textSize="11sp" />
 
                 <RadioButton
-                    android:id="@+id/continuationSegment"
+                    android:id="@+id/segmentContinuation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/planPickerRightText"
+                    android:text="@string/settingsSegment3"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
             </RadioGroup>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
-            <com.example.healthappandroid.common.views.InputView
-                android:id="@+id/settingsMaxSquats"
+            <com.example.healthAppAndroid.common.views.InputView
+                android:id="@+id/inputFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="Max Squat"/>
+                android:layout_marginTop="20dp"
+                app:fieldHint="@string/maxWeightSquat" />
 
-            <com.example.healthappandroid.common.views.InputView
-                android:id="@+id/settingsMaxPullup"
+            <com.example.healthAppAndroid.common.views.InputView
+                android:id="@+id/inputSecond"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="Max Pull-up"/>
+                app:fieldHint="@string/maxWeightPullUp" />
 
-            <com.example.healthappandroid.common.views.InputView
-                android:id="@+id/settingsMaxBench"
+            <com.example.healthAppAndroid.common.views.InputView
+                android:id="@+id/inputThird"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="Max Bench"/>
+                app:fieldHint="@string/maxWeightBench" />
 
-            <com.example.healthappandroid.common.views.InputView
-                android:id="@+id/settingsMaxDeadlift"
+            <com.example.healthAppAndroid.common.views.InputView
+                android:id="@+id/inputFourth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="Max Deadlift"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                app:fieldHint="@string/maxWeightDeadLift" />
 
             <Button
-                android:id="@+id/settingsSaveButton"
+                android:id="@+id/saveButton"
                 style="@null"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
                 android:text="@string/settingsSaveButtonTitle"
                 android:textAllCaps="false"
@@ -117,15 +105,12 @@
                 android:textSize="17sp"
                 app:iconTint="@null" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
             <Button
-                android:id="@+id/settingsDeleteButton"
+                android:id="@+id/deleteButton"
                 style="@null"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
                 android:text="@string/settingsDeleteButtonTitle"
                 android:textAllCaps="false"
@@ -135,7 +120,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="32dp" />
+                android:layout_height="40dp" />
 
         </LinearLayout>
     </ScrollView>

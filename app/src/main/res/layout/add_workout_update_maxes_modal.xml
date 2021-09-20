@@ -8,60 +8,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="8dp"
         android:orientation="vertical"
-        android:background="@color/systemGroupedBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.example.healthappandroid.common.views.InputView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3" />
+
+            <Button
+                android:id="@+id/updateMaxSubmitBtn"
+                style="@null"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:enabled="false"
+                android:text="@string/updates_maxes_finish_text"
+                android:textAllCaps="false"
+                android:textColor="@color/systemGray"
+                android:textSize="17sp"
+                app:iconTint="@null" />
+        </LinearLayout>
+
+        <com.example.healthAppAndroid.common.views.InputView
             android:id="@+id/updateMaxSquat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="Squat Weight">
-        </com.example.healthappandroid.common.views.InputView>
+            android:layout_marginTop="10dp"
+            app:fieldHint="@string/maxWeightSquat" />
 
-        <com.example.healthappandroid.common.views.InputView
+        <com.example.healthAppAndroid.common.views.InputView
             android:id="@+id/updateMaxPullUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="Pull-up Weight">
-        </com.example.healthappandroid.common.views.InputView>
+            app:fieldHint="@string/maxWeightPullUp" />
 
-        <com.example.healthappandroid.common.views.InputView
+        <com.example.healthAppAndroid.common.views.InputView
             android:id="@+id/updateMaxBench"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="Bench Weight">
-        </com.example.healthappandroid.common.views.InputView>
+            app:fieldHint="@string/maxWeightBench" />
 
-        <com.example.healthappandroid.common.views.InputView
+        <com.example.healthAppAndroid.common.views.InputView
             android:id="@+id/updateMaxDeadlift"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="Deadlift Weight">
-        </com.example.healthappandroid.common.views.InputView>
-
-        <Space android:layout_width="match_parent" android:layout_height="20dp"/>
-
-        <Button
-            android:id="@+id/updateMaxSubmitBtn"
-            style="@null"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:backgroundTint="@color/secondarySystemGroupedBackground"
-            android:text="@string/updates_maxes_finish_text"
-            android:textAllCaps="false"
-            android:textColor="@color/systemGray"
-            android:enabled="false"
-            android:textSize="17sp"
-            app:iconTint="@null" />
-
-
-
+            app:fieldHint="@string/maxWeightDeadLift" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
     android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp">
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="4dp"
+    android:orientation="horizontal">
 
     <View
         android:id="@+id/form"
         android:layout_width="20dp"
-        android:layout_height="20dp"/>
+        android:layout_height="20dp" />
 
     <Space
         android:layout_width="8dp"
@@ -23,6 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/label"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
 </LinearLayout>

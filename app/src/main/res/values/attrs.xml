@@ -3,17 +3,9 @@
     <declare-styleable name="StatusButton">
         <attr name="hideCheckbox" format="boolean"/>
         <attr name="hideHeader" format="boolean"/>
-        <attr name="headerText" format="string"/>
         <attr name="buttonLabel" format="string"/>
-        <attr name="checkboxState" format="enum">
-            <enum name="disabled" value="0"/>
-            <enum name="active" value="1"/>
-            <enum name="finished" value="3"/>
-        </attr>
-        <attr name="disableButton" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="InputView">
-        <attr name="initialText" format="string"/>
         <attr name="fieldHint" format="string"/>
     </declare-styleable>
     <declare-styleable name="ChartSeparator">

@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".historytab.view.HistoryFragment">
+    tools:context=".historyTab.view.HistoryFragment">
 
     <ScrollView
-        android:id="@+id/historyScrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:background="@color/systemBackground"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,62 +22,61 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="0dp"
             android:orientation="vertical">
 
             <RadioGroup
-                android:id="@+id/historyTimePicker"
+                android:id="@+id/rangePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@id/histSeg6Months"
+                android:checkedButton="@id/segmentLeft"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/histSeg6Months"
+                    android:id="@+id/segmentLeft"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/historySegmentLeft"
+                    android:text="@string/historySegment1"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
                 <RadioButton
-                    android:id="@+id/histSeg1Year"
+                    android:id="@+id/segmentCenter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/historySegmentCenter"
+                    android:text="@string/historySegment2"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
 
                 <RadioButton
-                    android:id="@+id/histSeg2Year"
+                    android:id="@+id/segmentRight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/historySegmentRight"
+                    android:text="@string/historySegment3"
                     android:textColor="@color/label"
                     android:textSize="12sp" />
             </RadioGroup>
 
-            <!--<Space android:layout_width="match_parent" android:layout_height="5dp" />!-->
-
-            <com.example.healthappandroid.historytab.view.TotalWorkoutsChart
+            <com.example.healthAppAndroid.historyTab.view.TotalWorkoutsChart
+                android:id="@+id/totalWorkoutsContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/totalWorkoutsChartContainer"/>
+                android:layout_height="wrap_content" />
 
-            <com.example.healthappandroid.historytab.view.WorkoutTypeChart
+            <com.example.healthAppAndroid.historyTab.view.WorkoutTypeChart
+                android:id="@+id/workoutTypeContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/workoutTypeChartContainer"/>
+                android:layout_height="wrap_content" />
 
-            <com.example.healthappandroid.historytab.view.LiftingChart
+            <com.example.healthAppAndroid.historyTab.view.LiftingChart
+                android:id="@+id/liftContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/liftChartContainer"/>
+                android:layout_height="wrap_content" />
 
-            <Space android:layout_width="match_parent" android:layout_height="30dp"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
         </LinearLayout>
     </ScrollView>
 

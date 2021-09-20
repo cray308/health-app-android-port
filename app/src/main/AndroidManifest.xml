@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.healthappandroid">
+    package="com.example.healthAppAndroid">
     <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <application
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthAppAndroid">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.healthAppAndroid.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -21,12 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".hometab.addWorkout.views.WorkoutActivity"
+            android:name="com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.example.healthAppAndroid.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value="com.example.healthAppAndroid.MainActivity"/>
         </activity>
     </application>
 

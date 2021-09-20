@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical">
 
-    <com.example.healthappandroid.historytab.view.ChartSeparator
+    <com.example.healthAppAndroid.historyTab.view.ChartSeparator
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:sepHeader="Lift Progress"/>
+        app:sepHeader="@string/chartHeaderLifts" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/liftChart"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp" />
 
     <LinearLayout
         android:id="@+id/legendContainer"
@@ -27,25 +27,25 @@
         android:orientation="vertical"
         tools:visibility="gone">
 
-        <com.example.healthappandroid.historytab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
             android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartBlue" />
 
-        <com.example.healthappandroid.historytab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
             android:id="@+id/secondEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartGreen" />
 
-        <com.example.healthappandroid.historytab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
             android:id="@+id/thirdEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartOrange" />
 
-        <com.example.healthappandroid.historytab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
             android:id="@+id/fourthEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
