@@ -10,13 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ExerciseEntry {
-    public static final byte TypeReps = 0;
-    public static final byte TypeDuration = 1;
-
-    public static final byte StateDisabled = 0;
-    public static final byte StateActive = 1;
-    public static final byte StateResting = 2;
-    public static final byte StateCompleted = 3;
+    public static abstract class Type {
+        public static final byte Reps = 0, Duration = 1;
+    }
+    public static abstract class State {
+        public static final byte Disabled = 0, Active = 1, Resting = 2, Completed = 3;
+    }
 
     public byte type, state;
     public int weight, reps, sets = 1, rest, completedSets;
@@ -40,16 +39,16 @@ public class ExerciseEntry {
     }
 
     public String createTitle(Context context) {
-        if (state == StateResting)
+        if (state == State.Resting)
             return context.getString(R.string.exerciseTitleRest, rest);
         switch (type) {
-            case TypeReps:
+            case Type.Reps:
                 if (weight > 1) {
                     return context.getString(R.string.exerciseTitleRepsWithWeight,
                                              name, reps, weight);
                 }
                 return context.getString(R.string.exerciseTitleReps, name, reps);
-            case TypeDuration:
+            case Type.Duration:
                 if (reps > 120) {
                     double minutes = reps / 60.0;
                     return context.getString(R.string.exerciseTitleDurationMinutes, name, minutes);
@@ -64,25 +63,25 @@ public class ExerciseEntry {
     public boolean cycle(Context context) {
         boolean completed = false;
         switch (state) {
-            case StateDisabled:
-                state = StateActive;
-                if (type == TypeDuration)
-                    WorkoutNotifService.scheduleAlarm(
-                        context, reps, WorkoutNotifService.NotificationFinishExercise);
+            case State.Disabled:
+                state = State.Active;
+                if (type == Type.Duration)
+                    WorkoutNotifService.scheduleAlarm(context, reps,
+                                                      WorkoutNotifService.Type.Exercise);
                 break;
 
-            case StateActive:
+            case State.Active:
                 if (rest != 0) {
-                    state = StateResting;
+                    state = State.Resting;
                     break;
                 }
 
-            case StateResting:
+            case State.Resting:
                 if (++completedSets == sets) {
-                    state = StateCompleted;
+                    state = State.Completed;
                     completed = true;
                 } else {
-                    state = StateActive;
+                    state = State.Active;
                 }
             default:
         }

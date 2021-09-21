@@ -13,7 +13,7 @@
         app:sepHeader="@string/chartHeaderTotalWorkouts" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/totalWorkoutsChart"
+        android:id="@+id/chartView"
         android:layout_width="match_parent"
         android:layout_height="340dp"
         android:layout_marginTop="5dp" />
@@ -27,7 +27,7 @@
         android:visibility="gone">
 
         <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
-            android:id="@+id/legendEntry"
+            android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/systemBlue" />

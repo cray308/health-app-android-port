@@ -14,24 +14,28 @@ import android.os.SystemClock;
 import androidx.core.app.NotificationCompat;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity;
 
 public abstract class WorkoutNotifService {
-    public static final String ChannelId = "HealthAppAndroid_channel";
+    public static abstract class Type {
+        public static final byte Exercise = 0;
+        public static final byte Circuit = 1;
+    }
+
+    private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
-    private static final String[] filters = {
+    private static int filterId = 1;
+    private static final String[] baseFilters = {
         "com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"
     };
+    private static final String[] filters = {null, null};
 
     private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
     private static final int defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
-    public static final byte NotificationFinishExercise = 0;
-    public static final byte NotificationFinishCircuit = 1;
-
     private static int identifier = 1;
-
     private static NotificationManager notificationMgr;
     private static AlarmManager alarmMgr;
     private static final BroadcastReceiver[] receivers = {null, null};
@@ -57,28 +61,29 @@ public abstract class WorkoutNotifService {
             Context.NOTIFICATION_SERVICE);
         alarmMgr = (AlarmManager) outerContext.getSystemService(Context.ALARM_SERVICE);
 
-        receivers[NotificationFinishExercise] = new BroadcastReceiver() {
+        receivers[Type.Exercise] = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                NotificationCompat.Builder b = createNotification(context,
-                                                                  NotificationFinishExercise);
+                NotificationCompat.Builder b = createNotification(context, Type.Exercise);
                 notificationMgr.notify(identifier++, b.build());
                 WorkoutActivity activity = (WorkoutActivity) context;
                 activity.finishedExercise();
             }
         };
-        receivers[NotificationFinishCircuit] = new BroadcastReceiver() {
+        receivers[Type.Circuit] = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                NotificationCompat.Builder b = createNotification(context,
-                                                                  NotificationFinishCircuit);
+                NotificationCompat.Builder b = createNotification(context, Type.Circuit);
                 notificationMgr.notify(identifier++, b.build());
                 WorkoutActivity activity = (WorkoutActivity) context;
                 activity.finishedGroup();
             }
         };
-        for (int i = 0; i < 2; ++i)
+        int id = filterId++;
+        for (int i = 0; i < 2; ++i) {
+            filters[i] = ViewHelper.format("%s.%d", baseFilters[i], id);
             outerContext.registerReceiver(receivers[i], new IntentFilter(filters[i]));
+        }
     }
 
     public static void cleanup(Context context) {
@@ -93,7 +98,7 @@ public abstract class WorkoutNotifService {
 
     public static void scheduleAlarm(Context context, long secondsFromNow, byte type) {
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
-        if (type == NotificationFinishCircuit)
+        if (type == Type.Circuit)
             secondsFromNow += 1000;
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, new Intent(filters[type]),
                                                            PendingIntent.FLAG_IMMUTABLE);

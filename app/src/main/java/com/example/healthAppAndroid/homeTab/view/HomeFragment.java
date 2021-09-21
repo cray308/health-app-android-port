@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
             if (viewModel.workoutNames[i] == null) continue;
             StatusButton dayBtn = new StatusButton(context);
             String dayName = days[i].getDisplayName(TextStyle.FULL, Locale.US);
-            dayBtn.setProperties(dayName, viewModel.workoutNames[i], StatusButton.StateActive, true);
+            dayBtn.setProperties(dayName, viewModel.workoutNames[i], StatusButton.State.Active, true);
             ViewHelper.setTag(dayBtn.button, i);
             dayBtn.button.setOnClickListener(dayWorkoutListener);
             weeklyWorkoutStack.addView(dayBtn);
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < count; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;
-            byte state = enabled ? StatusButton.StateDisabled : StatusButton.StateFinished;
+            byte state = enabled ? StatusButton.State.Disabled : StatusButton.State.Finished;
             v.updateStateAndButton(state, enabled);
         }
     }

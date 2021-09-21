@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.BaseTextValidator;
-import com.example.healthAppAndroid.common.helpers.InputValidator;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.InputView;
 import com.example.healthAppAndroid.common.workouts.Workout;
@@ -110,36 +109,34 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         picker.setAdapter(adapter);
         picker.setSelection(0);
 
-        short[] maxes = {0, 0, 0};
+        short[] maxes = {5, 5, 100};
         String[] titles = {
             getString(R.string.setupWorkoutSets), getString(R.string.setupWorkoutReps), null
         };
 
         switch (params.type) {
-            case Workout.TypeStrength:
+            case Workout.Type.Strength:
                 titles[2] = getString(R.string.setupWorkoutMaxWeight);
-                maxes[0] = maxes[1] = 5;
-                maxes[2] = 100;
-                validator.disableButton();
                 break;
-            case Workout.TypeSE:
+            case Workout.Type.SE:
                 maxes[0] = 3;
                 maxes[1] = 50;
-                validator.disableButton();
                 break;
-            case Workout.TypeEndurance:
+            case Workout.Type.Endurance:
                 titles[0] = null;
                 titles[1] = getString(R.string.setupWorkoutDuration);
                 maxes[1] = 180;
-                validator.disableButton();
+                break;
             default:
+                titles[0] = titles[1] = null;
+                validator.enableButton();
         }
 
         for (int i = 0; i < 3; ++i) {
             if (titles[i] == null) continue;
             InputView v = new InputView(c);
             v.field.setHint(titles[i]);
-            validator.children[i] = new InputValidator((short) 1, maxes[i], v, validator);
+            validator.addChild(i, (short) 1, maxes[i], v);
             inputViewStack.addView(v);
             Space space = new Space(c);
             space.setMinimumHeight(20);

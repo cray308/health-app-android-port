@@ -13,18 +13,19 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class HistoryViewModel {
+    public static abstract class Format {
+        public static final byte Short = 0, Long = 1;
+    }
+
     private String[] wordMonths;
     private String[] numMonths;
     private String[] workoutNames;
     private String[] liftNames;
-    public static final byte FormatShort = 0;
-    public static final byte FormatLong = 1;
 
     public static class TotalWorkoutsChartViewModel {
         public Entry[] entries;
         public String legendLabel = "";
-        public float avgWorkouts;
-        public float yMax;
+        public float avgWorkouts, yMax;
     }
 
     public static class WorkoutTypeChartViewModel {
@@ -53,10 +54,7 @@ public class HistoryViewModel {
 
     public static class WeekDataModel {
         public static class WeekModel {
-            public final int year;
-            public final int month;
-            public final int day;
-            public final int totalWorkouts;
+            public final int year, month, day, totalWorkouts;
             public final int[] durationByType = {0, 0, 0, 0};
             public final int[] cumulativeDuration = {0, 0, 0, 0};
             public final int[] weightArray = {0, 0, 0, 0};
@@ -103,7 +101,7 @@ public class HistoryViewModel {
     }
 
     public void formatDataForTimeRange(Context context, int index) {
-        formatType = FormatShort;
+        formatType = Format.Short;
         totalWorkoutsViewModel.avgWorkouts = 0;
         totalWorkoutsViewModel.yMax = 0;
         workoutTypeViewModel.yMax = 0;
@@ -129,7 +127,7 @@ public class HistoryViewModel {
         if (startIndex < 0)
             startIndex = 0;
         if (data.size - startIndex >= 7)
-            formatType = FormatLong;
+            formatType = Format.Long;
 
         int nEntries = data.size - startIndex;
 
@@ -193,7 +191,7 @@ public class HistoryViewModel {
 
     public String getXAxisLabel(int index) {
         WeekDataModel.WeekModel model = data.arr[index];
-        if (formatType == FormatShort) {
+        if (formatType == Format.Short) {
             return ViewHelper.format("%s %d", wordMonths[model.month], model.day);
         } else {
             return ViewHelper.format("%s/%d/%d", numMonths[model.month], model.day, model.year);

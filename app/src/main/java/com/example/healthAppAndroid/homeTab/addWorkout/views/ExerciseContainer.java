@@ -14,9 +14,9 @@ import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.workouts.ExerciseGroup;
 
 public class ExerciseContainer extends ConstraintLayout {
-    public View divider;
-    public TextView headerLabel;
-    public ExerciseView[] viewsArr;
+    View divider;
+    TextView headerLabel;
+    ExerciseView[] viewsArr;
 
     public ExerciseContainer(@NonNull Context context) {
         super(context);
@@ -34,7 +34,7 @@ public class ExerciseContainer extends ConstraintLayout {
         headerLabel = findViewById(R.id.headerLabel);
     }
 
-    public void setup(ExerciseGroup g, int idx, View.OnClickListener action) {
+    void setup(ExerciseGroup g, int idx, View.OnClickListener action) {
         int size = g.exercises.length;
         viewsArr = new ExerciseView[size];
         Context context = getContext();
@@ -44,7 +44,7 @@ public class ExerciseContainer extends ConstraintLayout {
         for (int i = 0; i < size; ++i) {
             int tag = (idx << 8) | (i + 1);
             ExerciseView v = new ExerciseView(context);
-            v.setup(g.exercises[0], tag, action);
+            v.setup(g.exercises[i], tag, action);
             vStack.addView(v);
             viewsArr[i] = v;
         }

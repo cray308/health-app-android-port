@@ -14,6 +14,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Workout {
+    public static abstract class Type {
+        public static final byte Strength = 0, SE = 1, Endurance = 2, HIC = 3;
+    }
+    public static abstract class Transition {
+        public static final byte CompletedWorkout = 0;
+        public static final byte FinishedCircuitDeleteFirst = 1, FinishedCircuit = 2;
+        public static final byte FinishedExercise = 3, NoChange = 4;
+    }
+    public static abstract class EventOption {
+        public static final byte StartGroup = 1, FinishGroup = 2;
+    }
+    public static final long MinWorkoutDuration = 15;
+
+    private static abstract class LiftWorkout {
+        private static abstract class Index {
+            static final int main = 0, test = 2;
+        }
+        private static abstract class Main {
+            static final byte pullUp = 2;
+        }
+        private static abstract class Aux {
+            static final byte deadlift = 2;
+        }
+        private static final byte benchIndex = 1;
+
+        static void populateWeights(ExerciseEntry[] exercises, int index, float multiplier) {
+            LiftData lifts = AppUserData.shared.liftData;
+            exercises[LiftType.squat].weight = (int) (multiplier * (float) lifts.squat);
+            if (index != Index.test) {
+                exercises[benchIndex].weight = (int) (multiplier * (float) lifts.bench);
+                if (index == Index.main) {
+                    exercises[Main.pullUp].weight = (int) (multiplier * (float) lifts.pullUp);
+                } else {
+                    exercises[Aux.deadlift].weight = (int) (multiplier * (float) lifts.deadlift);
+                }
+            } else {
+                exercises[LiftType.pullUp].weight = (int) (multiplier * (float) lifts.pullUp);
+                exercises[LiftType.bench].weight = (int) (multiplier * (float) lifts.bench);
+                exercises[LiftType.deadlift].weight = (int) (multiplier * (float) lifts.deadlift);
+            }
+        }
+    }
+
     public static class Params {
         public final byte day;
         public byte type;
@@ -21,28 +64,23 @@ public class Workout {
 
         public Params(byte day) { this.day = day; }
     }
-    public static final byte TypeStrength = 0;
-    public static final byte TypeSE = 1;
-    public static final byte TypeEndurance = 2;
-    public static final byte TypeHIC = 3;
 
-    public static final byte TransitionCompletedWorkout = 0;
-    public static final byte TransitionFinishedCircuitDeleteFirst = 1;
-    public static final byte TransitionFinishedCircuit = 2;
-    public static final byte TransitionFinishedExercise = 3;
-    public static final byte TransitionNoChange = 4;
+    public static class LiftData {
+        public short squat, pullUp, bench, deadlift;
 
-    public static final byte EventOptionStartGroup = 1;
-    public static final byte EventOptionFinishGroup = 2;
+        public LiftData() {}
+        public LiftData(short squat, short pullUp, short bench, short deadlift) {
+            this.squat = squat;
+            this.pullUp = pullUp;
+            this.bench = bench;
+            this.deadlift = deadlift;
+        }
+    }
 
-    public static final long MinWorkoutDuration = 15;
-
-    public final byte type;
-    public final byte day;
+    public final byte type, day;
     public int index;
-    public long startTime;
-    public long duration;
-    public short[] newLifts;
+    public long startTime, duration;
+    public LiftData newLifts;
     public String title;
     public ExerciseGroup group;
     public ExerciseEntry entry;
@@ -72,34 +110,19 @@ public class Workout {
         if (!success) return;
         ExerciseEntry[] exercises = activities[0].exercises;
         switch (type) {
-            case TypeStrength:
-                short[] lifts = AppUserData.shared.liftMaxes;
-                int nExercises = exercises.length;
-                double weightMultiplier = (double) params.weight / 100.0;
+            case Type.Strength:
                 for (ExerciseEntry e : exercises) {
                     e.sets = params.sets;
                     e.reps = params.reps;
                 }
-                exercises[0].weight = (int) (weightMultiplier * (double) lifts[0]);
-
-                if (nExercises >= 3 && params.index <= 1) {
-                    exercises[1].weight = (int) (weightMultiplier * (double) lifts[2]);
-                    if (params.index == 0) {
-                        exercises[2].weight = (int) (weightMultiplier * (double) lifts[1]);
-                    } else {
-                        exercises[2].weight = (int) (weightMultiplier * (double) lifts[3]);
-                    }
-                } else if (nExercises >= 4 && params.index == 2) {
-                    for (int i = 1; i < 4; ++i)
-                        exercises[i].weight = lifts[i];
-                }
+                LiftWorkout.populateWeights(exercises, params.index, params.weight / 100f);
                 break;
-            case TypeSE:
+            case Type.SE:
                 activities[0].reps = params.sets;
                 for (ExerciseEntry e : exercises)
                     e.reps = params.reps;
                 break;
-            case TypeEndurance:
+            case Type.Endurance:
                 int duration = params.reps * 60;
                 for (ExerciseEntry e : exercises)
                     e.reps = duration;
@@ -114,52 +137,51 @@ public class Workout {
         group.index = 0;
         entry = group.exercises[0];
         for (ExerciseEntry e : group.exercises) {
-            e.state = ExerciseEntry.StateDisabled;
+            e.state = ExerciseEntry.State.Disabled;
             e.completedSets = 0;
         }
 
-        if (group.type == ExerciseGroup.TypeAMRAP && startTimer) {
+        if (group.type == ExerciseGroup.Type.AMRAP && startTimer) {
             int duration = 60 * group.reps;
-            WorkoutNotifService.scheduleAlarm(
-                context, duration, WorkoutNotifService.NotificationFinishCircuit);
+            WorkoutNotifService.scheduleAlarm(context, duration, WorkoutNotifService.Type.Circuit);
         }
     }
 
     public byte findTransitionForEvent(Context context, ExerciseView view, byte option) {
-        byte t = TransitionNoChange;
+        byte t = Transition.NoChange;
         if (option != 0) {
-            t = TransitionFinishedCircuit;
-            if (option == EventOptionFinishGroup) {
+            t = Transition.FinishedCircuit;
+            if (option == EventOption.FinishGroup) {
                 if (++index == activities.length)
-                    return TransitionCompletedWorkout;
+                    return Transition.CompletedWorkout;
                 group = activities[index];
-                t = TransitionFinishedCircuitDeleteFirst;
+                t = Transition.FinishedCircuitDeleteFirst;
             }
             startGroup(context, true);
             entry.cycle(context);
             return t;
         }
 
-        if (entry.type == ExerciseEntry.TypeDuration &&
-            entry.state == ExerciseEntry.StateActive && !view.userInteractionEnabled) {
+        if (entry.type == ExerciseEntry.Type.Duration &&
+            entry.state == ExerciseEntry.State.Active && !view.userInteractionEnabled) {
             view.userInteractionEnabled = true;
             view.button.setEnabled(true);
-            if (type == TypeEndurance)
-                return TransitionNoChange;
+            if (type == Type.Endurance)
+                return Transition.NoChange;
         }
 
         boolean exerciseDone = entry.cycle(context);
         view.configure(entry);
 
         if (exerciseDone) {
-            t = TransitionFinishedExercise;
+            t = Transition.FinishedExercise;
             if (++group.index == group.exercises.length) {
-                t = TransitionFinishedCircuit;
+                t = Transition.FinishedCircuit;
                 if (group.didFinish()) {
                     if (++index == activities.length) {
-                        t = TransitionCompletedWorkout;
+                        t = Transition.CompletedWorkout;
                     } else {
-                        t = TransitionFinishedCircuitDeleteFirst;
+                        t = Transition.FinishedCircuitDeleteFirst;
                         group = activities[index];
                         startGroup(context, true);
                         entry.cycle(context);

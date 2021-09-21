@@ -14,7 +14,7 @@
         app:sepHeader="@string/chartHeaderLifts" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/liftChart"
+        android:id="@+id/chartView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginTop="5dp" />

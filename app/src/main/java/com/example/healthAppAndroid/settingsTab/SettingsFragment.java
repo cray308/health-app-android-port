@@ -14,11 +14,9 @@ import android.widget.RadioGroup;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.BaseTextValidator;
-import com.example.healthAppAndroid.common.helpers.InputValidator;
-import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
-import com.example.healthAppAndroid.common.views.InputView;
+import com.example.healthAppAndroid.common.workouts.LiftType;
 
 public class SettingsFragment extends Fragment {
     public SettingsTabCoordinator delegate;
@@ -36,9 +34,7 @@ public class SettingsFragment extends Fragment {
                 } else if (segmentId == R.id.segmentContinuation) {
                     plan = 1;
                 }
-                short[] results = {validator.children[0].result, validator.children[1].result,
-                    validator.children[2].result, validator.children[3].result};
-                delegate.handleSaveTap(results, plan);
+                delegate.handleSaveTap(validator.getLiftData(), plan);
             } else {
                 delegate.handleDeleteTap();
             }
@@ -64,10 +60,8 @@ public class SettingsFragment extends Fragment {
         saveButton.setOnClickListener(listener);
         deleteButton.setOnClickListener(listener);
         validator = new BaseTextValidator(saveButton, AppColors.blue);
-        for (int i = 0; i < 4; ++i) {
-            InputView v = view.findViewById(ids[i]);
-            validator.children[i] = new InputValidator((short) 999, v, validator);
-        }
+        for (int i = 0; i < 4; ++i)
+            validator.addChild(i, (short) 0, (short) 999, view.findViewById(ids[i]));
         updateWeightFields();
         byte plan = AppUserData.shared.currentPlan;
         int checked = R.id.segmentNoPlan;
@@ -80,14 +74,10 @@ public class SettingsFragment extends Fragment {
     }
 
     public void updateWeightFields() {
-        for (int i = 0; i < 4; ++i) {
-            short res = AppUserData.shared.liftMaxes[i];
-            validator.children[i].result = res;
-            validator.children[i].valid = true;
-            String text = ViewHelper.format("%d", res);
-            validator.children[i].view.field.setError(null);
-            validator.children[i].view.textField.setText(text);
-        }
+        validator.reset(LiftType.squat, AppUserData.shared.liftData.squat);
+        validator.reset(LiftType.pullUp, AppUserData.shared.liftData.pullUp);
+        validator.reset(LiftType.bench, AppUserData.shared.liftData.bench);
+        validator.reset(LiftType.deadlift, AppUserData.shared.liftData.deadlift);
         validator.enableButton();
     }
 }

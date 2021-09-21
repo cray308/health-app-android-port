@@ -21,7 +21,7 @@ public class ExerciseView extends StatusButton {
         super(context, attrs);
     }
 
-    public void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
+    void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
         button.setId(tag);
         button.setOnClickListener(action);
         configure(e);
@@ -33,15 +33,15 @@ public class ExerciseView extends StatusButton {
         headerLabel.setText(e.createSetsTitle(context));
 
         switch (e.state) {
-            case ExerciseEntry.StateDisabled:
+            case ExerciseEntry.State.Disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 enableButton(false);
                 break;
-            case ExerciseEntry.StateActive:
-                if (e.type == ExerciseEntry.TypeDuration) {
+            case ExerciseEntry.State.Active:
+                if (e.type == ExerciseEntry.Type.Duration) {
                     userInteractionEnabled = false;
                 }
-            case ExerciseEntry.StateResting:
+            case ExerciseEntry.State.Resting:
                 enableButton(true);
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;
@@ -51,7 +51,7 @@ public class ExerciseView extends StatusButton {
         }
     }
 
-    public void enableButton(boolean enabled) {
+    private void enableButton(boolean enabled) {
         if (userInteractionEnabled) {
             button.setEnabled(enabled);
         }

@@ -2,7 +2,6 @@ package com.example.healthAppAndroid.historyTab.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,62 +9,41 @@ import androidx.annotation.Nullable;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
-import com.example.healthAppAndroid.historyTab.helpers.ChartUtility;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-public class LiftingChart extends LinearLayout implements ChartContainer {
-    public LineChart chartView;
-    public LinearLayout legendContainer;
-    private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
-    public HistoryViewModel.LiftChartViewModel viewModel;
-    private final LineDataSet[] dataSets = {null, null, null, null};
-    private LineData data;
+public class LiftingChart extends ChartContainer {
+    HistoryViewModel.LiftChartViewModel viewModel;
 
-    public LiftingChart(Context context) {
-        super(context);
-        setup();
-    }
+    public LiftingChart(Context context) { super(context); }
 
     public LiftingChart(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setup();
     }
 
-    private void setup() {
+    void setup() {
         inflate(getContext(), R.layout.lift_chart, this);
-        chartView = findViewById(R.id.liftChart);
-        legendContainer = findViewById(R.id.legendContainer);
-        legendEntries[0] = findViewById(R.id.firstEntry);
+        init();
         legendEntries[1] = findViewById(R.id.secondEntry);
         legendEntries[2] = findViewById(R.id.thirdEntry);
         legendEntries[3] = findViewById(R.id.fourthEntry);
     }
 
-    public void setup(HistoryViewModel.LiftChartViewModel viewModel,
-                      IndexAxisValueFormatter xAxisFormatter) {
+    void setup(HistoryViewModel.LiftChartViewModel viewModel,
+               IndexAxisValueFormatter xAxisFormatter) {
         this.viewModel = viewModel;
 
         for (int i = 0; i < 4; ++i) {
-            dataSets[i] = ChartUtility.createDataSet(AppColors.chartColors[i]);
+            dataSets[i] = createDataSet(AppColors.chartColors[i]);
             dataSets[i].setLineWidth(2);
         }
 
-        data = ChartUtility.createChartData(dataSets, 4);
-        ChartUtility.setupChartView(chartView, xAxisFormatter);
+        setupChartData(dataSets, 4);
+        setupChartView(xAxisFormatter);
     }
 
-    public void update(int count, boolean isSmall) {
-        for (int i = 0; i < 4; ++i) {
-            legendEntries[i].label.setText(viewModel.legendLabels[i]);
-            ChartUtility.updateDataSet(isSmall, dataSets[i], viewModel.entries[i]);
-        }
-        ChartUtility.updateChart(isSmall, count, this, viewModel.yMax);
+    void update(int count, boolean isSmall) {
+        for (int i = 0; i < 4; ++i)
+            updateData(i, isSmall, viewModel.entries[i], i, viewModel.legendLabels[i]);
+        update(isSmall, count, viewModel.yMax);
     }
-
-    public LineChart getChartView() { return chartView; }
-    public LinearLayout getLegend() { return legendContainer; }
-    public LineData getData() { return data; }
 }

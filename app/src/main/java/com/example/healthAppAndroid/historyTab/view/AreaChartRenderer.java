@@ -17,7 +17,7 @@ import java.util.List;
 
 public class AreaChartRenderer extends LineChartRenderer {
     public static class Formatter implements IFillFormatter {
-        public final LineDataSet boundaryDataSet;
+        private final LineDataSet boundaryDataSet;
 
         public Formatter(LineDataSet boundaryDataSet) { this.boundaryDataSet = boundaryDataSet; }
 

@@ -14,14 +14,13 @@ import android.widget.RadioGroup;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
-import com.example.healthAppAndroid.historyTab.helpers.ChartUtility;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 public class HistoryFragment extends Fragment {
-    public static class Formatter extends IndexAxisValueFormatter {
+    private static class Formatter extends IndexAxisValueFormatter {
         private final HistoryViewModel viewModel;
 
-        public Formatter(HistoryViewModel viewModel) { this.viewModel = viewModel; }
+        private Formatter(HistoryViewModel viewModel) { this.viewModel = viewModel; }
 
         @Override public String getFormattedValue(float value) {
             return viewModel.getXAxisLabel((int) value);
@@ -51,10 +50,8 @@ public class HistoryFragment extends Fragment {
         workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
         liftingChart = view.findViewById(R.id.liftContainer);
         Context context = getContext();
-        if (context != null) {
-            System.out.println("Context is not null for history");
+        if (context != null)
             viewModel.setup(context);
-        }
 
         totalWorkoutsChart.setup(viewModel.totalWorkoutsViewModel, formatter);
         workoutTypeChart.setup(viewModel.workoutTypeViewModel, formatter);
@@ -81,14 +78,14 @@ public class HistoryFragment extends Fragment {
 
     private void updateCharts() {
         if (viewModel.data.size == 0) {
-            ChartUtility.disableLineChartView(totalWorkoutsChart);
-            ChartUtility.disableLineChartView(workoutTypeChart);
-            ChartUtility.disableLineChartView(liftingChart);
+            totalWorkoutsChart.disable();
+            workoutTypeChart.disable();
+            liftingChart.disable();
             return;
         }
 
         int count = viewModel.totalWorkoutsViewModel.entries.length;
-        boolean isSmall = viewModel.formatType == HistoryViewModel.FormatShort;
+        boolean isSmall = viewModel.formatType == HistoryViewModel.Format.Short;
         totalWorkoutsChart.update(count, isSmall);
         workoutTypeChart.update(count, isSmall);
         liftingChart.update(count, isSmall);

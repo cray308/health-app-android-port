@@ -42,26 +42,26 @@
         </LinearLayout>
 
         <com.example.healthAppAndroid.common.views.InputView
-            android:id="@+id/updateMaxSquat"
+            android:id="@+id/firstInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:fieldHint="@string/maxWeightSquat" />
 
         <com.example.healthAppAndroid.common.views.InputView
-            android:id="@+id/updateMaxPullUp"
+            android:id="@+id/secondInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightPullUp" />
 
         <com.example.healthAppAndroid.common.views.InputView
-            android:id="@+id/updateMaxBench"
+            android:id="@+id/thirdInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightBench" />
 
         <com.example.healthAppAndroid.common.views.InputView
-            android:id="@+id/updateMaxDeadlift"
+            android:id="@+id/fourthInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightDeadLift" />

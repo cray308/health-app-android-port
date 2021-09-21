@@ -5,23 +5,28 @@ import android.content.SharedPreferences;
 
 import com.example.healthAppAndroid.BuildConfig;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
+import com.example.healthAppAndroid.common.workouts.Workout;
 
 public class AppUserData {
+    private static abstract class Keys {
+        static final String planStart = "planStart";
+        static final String weekStart = "weekStart";
+        static final String tzOffset = "tzOffset";
+        static final String currentPlan = "currentPlan";
+        static final String completedWorkouts = "completedWorkouts";
+        static final String squatMax = "squatMax";
+        static final String pullUpMax = "pullUpMax";
+        static final String benchMax = "benchMax";
+        static final String deadLiftMax = "deadLiftMax";
+    }
     private final static String userDefaultsKey = "HealthAppPrefs";
-
-    private static final String[] keys = {
-            "planStart", "weekStart", "tzOffset", "currentPlan", "completedWorkouts",
-            "squatMax", "pullUpMax", "benchMax", "deadLiftMax"
-    };
 
     private final SharedPreferences prefs;
 
-    public long planStart;
-    public long weekStart;
+    public long planStart, weekStart;
     public int tzOffset;
-    public byte currentPlan = -1;
-    public byte completedWorkouts;
-    public final short[] liftMaxes = {0, 0, 0, 0};
+    public byte currentPlan = -1, completedWorkouts;
+    public final Workout.LiftData liftData = new Workout.LiftData();
 
     public static AppUserData shared;
 
@@ -46,13 +51,15 @@ public class AppUserData {
 
     private AppUserData(Context context) {
         prefs = getDict(context);
-        planStart = prefs.getLong(keys[0], -1);
-        weekStart = prefs.getLong(keys[1], 0);
-        tzOffset = prefs.getInt(keys[2], 0);
-        currentPlan = (byte) prefs.getInt(keys[3], -1);
-        completedWorkouts = (byte) prefs.getInt(keys[4], 0);
-        for (int i = 0; i < 4; ++i)
-            liftMaxes[i] = (short) prefs.getInt(keys[5 + i], 0);
+        planStart = prefs.getLong(Keys.planStart, -1);
+        weekStart = prefs.getLong(Keys.weekStart, 0);
+        tzOffset = prefs.getInt(Keys.tzOffset, 0);
+        currentPlan = (byte) prefs.getInt(Keys.currentPlan, -1);
+        completedWorkouts = (byte) prefs.getInt(Keys.completedWorkouts, 0);
+        liftData.squat = (short) prefs.getInt(Keys.squatMax, 0);
+        liftData.bench = (short) prefs.getInt(Keys.benchMax, 0);
+        liftData.pullUp = (short) prefs.getInt(Keys.pullUpMax, 0);
+        liftData.deadlift = (short) prefs.getInt(Keys.deadLiftMax, 0);
     }
 
     public void saveData() {
@@ -62,13 +69,15 @@ public class AppUserData {
     }
 
     private void writePrefs(SharedPreferences.Editor editor) {
-        editor.putLong(keys[0], planStart);
-        editor.putLong(keys[1], weekStart);
-        editor.putInt(keys[2], tzOffset);
-        editor.putInt(keys[3], currentPlan);
-        editor.putInt(keys[4], completedWorkouts);
-        for (int i = 0; i < 4; ++i)
-            editor.putInt(keys[5 + i], liftMaxes[i]);
+        editor.putLong(Keys.planStart, planStart);
+        editor.putLong(Keys.weekStart, weekStart);
+        editor.putInt(Keys.tzOffset, tzOffset);
+        editor.putInt(Keys.currentPlan, currentPlan);
+        editor.putInt(Keys.completedWorkouts, completedWorkouts);
+        editor.putInt(Keys.squatMax, liftData.squat);
+        editor.putInt(Keys.benchMax, liftData.bench);
+        editor.putInt(Keys.pullUpMax, liftData.pullUp);
+        editor.putInt(Keys.deadLiftMax, liftData.deadlift);
     }
 
     public void setWorkoutPlan(byte plan) {
@@ -131,11 +140,15 @@ public class AppUserData {
         return (int) ((weekStart - planStart) / DateHelper.weekSeconds);
     }
 
-    public void updateWeightMaxes(short[] weights) {
-        for (int i = 0; i < 4; ++i) {
-            if (weights[i] > liftMaxes[i])
-                liftMaxes[i] = weights[i];
-        }
+    public void updateWeightMaxes(Workout.LiftData newData) {
+        if (newData.squat > liftData.squat)
+            liftData.squat = newData.squat;
+        if (newData.pullUp > liftData.pullUp)
+            liftData.pullUp = newData.pullUp;
+        if (newData.bench > liftData.bench)
+            liftData.bench = newData.bench;
+        if (newData.deadlift > liftData.deadlift)
+            liftData.deadlift = newData.deadlift;
         saveData();
     }
 }

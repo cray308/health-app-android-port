@@ -47,9 +47,10 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:enabled="false"
                 android:text="@string/go"
                 android:textAllCaps="false"
-                android:textColor="@color/systemBlue"
+                android:textColor="@color/secondaryLabel"
                 android:textSize="17sp"
                 app:iconTint="@null" />
         </LinearLayout>

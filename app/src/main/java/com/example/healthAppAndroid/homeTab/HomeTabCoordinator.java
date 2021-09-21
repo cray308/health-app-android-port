@@ -20,10 +20,9 @@ import com.example.healthAppAndroid.homeTab.view.HomeSetupWorkoutDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class HomeTabCoordinator {
-    private static final int CustomWorkoutIndexTestMax = 0;
-    private static final int CustomWorkoutIndexEndurance = 1;
-    private static final int CustomWorkoutIndexSE = 3;
-    private static final int CustomWorkoutIndexHIC = 4;
+    private static abstract class CustomWorkoutIndex {
+        private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
+    }
 
     private final HomeFragment fragment;
     private final HomeViewModel viewModel;
@@ -79,17 +78,17 @@ public class HomeTabCoordinator {
 
     public void addWorkoutFromCustomButton(int index) {
         Context context = fragment.getContext();
-        byte type = Workout.TypeStrength;
+        byte type = Workout.Type.Strength;
         switch (index) {
-            case CustomWorkoutIndexSE:
-                type = Workout.TypeSE;
+            case CustomWorkoutIndex.SE:
+                type = Workout.Type.SE;
                 break;
-            case CustomWorkoutIndexHIC:
-                type = Workout.TypeHIC;
+            case CustomWorkoutIndex.HIC:
+                type = Workout.Type.HIC;
                 break;
-            case CustomWorkoutIndexTestMax:
+            case CustomWorkoutIndex.TestMax:
                 Workout.Params params = new Workout.Params((byte) -1);
-                params.type = Workout.TypeStrength;
+                params.type = Workout.Type.Strength;
                 params.index = 2;
                 params.sets = params.reps = 1;
                 params.weight = 100;
@@ -97,8 +96,8 @@ public class HomeTabCoordinator {
                 if (w != null)
                     navigateToAddWorkout(null, w);
                 return;
-            case CustomWorkoutIndexEndurance:
-                type = Workout.TypeEndurance;
+            case CustomWorkoutIndex.Endurance:
+                type = Workout.Type.Endurance;
             default:
                 break;
         }

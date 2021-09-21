@@ -22,8 +22,8 @@ import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.WorkoutNotifService;
 
 public class WorkoutActivity extends AppCompatActivity {
-    public WorkoutCoordinator delegate;
-    public Workout workout;
+    private WorkoutCoordinator delegate;
+    private Workout workout;
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
 
@@ -78,7 +78,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 btn.setText(getString(R.string.end));
                 btn.setTextColor(AppColors.red);
                 workout.startTime = DateHelper.getCurrentTime();
-                handleTap(0, 0, Workout.EventOptionStartGroup);
+                handleTap(0, 0, Workout.EventOption.StartGroup);
             } else {
                 workout.setDuration();
                 delegate.stoppedWorkout(WorkoutActivity.this);
@@ -93,29 +93,29 @@ public class WorkoutActivity extends AppCompatActivity {
         handleTap(groupIdx, exerciseIdx, (byte) 0);
     };
 
-    public void handleTap(int groupIdx, int exerciseIdx, byte option) {
+    private void handleTap(int groupIdx, int exerciseIdx, byte option) {
         boolean finishedWorkout = false;
         if (groupIdx != workout.index || exerciseIdx != workout.group.index) {
-            if (option != Workout.EventOptionFinishGroup || groupIdx != workout.index) return;
+            if (option != Workout.EventOption.FinishGroup || groupIdx != workout.index) return;
         }
 
         ExerciseView v = firstContainer.viewsArr[workout.group.index];
         switch (workout.findTransitionForEvent(this, v, option)) {
-            case Workout.TransitionCompletedWorkout:
+            case Workout.Transition.CompletedWorkout:
                 finishedWorkout = true;
                 workout.setDuration();
                 break;
-            case Workout.TransitionFinishedCircuitDeleteFirst:
+            case Workout.Transition.FinishedCircuitDeleteFirst:
                 firstContainer = (ExerciseContainer) groupsStack.getChildAt(1);
                 groupsStack.removeViewAt(0);
-            case Workout.TransitionFinishedCircuit:
+            case Workout.Transition.FinishedCircuit:
                 firstContainer.divider.setVisibility(View.GONE);
                 firstContainer.headerLabel.setText(workout.group.createHeader(this));
                 int i = 0;
                 for (ExerciseEntry e : workout.group.exercises)
                     firstContainer.viewsArr[i++].configure(e);
                 break;
-            case Workout.TransitionFinishedExercise:
+            case Workout.Transition.FinishedExercise:
                 v = firstContainer.viewsArr[workout.group.index];
                 v.configure(workout.entry);
             default:
@@ -126,7 +126,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void finishedGroup() {
-        handleTap(workout.index, 255, Workout.EventOptionFinishGroup);
+        handleTap(workout.index, 255, Workout.EventOption.FinishGroup);
     }
 
     public void finishedExercise() {

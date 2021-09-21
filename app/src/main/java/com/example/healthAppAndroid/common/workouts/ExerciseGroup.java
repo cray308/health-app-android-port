@@ -10,13 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ExerciseGroup {
-    public static final byte TypeRounds = 0;
-    public static final byte TypeAMRAP = 1;
-    public static final byte TypeDecrement = 2;
+    public static abstract class Type {
+        public static final byte Rounds = 0, AMRAP = 1, Decrement = 2;
+    }
 
     public byte type;
-    public int reps, completedReps;
-    public int index;
+    public int reps, completedReps, index;
     public ExerciseEntry[] exercises;
 
     public ExerciseGroup(JSONObject g) {
@@ -38,10 +37,10 @@ public class ExerciseGroup {
     }
 
     public String createHeader(Context context) {
-        if (type == TypeRounds && reps > 1) {
+        if (type == Type.Rounds && reps > 1) {
             int completed = completedReps == reps ? reps : completedReps + 1;
             return context.getString(R.string.circuitHeaderRounds, completed, reps);
-        } else if (type == TypeAMRAP) {
+        } else if (type == Type.AMRAP) {
             return context.getString(R.string.circuitHeaderAMRAP, reps);
         }
         return null;
@@ -50,17 +49,17 @@ public class ExerciseGroup {
     public boolean didFinish() {
         boolean isDone = false;
         switch (type) {
-            case TypeRounds:
+            case Type.Rounds:
                 if (++completedReps == reps)
                     isDone = true;
                 break;
 
-            case TypeDecrement:
+            case Type.Decrement:
                 if (--completedReps == 0) {
                     isDone = true;
                 } else {
                     for (ExerciseEntry e : exercises) {
-                        if (e.type == ExerciseEntry.TypeReps)
+                        if (e.type == ExerciseEntry.Type.Reps)
                             e.reps -= 1;
                     }
                 }

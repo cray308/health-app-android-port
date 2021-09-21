@@ -14,9 +14,11 @@ import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 
 public class StatusButton extends ConstraintLayout {
-    public final static byte StateDisabled = 0;
-    public final static byte StateActive = 1;
-    public final static byte StateFinished = 3;
+    public static abstract class State {
+        public final static byte Disabled = 0;
+        public final static byte Active = 1;
+        public final static byte Finished = 3;
+    }
 
     public View checkbox;
     public TextView headerLabel;
@@ -70,10 +72,10 @@ public class StatusButton extends ConstraintLayout {
         button.setEnabled(enableButton);
         button.setTextColor(enableButton ? AppColors.labelNormal : AppColors.labelDisabled);
         switch (state) {
-            case StateDisabled:
+            case State.Disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 break;
-            case StateActive:
+            case State.Active:
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;
             default:

@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import com.example.healthAppAndroid.R;
 
 public class HistoryChartLegendEntry extends LinearLayout {
-    public View form;
-    public TextView label;
+    View form;
+    TextView label;
 
     public HistoryChartLegendEntry(Context context) {
         super(context);

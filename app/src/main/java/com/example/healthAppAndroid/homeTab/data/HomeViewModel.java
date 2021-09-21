@@ -9,9 +9,9 @@ import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 import java.time.LocalDateTime;
 
 public class HomeViewModel {
-    static final byte TimeMorning = 0;
-    static final byte TimeAfternoon = 1;
-    static final byte TimeEvening = 2;
+    private static abstract class Time {
+        private static final byte morning = 0, afternoon = 1, evening = 2;
+    }
 
     public final String[] workoutNames = {null, null, null, null, null, null, null};
     public byte timeOfDay;
@@ -32,14 +32,14 @@ public class HomeViewModel {
         LocalDateTime localInfo = DateHelper.localTime(DateHelper.getCurrentTime());
         int hour = localInfo.getHour();
 
-        if (hour >= 5 && hour < 12 && timeOfDay != TimeMorning) {
-            timeOfDay = TimeMorning;
+        if (hour >= 5 && hour < 12 && timeOfDay != Time.morning) {
+            timeOfDay = Time.morning;
             return true;
-        } else if (hour >= 12 && hour < 17 && timeOfDay != TimeAfternoon) {
-            timeOfDay = TimeAfternoon;
+        } else if (hour >= 12 && hour < 17 && timeOfDay != Time.afternoon) {
+            timeOfDay = Time.afternoon;
             return true;
-        } else if ((hour < 5 || hour >= 17) && timeOfDay != TimeEvening) {
-            timeOfDay = TimeEvening;
+        } else if ((hour < 5 || hour >= 17) && timeOfDay != Time.evening) {
+            timeOfDay = Time.evening;
             return true;
         }
         return false;

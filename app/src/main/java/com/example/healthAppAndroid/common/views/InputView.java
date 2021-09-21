@@ -33,7 +33,7 @@ public class InputView extends ConstraintLayout {
 
         if (attrs != null) {
             TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                    attrs, R.styleable.InputView, 0, 0);
+                attrs, R.styleable.InputView, 0, 0);
             try {
                 hintText = a.getString(R.styleable.InputView_fieldHint);
             } finally {

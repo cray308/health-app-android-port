@@ -14,9 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class ExerciseManager {
     private static class DictWrapper {
-        final JSONObject root;
-        final JSONObject lib;
-
+        final JSONObject root, lib;
         static final String[] libraryKeys = {"st", "se", "en", "hi"};
 
         DictWrapper(JSONObject root, JSONObject lib) {
@@ -133,7 +131,7 @@ public abstract class ExerciseManager {
         JSONArray libArr = data.getLibraryArrayForType(type);
         if (libArr == null || ((len = libArr.length()) == 0)) return null;
 
-        if (type == Workout.TypeStrength)
+        if (type == Workout.Type.Strength)
             len = 2;
         results = new String[len];
 

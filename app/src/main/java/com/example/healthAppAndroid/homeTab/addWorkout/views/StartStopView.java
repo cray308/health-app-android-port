@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import com.example.healthAppAndroid.R;
 
 public class StartStopView extends LinearLayout {
-    public Button btn;
+    Button btn;
 
     public StartStopView(Context context) {
         super(context);
