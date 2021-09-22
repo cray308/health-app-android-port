@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -35,14 +34,12 @@ public class HistoryFragment extends Fragment {
 
     public HistoryFragment() {}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater,
+                                       ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Formatter formatter = new Formatter(viewModel);
         rangePicker = view.findViewById(R.id.rangePicker);
@@ -60,11 +57,11 @@ public class HistoryFragment extends Fragment {
     }
 
     private final RadioGroup.OnCheckedChangeListener segmentListener = (radioGroup, i) -> {
-        int segment = 0;
+        byte segment = HistoryViewModel.Segment.sixMonths;
         if (i == R.id.segmentCenter) {
-            segment = 1;
+            segment = HistoryViewModel.Segment.oneYear;
         } else if (i == R.id.segmentRight) {
-            segment = 2;
+            segment = HistoryViewModel.Segment.twoYears;
         }
         viewModel.formatDataForTimeRange(getContext(), segment);
         updateCharts();

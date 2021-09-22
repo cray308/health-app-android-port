@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
-import com.example.healthAppAndroid.common.shareddata.WeeklyData;
+import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.github.mikephil.charting.data.Entry;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,13 @@ import java.util.Arrays;
 
 public class HistoryViewModel {
     public static abstract class Format {
-        public static final byte Short = 0, Long = 1;
+        public static final byte Short = 0;
+        public static final byte Long = 1;
+    }
+    public static abstract class Segment {
+        public static final byte sixMonths = 0;
+        public static final byte oneYear = 1;
+        public static final byte twoYears = 2;
     }
 
     private String[] wordMonths;
@@ -24,13 +30,14 @@ public class HistoryViewModel {
 
     public static class TotalWorkoutsChartViewModel {
         public Entry[] entries;
-        public String legendLabel = "";
-        public float avgWorkouts, yMax;
+        public String legendLabel;
+        public float avgWorkouts;
+        public float yMax;
     }
 
     public static class WorkoutTypeChartViewModel {
         public final Entry[][] entries = {null, null, null, null, null};
-        public final String[] legendLabels = {"", "", "", ""};
+        public final String[] legendLabels = {null, null, null, null};
         public final int[] totalByType = {0, 0, 0, 0};
         public float yMax;
 
@@ -47,19 +54,22 @@ public class HistoryViewModel {
 
     public static class LiftChartViewModel {
         public final Entry[][] entries = {null, null, null, null};
-        public final String[] legendLabels = {"", "", "", ""};
+        public final String[] legendLabels = {null, null, null, null};
         public final int[] totalByExercise = {0, 0, 0, 0};
         public float yMax;
     }
 
     public static class WeekDataModel {
-        public static class WeekModel {
-            public final int year, month, day, totalWorkouts;
+        public static class Week {
+            public final int year;
+            public final int month;
+            public final int day;
+            public final int totalWorkouts;
             public final int[] durationByType = {0, 0, 0, 0};
             public final int[] cumulativeDuration = {0, 0, 0, 0};
             public final int[] weightArray = {0, 0, 0, 0};
 
-            public WeekModel(WeeklyData d) {
+            public Week(PersistenceService.WeeklyData d) {
                 int timeStrength = d.timeStrength;
                 LocalDateTime localInfo = DateHelper.localTime(d.start);
 
@@ -83,7 +93,7 @@ public class HistoryViewModel {
         }
 
         public int size;
-        public final WeekModel[] arr = new WeekModel[128];
+        public final Week[] arr = new Week[128];
     }
 
     public byte formatType;
@@ -100,7 +110,7 @@ public class HistoryViewModel {
         liftNames = res.getStringArray(R.array.liftTypes);
     }
 
-    public void formatDataForTimeRange(Context context, int index) {
+    public void formatDataForTimeRange(Context context, byte index) {
         formatType = Format.Short;
         totalWorkoutsViewModel.avgWorkouts = 0;
         totalWorkoutsViewModel.yMax = 0;
@@ -118,9 +128,9 @@ public class HistoryViewModel {
         if (data.size == 0) return;
 
         int startIndex = 0;
-        if (index == 0) {
+        if (index == Segment.sixMonths) {
             startIndex = data.size - 26;
-        } else if (index == 1) {
+        } else if (index == Segment.oneYear) {
             startIndex = data.size - 52;
         }
 
@@ -139,29 +149,29 @@ public class HistoryViewModel {
         workoutTypeViewModel.entries[4] = new Entry[nEntries];
 
         int totalWorkouts = 0, maxWorkouts = 0, maxActivityTime = 0, maxWeight = 0;
-        for (int i = startIndex, entryIdx = 0; i < data.size; ++i, ++entryIdx) {
-            WeekDataModel.WeekModel e = data.arr[i];
+        for (int i = startIndex, j = 0; i < data.size; ++i, ++j) {
+            WeekDataModel.Week e = data.arr[i];
             int workouts = e.totalWorkouts;
             totalWorkouts += workouts;
             if (workouts > maxWorkouts)
                 maxWorkouts = workouts;
-            totalWorkoutsViewModel.entries[entryIdx] = new Entry(i, workouts);
+            totalWorkoutsViewModel.entries[j] = new Entry(i, workouts);
 
-            for (int j = 0; j < 4; ++j) {
-                workoutTypeViewModel.totalByType[j] += e.durationByType[j];
+            for (int x = 0; x < 4; ++x) {
+                workoutTypeViewModel.totalByType[x] += e.durationByType[x];
 
-                int weight = e.weightArray[j];
-                liftViewModel.totalByExercise[j] += weight;
+                int weight = e.weightArray[x];
+                liftViewModel.totalByExercise[x] += weight;
                 if (weight > maxWeight)
                     maxWeight = weight;
-                liftViewModel.entries[j][entryIdx] = new Entry(i, weight);
+                liftViewModel.entries[x][j] = new Entry(i, weight);
             }
 
             if (e.cumulativeDuration[3] > maxActivityTime)
                 maxActivityTime = e.cumulativeDuration[3];
-            workoutTypeViewModel.entries[0][entryIdx] = new Entry(i, 0);
-            for (int j = 1; j < 5; ++j)
-                workoutTypeViewModel.entries[j][entryIdx] = new Entry(i, e.cumulativeDuration[j - 1]);
+            workoutTypeViewModel.entries[0][j] = new Entry(i, 0);
+            for (int x = 1; x < 5; ++x)
+                workoutTypeViewModel.entries[x][j] = new Entry(i, e.cumulativeDuration[x - 1]);
         }
 
         totalWorkoutsViewModel.avgWorkouts = (float) totalWorkouts / nEntries;
@@ -190,7 +200,7 @@ public class HistoryViewModel {
     }
 
     public String getXAxisLabel(int index) {
-        WeekDataModel.WeekModel model = data.arr[index];
+        WeekDataModel.Week model = data.arr[index];
         if (formatType == Format.Short) {
             return ViewHelper.format("%s %d", wordMonths[model.month], model.day);
         } else {

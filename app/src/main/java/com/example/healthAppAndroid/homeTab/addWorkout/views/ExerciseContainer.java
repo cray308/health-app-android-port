@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.healthAppAndroid.R;
@@ -18,12 +16,12 @@ public class ExerciseContainer extends ConstraintLayout {
     TextView headerLabel;
     ExerciseView[] viewsArr;
 
-    public ExerciseContainer(@NonNull Context context) {
+    public ExerciseContainer(Context context) {
         super(context);
         setup();
     }
 
-    public ExerciseContainer(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ExerciseContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
@@ -37,13 +35,12 @@ public class ExerciseContainer extends ConstraintLayout {
     void setup(ExerciseGroup g, int idx, View.OnClickListener action) {
         int size = g.exercises.length;
         viewsArr = new ExerciseView[size];
-        Context context = getContext();
-        headerLabel.setText(g.createHeader(context));
+        headerLabel.setText(g.createHeader(getContext()));
         LinearLayout vStack = findViewById(R.id.mainStack);
 
         for (int i = 0; i < size; ++i) {
             int tag = (idx << 8) | (i + 1);
-            ExerciseView v = new ExerciseView(context);
+            ExerciseView v = new ExerciseView(getContext());
             v.setup(g.exercises[i], tag, action);
             vStack.addView(v);
             viewsArr[i] = v;

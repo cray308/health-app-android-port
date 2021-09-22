@@ -13,14 +13,13 @@ import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.shareddata.PersistenceService;
-import com.example.healthAppAndroid.homeTab.addWorkout.utils.WorkoutNotifService;
+import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 import com.github.mikephil.charting.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
     private final String hasLaunchedKey = "hasLaunched";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         AppColors.setColors(this);
-        WorkoutNotifService.init(this);
+        NotificationService.init(this);
         Utils.init(this);
 
         int tzOffset = AppUserData.shared.checkTimezone(now);
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean(hasLaunchedKey, true);
         editor.apply();
         AppUserData.setup(this, now, weekStart);
-        WorkoutNotifService.setupAppNotifications(this);
+        NotificationService.setupAppNotifications(this);
         if (BuildConfig.DEBUG) {
             PersistenceService.createFromDB(this);
         } else {

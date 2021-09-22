@@ -1,5 +1,8 @@
 package com.example.healthAppAndroid.common.workouts;
 
 public abstract class LiftType {
-    public static final byte squat = 0, pullUp = 1, bench = 2, deadlift = 3;
+    public static final byte squat = 0;
+    public static final byte pullUp = 1;
+    public static final byte bench = 2;
+    public static final byte deadlift = 3;
 }

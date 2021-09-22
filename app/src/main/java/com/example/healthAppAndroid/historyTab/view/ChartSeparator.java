@@ -5,24 +5,22 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.healthAppAndroid.R;
 
 public class ChartSeparator extends ConstraintLayout {
-    public ChartSeparator(@NonNull Context context) {
+    public ChartSeparator(Context context) {
         super(context);
         setup(null);
     }
 
-    public ChartSeparator(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ChartSeparator(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(attrs);
     }
 
-    private void setup(@Nullable AttributeSet attrs) {
+    private void setup(AttributeSet attrs) {
         inflate(getContext(), R.layout.chart_separator, this);
         TextView headerLabel = findViewById(R.id.headerLabel);
         String labelText = null;

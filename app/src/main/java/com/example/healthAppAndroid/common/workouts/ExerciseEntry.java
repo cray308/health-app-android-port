@@ -4,27 +4,34 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.homeTab.addWorkout.utils.WorkoutNotifService;
+import com.example.healthAppAndroid.common.views.StatusButton;
+import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ExerciseEntry {
     public static abstract class Type {
-        public static final byte Reps = 0, Duration = 1;
+        public static final byte reps = 0;
+        public static final byte duration = 1;
     }
-    public static abstract class State {
-        public static final byte Disabled = 0, Active = 1, Resting = 2, Completed = 3;
+    public static abstract class State extends StatusButton.State {
+        public static final byte resting = 2;
     }
 
-    public byte type, state;
-    public int weight, reps, sets = 1, rest, completedSets;
+    public byte type;
+    public byte state;
+    public int weight;
+    public int reps;
+    public int sets = 1;
+    public int rest;
+    public int completedSets;
     String name;
 
     public ExerciseEntry(JSONObject e) {
         try {
-            type = (byte) e.getInt(ExerciseManager.typeKey);
-            reps = e.getInt(ExerciseManager.repsKey);
+            type = (byte) e.getInt(ExerciseManager.Keys.type);
+            reps = e.getInt(ExerciseManager.Keys.reps);
             rest = e.getInt("rest");
             name = e.getString("name");
         } catch (JSONException ex) {
@@ -39,16 +46,16 @@ public class ExerciseEntry {
     }
 
     public String createTitle(Context context) {
-        if (state == State.Resting)
+        if (state == State.resting)
             return context.getString(R.string.exerciseTitleRest, rest);
         switch (type) {
-            case Type.Reps:
+            case Type.reps:
                 if (weight > 1) {
                     return context.getString(R.string.exerciseTitleRepsWithWeight,
                                              name, reps, weight);
                 }
                 return context.getString(R.string.exerciseTitleReps, name, reps);
-            case Type.Duration:
+            case Type.duration:
                 if (reps > 120) {
                     double minutes = reps / 60.0;
                     return context.getString(R.string.exerciseTitleDurationMinutes, name, minutes);
@@ -63,25 +70,24 @@ public class ExerciseEntry {
     public boolean cycle(Context context) {
         boolean completed = false;
         switch (state) {
-            case State.Disabled:
-                state = State.Active;
-                if (type == Type.Duration)
-                    WorkoutNotifService.scheduleAlarm(context, reps,
-                                                      WorkoutNotifService.Type.Exercise);
+            case State.disabled:
+                state = State.active;
+                if (type == Type.duration)
+                    NotificationService.scheduleAlarm(context, reps,
+                                                      NotificationService.Type.Exercise);
                 break;
 
-            case State.Active:
+            case State.active:
                 if (rest != 0) {
-                    state = State.Resting;
+                    state = State.resting;
                     break;
                 }
-
-            case State.Resting:
+            case State.resting:
                 if (++completedSets == sets) {
-                    state = State.Completed;
+                    state = State.finished;
                     completed = true;
                 } else {
-                    state = State.Active;
+                    state = State.active;
                 }
             default:
         }

@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import androidx.annotation.Nullable;
-
 import com.example.healthAppAndroid.R;
 
 public class StartStopView extends LinearLayout {
@@ -17,7 +15,7 @@ public class StartStopView extends LinearLayout {
         setup();
     }
 
-    public StartStopView(Context context, @Nullable AttributeSet attrs) {
+    public StartStopView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }

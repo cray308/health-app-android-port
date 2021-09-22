@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.healthAppAndroid.R;
@@ -15,9 +14,9 @@ import com.example.healthAppAndroid.common.shareddata.AppColors;
 
 public class StatusButton extends ConstraintLayout {
     public static abstract class State {
-        public final static byte Disabled = 0;
-        public final static byte Active = 1;
-        public final static byte Finished = 3;
+        public final static byte disabled = 0;
+        public final static byte active = 1;
+        public final static byte finished = 3;
     }
 
     public View checkbox;
@@ -29,12 +28,12 @@ public class StatusButton extends ConstraintLayout {
         setup(null);
     }
 
-    public StatusButton(Context context, @Nullable AttributeSet attrs) {
+    public StatusButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(attrs);
     }
 
-    private void setup(@Nullable AttributeSet attrs) {
+    private void setup(AttributeSet attrs) {
         inflate(getContext(), R.layout.status_button, this);
         button = findViewById(R.id.button);
         headerLabel = findViewById(R.id.headerLabel);
@@ -72,15 +71,14 @@ public class StatusButton extends ConstraintLayout {
         button.setEnabled(enableButton);
         button.setTextColor(enableButton ? AppColors.labelNormal : AppColors.labelDisabled);
         switch (state) {
-            case State.Disabled:
+            case State.disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 break;
-            case State.Active:
+            case State.active:
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;
             default:
                 checkbox.setBackgroundColor(AppColors.green);
-                break;
         }
     }
 }

@@ -1,21 +1,88 @@
 package com.example.healthAppAndroid.common.shareddata;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Dao;
 import androidx.room.Database;
+import androidx.room.Delete;
+import androidx.room.Entity;
+import androidx.room.Insert;
+import androidx.room.PrimaryKey;
+import androidx.room.Query;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.Update;
 
 import com.example.healthAppAndroid.common.helpers.DateHelper;
+import com.example.healthAppAndroid.common.workouts.LiftType;
+import com.example.healthAppAndroid.common.workouts.Workout;
+import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 
-@Database(entities = {WeeklyData.class}, version = 1, exportSchema = false)
+@Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
 public abstract class PersistenceService extends RoomDatabase {
+    @Dao public interface DAO {
+        @Query("SELECT * FROM weeks") WeeklyData[] getAll();
+
+        @Query("SELECT * FROM weeks WHERE start == :date LIMIT 1")
+        WeeklyData findCurrentWeek(long date);
+
+        @Query("SELECT * FROM weeks WHERE start < :endDate AND start > :startDate ORDER BY start")
+        WeeklyData[] getDataInIntervalSorted(long startDate, long endDate);
+
+        @Query("SELECT * FROM weeks WHERE start < :endDate AND start > :startDate")
+        WeeklyData[] getDataInInterval(long startDate, long endDate);
+
+        @Insert void insertWeeks(WeeklyData[] data);
+
+        @Update void updateWeeks(WeeklyData[] weeks);
+
+        @Delete void delete(WeeklyData[] weeks);
+    }
+
+    @Entity(tableName = "weeks") public static class WeeklyData {
+        @PrimaryKey(autoGenerate = true) public int uid;
+
+        @ColumnInfo(name = "start") public long start;
+
+        @ColumnInfo(name = "best_bench") public int bestBench;
+
+        @ColumnInfo(name = "best_deadlift") public int bestDeadlift;
+
+        @ColumnInfo(name = "best_pullup") public int bestPullup;
+
+        @ColumnInfo(name = "best_squat") public int bestSquat;
+
+        @ColumnInfo(name = "time_endurance") public int timeEndurance;
+
+        @ColumnInfo(name = "time_hic") public int timeHIC;
+
+        @ColumnInfo(name = "time_se") public int timeSE;
+
+        @ColumnInfo(name = "time_strength") public int timeStrength;
+
+        @ColumnInfo(name = "total_workouts") public int totalWorkouts;
+
+        private void copyLiftMaxes(WeeklyData other) {
+            bestBench = other.bestBench;
+            bestDeadlift = other.bestDeadlift;
+            bestPullup = other.bestPullup;
+            bestSquat = other.bestSquat;
+        }
+    }
+
+    public interface Block {
+        void completion();
+    }
+
     private static final String DBName = "HealthApp-db";
-    public abstract WeeklyDataDao dao();
+    public abstract DAO dao();
     public static PersistenceService shared;
 
     public static void setup(long tzDifference) {
-        WeeklyDataDao dao = PersistenceService.shared.dao();
+        DAO dao = PersistenceService.shared.dao();
         if (tzDifference != 0)
             shared.changeTimestamps(dao, tzDifference);
         shared.performStartupUpdate(dao);
@@ -31,16 +98,16 @@ public abstract class PersistenceService extends RoomDatabase {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
 
-    public void deleteEntries(WeeklyDataDao dao, WeeklyData[] data) {
+    private void deleteEntries(DAO dao, WeeklyData[] data) {
         if (data.length != 0)
             dao.delete(data);
     }
 
-    public void saveChanges(WeeklyDataDao dao, WeeklyData[] data) {
+    private void saveChanges(DAO dao, WeeklyData[] data) {
         dao.updateWeeks(data);
     }
 
-    private void performStartupUpdate(WeeklyDataDao dao) {
+    private void performStartupUpdate(DAO dao) {
         int count;
         WeeklyData[] data = dao.getDataInInterval(0, DateHelper.twoYearsAgo());
         deleteEntries(dao, data);
@@ -85,18 +152,105 @@ public abstract class PersistenceService extends RoomDatabase {
         dao.insertWeeks(dataToSave);
     }
 
-    private void changeTimestamps(WeeklyDataDao dao, long difference) {
+    private void changeTimestamps(DAO dao, long difference) {
         int count;
         WeeklyData[] data = dao.getAll();
         count = data.length;
         if (count == 0) return;
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
             data[i].start += difference;
-        }
         saveChanges(dao, data);
     }
 
-    public WeeklyData getCurrentWeek(WeeklyDataDao dao) {
+    private WeeklyData getCurrentWeek(DAO dao) {
         return dao.findCurrentWeek(AppUserData.shared.weekStart);
+    }
+
+    private static class DeleteDataTask implements Runnable {
+        private final Block block;
+
+        private DeleteDataTask(Block block) { this.block = block; }
+
+        public void run() {
+            PersistenceService service = PersistenceService.shared;
+            DAO dao = service.dao();
+            WeeklyData[] data = dao.getDataInInterval(0, AppUserData.shared.weekStart);
+            service.deleteEntries(dao, data);
+            new Handler(Looper.getMainLooper()).post(block::completion);
+        }
+    }
+
+    public static void deleteAppData(Block block) {
+        new Thread(new DeleteDataTask(block)).start();
+    }
+
+    private static class UpdateCurrentWeekTask implements Runnable {
+        private final Workout workout;
+        private final Block block;
+
+        private UpdateCurrentWeekTask(Workout workout, Block block) {
+            this.workout = workout;
+            this.block = block;
+        }
+
+        public void run() {
+            PersistenceService service = PersistenceService.shared;
+            DAO dao = service.dao();
+            WeeklyData curr = service.getCurrentWeek(dao);
+            curr.totalWorkouts += 1;
+            switch (workout.type) {
+                case Workout.Type.SE:
+                    curr.timeSE += workout.duration;
+                    break;
+                case Workout.Type.HIC:
+                    curr.timeHIC += workout.duration;
+                    break;
+                case Workout.Type.strength:
+                    curr.timeStrength += workout.duration;
+                    break;
+                default:
+                    curr.timeEndurance += workout.duration;
+            }
+
+            if (workout.newLifts != null) {
+                curr.bestSquat = workout.newLifts[LiftType.squat];
+                curr.bestPullup = workout.newLifts[LiftType.pullUp];
+                curr.bestBench = workout.newLifts[LiftType.bench];
+                curr.bestDeadlift = workout.newLifts[LiftType.deadlift];
+            }
+
+            service.saveChanges(dao, new WeeklyData[]{curr});
+            if (block != null)
+                new Handler(Looper.getMainLooper()).post(block::completion);
+        }
+    }
+
+    public static void updateCurrentWeek(Workout workout, Block block) {
+        if (workout.duration < Workout.MinWorkoutDuration) return;
+        new Thread(new UpdateCurrentWeekTask(workout, block)).start();
+    }
+
+    private static class HistoryFetchTask implements Runnable {
+        private final HistoryViewModel.WeekDataModel model;
+        private final Block block;
+
+        private HistoryFetchTask(HistoryViewModel.WeekDataModel model, Block block) {
+            this.model = model;
+            this.block = block;
+        }
+
+        public void run() {
+            PersistenceService service = PersistenceService.shared;
+            WeeklyData[] data = service.dao().getDataInInterval(
+                DateHelper.twoYearsAgo(), AppUserData.shared.weekStart);
+            model.size = data.length;
+            for (int i = 0; i < model.size; ++i)
+                model.arr[i] = new HistoryViewModel.WeekDataModel.Week(data[i]);
+            new Handler(Looper.getMainLooper()).post(block::completion);
+        }
+    }
+
+    public static void fetchHistoryData(HistoryViewModel.WeekDataModel model, Block block) {
+        new Thread(new HistoryFetchTask(model, block)).start();
     }
 }

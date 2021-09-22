@@ -17,7 +17,7 @@ import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity;
 
-public abstract class WorkoutNotifService {
+public abstract class NotificationService {
     public static abstract class Type {
         public static final byte Exercise = 0;
         public static final byte Circuit = 1;
@@ -62,8 +62,7 @@ public abstract class WorkoutNotifService {
         alarmMgr = (AlarmManager) outerContext.getSystemService(Context.ALARM_SERVICE);
 
         receivers[Type.Exercise] = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
+            @Override public void onReceive(Context context, Intent intent) {
                 NotificationCompat.Builder b = createNotification(context, Type.Exercise);
                 notificationMgr.notify(identifier++, b.build());
                 WorkoutActivity activity = (WorkoutActivity) context;
@@ -71,8 +70,7 @@ public abstract class WorkoutNotifService {
             }
         };
         receivers[Type.Circuit] = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
+            @Override public void onReceive(Context context, Intent intent) {
                 NotificationCompat.Builder b = createNotification(context, Type.Circuit);
                 notificationMgr.notify(identifier++, b.build());
                 WorkoutActivity activity = (WorkoutActivity) context;

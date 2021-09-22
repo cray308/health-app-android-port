@@ -8,23 +8,24 @@ import android.widget.Button;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.InputView;
-import com.example.healthAppAndroid.common.workouts.Workout;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BaseTextValidator {
-    public static class InputValidator implements TextWatcher {
+public class TextValidator {
+    private static class ChildValidator implements TextWatcher {
         private final InputView view;
-        private final short maxVal, minVal;
-        private final BaseTextValidator delegate;
-        private boolean valid = false, isInputNumeric = false;
+        private final short min;
+        private final short max;
+        private final TextValidator delegate;
+        private boolean valid = false;
+        private boolean isInputNumeric = false;
         public short result = 0;
 
-        private InputValidator(short min, short max, InputView view, BaseTextValidator delegate) {
-            this.minVal = min;
-            this.maxVal = max;
+        private ChildValidator(short min, short max, InputView view, TextValidator delegate) {
+            this.min = min;
+            this.max = max;
             this.view = view;
             this.delegate = delegate;
             view.textField.addTextChangedListener(this);
@@ -60,7 +61,7 @@ public class BaseTextValidator {
                 Log.e("checkInput", "Error while validating input", e);
             }
 
-            if (res < minVal || res > maxVal) {
+            if (res < min || res > max) {
                 showErrorMsg();
                 return;
             }
@@ -73,19 +74,19 @@ public class BaseTextValidator {
 
         private void showErrorMsg() {
             valid = false;
-            view.field.setError(view.getContext().getString(R.string.inputFieldError,
-                                                            minVal, maxVal));
+            view.field.setError(view.getContext().getString(R.string.inputFieldError, min, max));
             delegate.disableButton();
         }
     }
 
     private final Set<Character> validChars = new HashSet<>(
         Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
-    public final InputValidator[] children = {null, null, null, null};
+    private final ChildValidator[] children = {null, null, null, null};
+    private int count = 0;
     private final Button button;
     private final int enabledColor;
 
-    public BaseTextValidator(Button button, int enabledColor) {
+    public TextValidator(Button button, int enabledColor) {
         this.button = button;
         this.enabledColor = enabledColor;
     }
@@ -101,8 +102,8 @@ public class BaseTextValidator {
     }
 
     private void checkFields() {
-        for (int i = 0; i < 4; ++i) {
-            if (children[i] != null && !children[i].valid) {
+        for (int i = 0; i < count; ++i) {
+            if (!children[i].valid) {
                 disableButton();
                 return;
             }
@@ -110,20 +111,23 @@ public class BaseTextValidator {
         enableButton();
     }
 
-    public void addChild(int index, short min, short max, InputView view) {
-        children[index] = new InputValidator(min, max, view, this);
+    public void addChild(short min, short max, InputView view) {
+        children[count++] = new ChildValidator(min, max, view, this);
     }
 
-    public void reset(int index, short value) {
-        children[index].result = value;
-        children[index].valid = true;
-        String text = ViewHelper.format("%d", value);
-        children[index].view.field.setError(null);
-        children[index].view.textField.setText(text);
+    public void reset(short[] values) {
+        for (int i = 0; i < count; ++i) {
+            children[i].result = values[i];
+            children[i].valid = true;
+            children[i].view.field.setError(null);
+            children[i].view.textField.setText(ViewHelper.format("%d", values[i]));
+        }
     }
 
-    public Workout.LiftData getLiftData() {
-        return new Workout.LiftData(children[0].result, children[1].result,
-                                    children[2].result, children[3].result);
+    public short[] getResults() {
+        short[] results = new short[4];
+        for (int i = 0; i < count; ++i)
+            results[i] = children[i].result;
+        return results;
     }
 }

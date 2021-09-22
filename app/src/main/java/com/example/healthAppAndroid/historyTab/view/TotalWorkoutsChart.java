@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.healthAppAndroid.R;
@@ -20,9 +18,7 @@ public class TotalWorkoutsChart extends ChartContainer {
 
     public TotalWorkoutsChart(Context context) { super(context); }
 
-    public TotalWorkoutsChart(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
+    public TotalWorkoutsChart(Context context, AttributeSet attrs) { super(context, attrs); }
 
     void setup() {
         inflate(getContext(), R.layout.total_workouts_chart, this);
@@ -45,9 +41,9 @@ public class TotalWorkoutsChart extends ChartContainer {
     void update(int count, boolean isSmall) {
         chartView.getAxisLeft().removeAllLimitLines();
         LimitLine limitLine = new LimitLine(viewModel.avgWorkouts);
-        limitLine.enableDashedLine(5, 5, 0);
+        limitLine.enableDashedLine(10, 10, 0);
         limitLine.setLineWidth(2);
-        limitLine.setLineColor(AppColors.blue);
+        limitLine.setLineColor(AppColors.chartColors[0]);
         chartView.getAxisLeft().addLimitLine(limitLine);
         updateData(0, isSmall, viewModel.entries, 0, viewModel.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));

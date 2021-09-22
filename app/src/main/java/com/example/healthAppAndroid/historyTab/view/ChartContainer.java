@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.Nullable;
-
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.github.mikephil.charting.charts.LineChart;
@@ -25,14 +23,14 @@ public abstract class ChartContainer extends LinearLayout {
     LinearLayout legendContainer;
     final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
-    LineData data = new LineData();
+    final LineData data = new LineData();
 
     public ChartContainer(Context context) {
         super(context);
         setup();
     }
 
-    public ChartContainer(Context context, @Nullable AttributeSet attrs) {
+    public ChartContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
@@ -68,6 +66,7 @@ public abstract class ChartContainer extends LinearLayout {
 
     void setupChartView(IndexAxisValueFormatter xAxisFormatter) {
         chartView.setNoDataText(chartView.getContext().getString(R.string.chartEmptyText));
+        chartView.getDescription().setEnabled(false);
         YAxis leftAxis = chartView.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextColor(AppColors.labelNormal);

@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.example.healthAppAndroid.R;
 
 public class HistoryChartLegendEntry extends LinearLayout {
@@ -20,12 +18,12 @@ public class HistoryChartLegendEntry extends LinearLayout {
         setup(null);
     }
 
-    public HistoryChartLegendEntry(Context context, @Nullable AttributeSet attrs) {
+    public HistoryChartLegendEntry(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(attrs);
     }
 
-    private void setup(@Nullable AttributeSet attrs) {
+    private void setup(AttributeSet attrs) {
         inflate(getContext(), R.layout.history_chart_legend_entry, this);
         form = findViewById(R.id.form);
         label = findViewById(R.id.label);

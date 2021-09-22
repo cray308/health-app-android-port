@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.StatusButton;
 import com.example.healthAppAndroid.common.workouts.ExerciseEntry;
@@ -13,13 +11,9 @@ import com.example.healthAppAndroid.common.workouts.ExerciseEntry;
 public class ExerciseView extends StatusButton {
     public boolean userInteractionEnabled = true;
 
-    public ExerciseView(Context context) {
-        super(context);
-    }
+    public ExerciseView(Context context) { super(context); }
 
-    public ExerciseView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
+    public ExerciseView(Context context, AttributeSet attrs) { super(context, attrs); }
 
     void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
         button.setId(tag);
@@ -33,18 +27,19 @@ public class ExerciseView extends StatusButton {
         headerLabel.setText(e.createSetsTitle(context));
 
         switch (e.state) {
-            case ExerciseEntry.State.Disabled:
+            case ExerciseEntry.State.disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 enableButton(false);
                 break;
-            case ExerciseEntry.State.Active:
-                if (e.type == ExerciseEntry.Type.Duration) {
+
+            case ExerciseEntry.State.active:
+                if (e.type == ExerciseEntry.Type.duration)
                     userInteractionEnabled = false;
-                }
-            case ExerciseEntry.State.Resting:
+            case ExerciseEntry.State.resting:
                 enableButton(true);
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;
+
             default:
                 enableButton(false);
                 checkbox.setBackgroundColor(AppColors.green);
@@ -52,9 +47,8 @@ public class ExerciseView extends StatusButton {
     }
 
     private void enableButton(boolean enabled) {
-        if (userInteractionEnabled) {
+        if (userInteractionEnabled)
             button.setEnabled(enabled);
-        }
         button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
     }
 }

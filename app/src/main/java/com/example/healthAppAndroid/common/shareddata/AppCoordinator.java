@@ -1,8 +1,5 @@
 package com.example.healthAppAndroid.common.shareddata;
 
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -15,7 +12,6 @@ import com.example.healthAppAndroid.homeTab.view.HomeFragment;
 import com.example.healthAppAndroid.settingsTab.SettingsFragment;
 import com.example.healthAppAndroid.settingsTab.SettingsTabCoordinator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class AppCoordinator {
     private final FragmentManager fm;
@@ -27,26 +23,6 @@ public class AppCoordinator {
     public final HistoryTabCoordinator historyCoordinator;
     public final SettingsTabCoordinator settingsCoordinator;
     private Fragment active = null;
-
-    private final NavigationBarView.OnItemSelectedListener tabListener = new NavigationBarView.OnItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            int index = 0;
-            int id = item.getItemId();
-            if (id == R.id.history) {
-                index = 1;
-            } else if (id == R.id.settings) {
-                index = 2;
-            }
-
-            fm.beginTransaction().hide(active).show(children[index]).commit();
-            active = children[index];
-            FragmentActivity activity = active.getActivity();
-            if (activity != null)
-                activity.setTitle(titles[index]);
-            return true;
-        }
-    };
 
     public static AppCoordinator shared;
 
@@ -64,7 +40,23 @@ public class AppCoordinator {
     }
 
     private void setupTabs(BottomNavigationView tabBar) {
-        tabBar.setOnItemSelectedListener(tabListener);
+        tabBar.setOnItemSelectedListener(item -> {
+            int index = 0;
+            int id = item.getItemId();
+            if (id == R.id.history) {
+                index = 1;
+            } else if (id == R.id.settings) {
+                index = 2;
+            }
+
+            fm.beginTransaction().hide(active).show(children[index]).commit();
+            active = children[index];
+            FragmentActivity activity = active.getActivity();
+            if (activity != null)
+                activity.setTitle(titles[index]);
+            return true;
+        });
+
         for (int i = titles.length - 1; i > 0; --i) {
             String tag = Integer.toString(i + 1);
             fm.beginTransaction().add(R.id.container, children[i], tag).hide(children[i]).commit();

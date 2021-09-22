@@ -3,9 +3,6 @@ package com.example.healthAppAndroid.historyTab.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
@@ -16,9 +13,7 @@ public class LiftingChart extends ChartContainer {
 
     public LiftingChart(Context context) { super(context); }
 
-    public LiftingChart(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
+    public LiftingChart(Context context, AttributeSet attrs) { super(context, attrs); }
 
     void setup() {
         inflate(getContext(), R.layout.lift_chart, this);
@@ -36,7 +31,6 @@ public class LiftingChart extends ChartContainer {
             dataSets[i] = createDataSet(AppColors.chartColors[i]);
             dataSets[i].setLineWidth(2);
         }
-
         setupChartData(dataSets, 4);
         setupChartView(xAxisFormatter);
     }

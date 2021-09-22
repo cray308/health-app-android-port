@@ -15,10 +15,9 @@ import android.widget.Space;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.BaseTextValidator;
+import com.example.healthAppAndroid.common.helpers.TextValidator;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.InputView;
 import com.example.healthAppAndroid.common.workouts.Workout;
@@ -52,18 +51,16 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         }
 
         public static final Creator<Params> CREATOR = new Creator<Params>() {
-            @Override
-            public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
+            @Override public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
 
-            @Override
-            public Params[] newArray(int i) { return new Params[i]; }
+            @Override public Params[] newArray(int i) { return new Params[i]; }
         };
     }
 
     private Params params;
     private final Workout.Params output = new Workout.Params((byte) -1);
     public HomeTabCoordinator delegate;
-    private BaseTextValidator validator;
+    private TextValidator validator;
 
     public static HomeSetupWorkoutDialog newInstance(Params params) {
         HomeSetupWorkoutDialog fragment = new HomeSetupWorkoutDialog();
@@ -73,8 +70,7 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
@@ -83,28 +79,43 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         }
     }
 
-    @Nullable @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater,
+                                       ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_setup_workout_modal, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button cancelButton = view.findViewById(R.id.homeSetupWorkoutModalCancel);
-        cancelButton.setOnClickListener(cancelListener);
+        cancelButton.setOnClickListener(view1 -> dismiss());
+
         Button submitButton = view.findViewById(R.id.homeSetupWorkoutModalSubmit);
-        submitButton.setOnClickListener(finishListener);
-        validator = new BaseTextValidator(submitButton, AppColors.blue);
+        submitButton.setOnClickListener(view2 -> {
+            short[] results = validator.getResults();
+            switch (output.type) {
+                case Workout.Type.strength:
+                    output.weight = results[2];
+                case Workout.Type.SE:
+                    output.sets = results[0];
+                    output.reps = results[1];
+                    break;
+
+                case Workout.Type.endurance:
+                    output.reps = results[0];
+                default:
+            }
+            delegate.finishedBottomSheet(HomeSetupWorkoutDialog.this, output);
+        });
+
+        validator = new TextValidator(submitButton, AppColors.blue);
         Spinner picker = view.findViewById(R.id.workoutPicker);
         LinearLayout inputViewStack = view.findViewById(R.id.textFieldStack);
         Context c = getContext();
         if (c == null) return;
 
         picker.setOnItemSelectedListener(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            c, android.R.layout.simple_spinner_item, params.names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item,
+                                                          params.names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         picker.setAdapter(adapter);
         picker.setSelection(0);
@@ -115,18 +126,21 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         };
 
         switch (params.type) {
-            case Workout.Type.Strength:
+            case Workout.Type.strength:
                 titles[2] = getString(R.string.setupWorkoutMaxWeight);
                 break;
+
             case Workout.Type.SE:
                 maxes[0] = 3;
                 maxes[1] = 50;
                 break;
-            case Workout.Type.Endurance:
+
+            case Workout.Type.endurance:
                 titles[0] = null;
                 titles[1] = getString(R.string.setupWorkoutDuration);
                 maxes[1] = 180;
                 break;
+
             default:
                 titles[0] = titles[1] = null;
                 validator.enableButton();
@@ -136,7 +150,7 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
             if (titles[i] == null) continue;
             InputView v = new InputView(c);
             v.field.setHint(titles[i]);
-            validator.addChild(i, (short) 1, maxes[i], v);
+            validator.addChild((short) 1, maxes[i], v);
             inputViewStack.addView(v);
             Space space = new Space(c);
             space.setMinimumHeight(20);
@@ -146,21 +160,6 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
         if (dialog != null)
             dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
-
-    private final View.OnClickListener cancelListener = view -> dismiss();
-
-    private final View.OnClickListener finishListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (validator.children[0] != null)
-                output.sets = validator.children[0].result;
-            if (validator.children[1] != null)
-                output.reps = validator.children[1].result;
-            if (validator.children[2] != null)
-                output.weight = validator.children[2].result;
-            delegate.finishedBottomSheet(HomeSetupWorkoutDialog.this, output);
-        }
-    };
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         output.index = i;

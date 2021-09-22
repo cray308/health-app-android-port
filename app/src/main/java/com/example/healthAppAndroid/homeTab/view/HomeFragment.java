@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -34,7 +33,6 @@ import nl.dionsegijn.konfetti.models.Size;
 
 public class HomeFragment extends Fragment {
     private String[] timeNames;
-
     public final HomeViewModel viewModel = new HomeViewModel();
     public HomeTabCoordinator delegate;
     private TextView greetingLabel;
@@ -44,14 +42,12 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater,
+                                       ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         greetingLabel = view.findViewById(R.id.greetingLabel);
         timeNames = getResources().getStringArray(R.array.timesOfDay);
@@ -71,8 +67,7 @@ public class HomeFragment extends Fragment {
         createWorkoutsList();
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         FragmentActivity a = getActivity();
         if (a != null)
@@ -97,12 +92,12 @@ public class HomeFragment extends Fragment {
 
         for (int i = 0; i < 7; ++i) {
             if (viewModel.workoutNames[i] == null) continue;
-            StatusButton dayBtn = new StatusButton(context);
+            StatusButton btn = new StatusButton(context);
             String dayName = days[i].getDisplayName(TextStyle.FULL, Locale.US);
-            dayBtn.setProperties(dayName, viewModel.workoutNames[i], StatusButton.State.Active, true);
-            ViewHelper.setTag(dayBtn.button, i);
-            dayBtn.button.setOnClickListener(dayWorkoutListener);
-            weeklyWorkoutStack.addView(dayBtn);
+            btn.setProperties(dayName, viewModel.workoutNames[i], StatusButton.State.active, true);
+            ViewHelper.setTag(btn.button, i);
+            btn.button.setOnClickListener(dayWorkoutListener);
+            weeklyWorkoutStack.addView(btn);
         }
         updateWorkoutsList();
     }
@@ -115,7 +110,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < count; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;
-            byte state = enabled ? StatusButton.State.Disabled : StatusButton.State.Finished;
+            byte state = enabled ? StatusButton.State.disabled : StatusButton.State.finished;
             v.updateStateAndButton(state, enabled);
         }
     }
@@ -125,15 +120,13 @@ public class HomeFragment extends Fragment {
     }
 
     private final View.OnClickListener customBtnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
             delegate.addWorkoutFromCustomButton(ViewHelper.getTag(view));
         }
     };
 
     private final View.OnClickListener dayWorkoutListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
             delegate.addWorkoutFromPlan(ViewHelper.getTag(view));
         }
     };

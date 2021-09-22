@@ -11,17 +11,21 @@ import org.json.JSONObject;
 
 public class ExerciseGroup {
     public static abstract class Type {
-        public static final byte Rounds = 0, AMRAP = 1, Decrement = 2;
+        public static final byte rounds = 0;
+        public static final byte AMRAP = 1;
+        public static final byte decrement = 2;
     }
 
     public byte type;
-    public int reps, completedReps, index;
+    public int reps;
+    public int completedReps;
+    public int index;
     public ExerciseEntry[] exercises;
 
     public ExerciseGroup(JSONObject g) {
         try {
-            type = (byte) g.getInt(ExerciseManager.typeKey);
-            reps = g.getInt(ExerciseManager.repsKey);
+            type = (byte) g.getInt(ExerciseManager.Keys.type);
+            reps = g.getInt(ExerciseManager.Keys.reps);
             JSONArray foundExercises = g.getJSONArray("exercises");
             int nExercises = foundExercises.length();
             exercises = new ExerciseEntry[nExercises];
@@ -37,7 +41,7 @@ public class ExerciseGroup {
     }
 
     public String createHeader(Context context) {
-        if (type == Type.Rounds && reps > 1) {
+        if (type == Type.rounds && reps > 1) {
             int completed = completedReps == reps ? reps : completedReps + 1;
             return context.getString(R.string.circuitHeaderRounds, completed, reps);
         } else if (type == Type.AMRAP) {
@@ -49,17 +53,17 @@ public class ExerciseGroup {
     public boolean didFinish() {
         boolean isDone = false;
         switch (type) {
-            case Type.Rounds:
+            case Type.rounds:
                 if (++completedReps == reps)
                     isDone = true;
                 break;
 
-            case Type.Decrement:
+            case Type.decrement:
                 if (--completedReps == 0) {
                     isDone = true;
                 } else {
                     for (ExerciseEntry e : exercises) {
-                        if (e.type == ExerciseEntry.Type.Reps)
+                        if (e.type == ExerciseEntry.Type.reps)
                             e.reps -= 1;
                     }
                 }

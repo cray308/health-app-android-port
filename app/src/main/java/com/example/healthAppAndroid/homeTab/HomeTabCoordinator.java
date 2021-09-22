@@ -78,17 +78,19 @@ public class HomeTabCoordinator {
 
     public void addWorkoutFromCustomButton(int index) {
         Context context = fragment.getContext();
-        byte type = Workout.Type.Strength;
+        byte type = Workout.Type.strength;
         switch (index) {
             case CustomWorkoutIndex.SE:
                 type = Workout.Type.SE;
                 break;
+
             case CustomWorkoutIndex.HIC:
                 type = Workout.Type.HIC;
                 break;
+
             case CustomWorkoutIndex.TestMax:
                 Workout.Params params = new Workout.Params((byte) -1);
-                params.type = Workout.Type.Strength;
+                params.type = Workout.Type.strength;
                 params.index = 2;
                 params.sets = params.reps = 1;
                 params.weight = 100;
@@ -96,10 +98,10 @@ public class HomeTabCoordinator {
                 if (w != null)
                     navigateToAddWorkout(null, w);
                 return;
+
             case CustomWorkoutIndex.Endurance:
-                type = Workout.Type.Endurance;
+                type = Workout.Type.endurance;
             default:
-                break;
         }
 
         String[] names = ExerciseManager.getWorkoutNamesForType(context, type);
