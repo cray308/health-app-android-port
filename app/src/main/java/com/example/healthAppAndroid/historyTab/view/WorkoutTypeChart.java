@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.charts.LineChart;
@@ -89,14 +90,15 @@ public class WorkoutTypeChart extends ChartContainer {
     }
 
     private static class Formatter extends IndexAxisValueFormatter {
-        private final HistoryViewModel.WorkoutTypeChartViewModel viewModel;
-
-        private Formatter(HistoryViewModel.WorkoutTypeChartViewModel viewModel) {
-            this.viewModel = viewModel;
-        }
-
-        public String getFormattedValue(float value) {
-            return viewModel.getDuration((int) value);
+        @Override public String getFormattedValue(float value) {
+            int minutes = (int) value;
+            if (minutes == 0) {
+                return "";
+            } else if (minutes < 60) {
+                return ViewHelper.format("%dm", minutes);
+            } else {
+                return ViewHelper.format("%dh %dm", minutes / 60, minutes % 60);
+            }
         }
     }
 
@@ -117,7 +119,7 @@ public class WorkoutTypeChart extends ChartContainer {
     void setup(HistoryViewModel.WorkoutTypeChartViewModel viewModel,
                IndexAxisValueFormatter xAxisFormatter) {
         this.viewModel = viewModel;
-        Formatter formatter = new Formatter(viewModel);
+        Formatter formatter = new Formatter();
 
         dataSets[0] = createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {

@@ -13,18 +13,12 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class HistoryViewModel {
-    public static abstract class Format {
-        public static final byte Short = 0;
-        public static final byte Long = 1;
-    }
     public static abstract class Segment {
         public static final byte sixMonths = 0;
         public static final byte oneYear = 1;
         public static final byte twoYears = 2;
     }
 
-    private String[] wordMonths;
-    private String[] numMonths;
     private String[] workoutNames;
     private String[] liftNames;
 
@@ -40,16 +34,6 @@ public class HistoryViewModel {
         public final String[] legendLabels = {null, null, null, null};
         public final int[] totalByType = {0, 0, 0, 0};
         public float yMax;
-
-        public String getDuration(int minutes) {
-            if (minutes == 0) {
-                return "";
-            } else if (minutes < 60) {
-                return ViewHelper.format("%dm", minutes);
-            } else {
-                return ViewHelper.format("%dh %dm", minutes / 60, minutes % 60);
-            }
-        }
     }
 
     public static class LiftChartViewModel {
@@ -96,22 +80,19 @@ public class HistoryViewModel {
         public final Week[] arr = new Week[128];
     }
 
-    public byte formatType;
+    public boolean isSmall;
     public final TotalWorkoutsChartViewModel totalWorkoutsViewModel = new TotalWorkoutsChartViewModel();
     public final WorkoutTypeChartViewModel workoutTypeViewModel = new WorkoutTypeChartViewModel();
     public final LiftChartViewModel liftViewModel = new LiftChartViewModel();
     public final WeekDataModel data = new WeekDataModel();
 
-    public void setup(Context context) {
-        Resources res = context.getResources();
-        wordMonths = res.getStringArray(R.array.wordMonths);
-        numMonths = res.getStringArray(R.array.numMonths);
+    public void setup(Resources res) {
         workoutNames = res.getStringArray(R.array.workoutTypes);
         liftNames = res.getStringArray(R.array.liftTypes);
     }
 
     public void formatDataForTimeRange(Context context, byte index) {
-        formatType = Format.Short;
+        isSmall = true;
         totalWorkoutsViewModel.avgWorkouts = 0;
         totalWorkoutsViewModel.yMax = 0;
         workoutTypeViewModel.yMax = 0;
@@ -137,7 +118,7 @@ public class HistoryViewModel {
         if (startIndex < 0)
             startIndex = 0;
         if (data.size - startIndex >= 7)
-            formatType = Format.Long;
+            isSmall = false;
 
         int nEntries = data.size - startIndex;
 
@@ -196,15 +177,6 @@ public class HistoryViewModel {
 
             liftViewModel.legendLabels[i] = context.getString(R.string.liftLegend,
                                                               liftNames[i], liftAverage);
-        }
-    }
-
-    public String getXAxisLabel(int index) {
-        WeekDataModel.Week model = data.arr[index];
-        if (formatType == Format.Short) {
-            return ViewHelper.format("%s %d", wordMonths[model.month], model.day);
-        } else {
-            return ViewHelper.format("%s/%d/%d", numMonths[model.month], model.day, model.year);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.healthAppAndroid.historyTab.view;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,17 +12,23 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 public class HistoryFragment extends Fragment {
     private static class Formatter extends IndexAxisValueFormatter {
+        private final String[] months;
         private final HistoryViewModel viewModel;
 
-        private Formatter(HistoryViewModel viewModel) { this.viewModel = viewModel; }
+        private Formatter(HistoryViewModel viewModel, Resources res) {
+            this.viewModel = viewModel;
+            months = res.getStringArray(R.array.months);
+        }
 
         @Override public String getFormattedValue(float value) {
-            return viewModel.getXAxisLabel((int) value);
+            HistoryViewModel.WeekDataModel.Week model = viewModel.data.arr[(int) value];
+            return ViewHelper.format("%s/%d/%d", months[model.month], model.day, model.year);
         }
     }
 
@@ -41,14 +47,14 @@ public class HistoryFragment extends Fragment {
 
     @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Formatter formatter = new Formatter(viewModel);
+
         rangePicker = view.findViewById(R.id.rangePicker);
         totalWorkoutsChart = view.findViewById(R.id.totalWorkoutsContainer);
         workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
         liftingChart = view.findViewById(R.id.liftContainer);
-        Context context = getContext();
-        if (context != null)
-            viewModel.setup(context);
+        Resources res = getResources();
+        Formatter formatter = new Formatter(viewModel, res);
+        viewModel.setup(res);
 
         totalWorkoutsChart.setup(viewModel.totalWorkoutsViewModel, formatter);
         workoutTypeChart.setup(viewModel.workoutTypeViewModel, formatter);
@@ -82,9 +88,8 @@ public class HistoryFragment extends Fragment {
         }
 
         int count = viewModel.totalWorkoutsViewModel.entries.length;
-        boolean isSmall = viewModel.formatType == HistoryViewModel.Format.Short;
-        totalWorkoutsChart.update(count, isSmall);
-        workoutTypeChart.update(count, isSmall);
-        liftingChart.update(count, isSmall);
+        totalWorkoutsChart.update(count, viewModel.isSmall);
+        workoutTypeChart.update(count, viewModel.isSmall);
+        liftingChart.update(count, viewModel.isSmall);
     }
 }

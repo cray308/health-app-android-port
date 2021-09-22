@@ -14,21 +14,7 @@
         <item>Good afternoon!</item>
         <item>Good evening!</item>
     </string-array>
-    <string-array name="wordMonths">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
-    <string-array name="numMonths">
+    <string-array name="months">
         <item>1</item>
         <item>2</item>
         <item>3</item>
