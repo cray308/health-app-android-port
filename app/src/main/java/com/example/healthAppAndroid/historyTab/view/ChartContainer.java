@@ -74,7 +74,7 @@ public abstract class ChartContainer extends LinearLayout {
         chartView.getLegend().setEnabled(false);
         XAxis xAxis = chartView.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGridLineWidth((float) 1.5);
+        xAxis.setGridLineWidth(0.5f);
         xAxis.setTextSize(12);
         xAxis.setTextColor(AppColors.labelNormal);
         xAxis.setGranularityEnabled(true);
