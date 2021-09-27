@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
@@ -17,8 +16,6 @@ import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService
 import com.github.mikephil.charting.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    private final String hasLaunchedKey = "hasLaunched";
-
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -26,39 +23,28 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SharedPreferences prefs = getSharedPreferences("AppDelPrefs", Context.MODE_PRIVATE);
+        String hasLaunchedKey = "hasLaunched";
         boolean hasLaunched = prefs.getBoolean(hasLaunchedKey, false);
-        long now = DateHelper.getCurrentTime();
-        long weekStart = DateHelper.calcStartOfWeek(now);
+        int tzOffset = 0;
 
         if (!hasLaunched) {
-            setupData(prefs, now, weekStart);
-        } else {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(hasLaunchedKey, true);
+            editor.apply();
             AppUserData.create(this);
+            NotificationService.setupAppNotifications(this);
             PersistenceService.create(this);
+        } else {
+            tzOffset = AppUserData.setupFromStorage(this);
+            PersistenceService.init(this);
         }
 
         AppColors.setColors(this);
         NotificationService.init(this);
         Utils.init(this);
 
-        int tzOffset = AppUserData.shared.checkTimezone(now);
-        if (weekStart != AppUserData.shared.weekStart)
-            AppUserData.shared.handleNewWeek(weekStart);
-
         AppCoordinator.create(this);
-        AsyncTask.execute(() -> PersistenceService.setup(tzOffset));
-    }
-
-    private void setupData(SharedPreferences prefs, long now, long weekStart) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(hasLaunchedKey, true);
-        editor.apply();
-        AppUserData.setup(this, now, weekStart);
-        NotificationService.setupAppNotifications(this);
-        if (BuildConfig.DEBUG) {
-            PersistenceService.createFromDB(this);
-        } else {
-            PersistenceService.create(this);
-        }
+        int finalTzOffset = tzOffset;
+        AsyncTask.execute(() -> PersistenceService.setup(finalTzOffset));
     }
 }

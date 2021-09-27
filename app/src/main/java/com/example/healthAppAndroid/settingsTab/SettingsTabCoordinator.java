@@ -10,13 +10,6 @@ import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 
 public class SettingsTabCoordinator {
-    private static class DeleteHandler implements PersistenceService.Block {
-        public void completion() {
-            AppUserData.shared.deleteSavedData();
-            AppCoordinator.shared.deletedAppData();
-        }
-    }
-
     private final SettingsFragment fragment;
 
     public SettingsTabCoordinator(Fragment fragment) {
@@ -42,12 +35,13 @@ public class SettingsTabCoordinator {
             .setTitle(fragment.getString(R.string.settingsAlertTitle))
             .setMessage(fragment.getString(R.string.settingsAlertMessageDelete))
             .setNegativeButton(fragment.getString(R.string.cancel), null)
-            .setNeutralButton(fragment.getString(R.string.delete), (dialogInterface, i) ->
-                PersistenceService.deleteAppData(new DeleteHandler()));
+            .setNeutralButton(fragment.getString(R.string.delete), (dialogInterface, i) -> {
+                AppUserData.shared.deleteSavedData();
+                AppCoordinator.shared.deletedAppData();
+                PersistenceService.deleteAppData();
+            });
         builder.create().show();
     }
 
-    public void updateWeightText() {
-        fragment.updateWeightFields();
-    }
+    public void updateWeightText() { fragment.updateWeightFields(); }
 }

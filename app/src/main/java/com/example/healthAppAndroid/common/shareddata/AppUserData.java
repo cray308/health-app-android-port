@@ -40,13 +40,40 @@ public class AppUserData {
         return context.getSharedPreferences("HealthAppPrefs", Context.MODE_PRIVATE);
     }
 
-    public static void setup(Context context, long now, long weekStart) {
-        shared = new AppUserData(context, now, weekStart);
+    public static void create(Context context) {
+        long now = DateHelper.getCurrentTime();
+        shared = new AppUserData(context, now, DateHelper.calcStartOfWeek(now));
         shared.saveData();
     }
 
-    public static void create(Context context) {
+    public static int setupFromStorage(Context context) {
         shared = new AppUserData(context);
+        long now = DateHelper.getCurrentTime();
+        long weekStart = DateHelper.calcStartOfWeek(now);
+
+        int newOffset = DateHelper.getOffsetFromGMT(now);
+        int tzDiff = shared.tzOffset - newOffset;
+        if (tzDiff != 0) {
+            shared.weekStart += tzDiff;
+            shared.tzOffset = newOffset;
+            shared.saveData();
+        }
+
+        if (weekStart != shared.weekStart) {
+            shared.completedWorkouts = 0;
+            shared.weekStart = weekStart;
+
+            if (shared.currentPlan >= 0) {
+                int nWeeks = shared.currentPlan == Plans.baseBuilding ? 8 : 13;
+                if (shared.getWeekInPlan() >= nWeeks) {
+                    if (shared.currentPlan == Plans.baseBuilding)
+                        shared.currentPlan = Plans.continuation;
+                    shared.planStart = weekStart;
+                }
+            }
+            shared.saveData();
+        }
+        return tzDiff;
     }
 
     private AppUserData(Context context, long now, long weekStart) {
@@ -98,34 +125,8 @@ public class AppUserData {
         saveData();
     }
 
-    public int checkTimezone(long now) {
-        int newOffset = DateHelper.getOffsetFromGMT(now);
-        int diff = newOffset - tzOffset;
-        if (diff != 0) {
-            weekStart += diff;
-            tzOffset = newOffset;
-            saveData();
-        }
-        return diff;
-    }
-
     public void deleteSavedData() {
         completedWorkouts = 0;
-        saveData();
-    }
-
-    public void handleNewWeek(long weekStart) {
-        completedWorkouts = 0;
-        this.weekStart = weekStart;
-
-        if (currentPlan >= 0) {
-            int nWeeks = currentPlan == Plans.baseBuilding ? 8 : 13;
-            if (getWeekInPlan() >= nWeeks) {
-                if (currentPlan == Plans.baseBuilding)
-                    currentPlan = Plans.continuation;
-                planStart = weekStart;
-            }
-        }
         saveData();
     }
 
@@ -140,9 +141,7 @@ public class AppUserData {
         return total;
     }
 
-    public int getWeekInPlan() {
-        return (int) ((weekStart - planStart) / DateHelper.weekSeconds);
-    }
+    public int getWeekInPlan() { return (int) ((weekStart - planStart) / DateHelper.weekSeconds); }
 
     public void updateWeightMaxes(short[] newLifts) {
         for (int i = 0; i < 4; ++i) {

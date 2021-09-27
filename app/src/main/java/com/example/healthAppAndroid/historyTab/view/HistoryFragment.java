@@ -74,9 +74,8 @@ public class HistoryFragment extends Fragment {
     };
 
     public void performForegroundUpdate() {
-        int id = R.id.segmentLeft;
-        rangePicker.check(id);
-        segmentListener.onCheckedChanged(rangePicker, id);
+        rangePicker.check(R.id.segmentLeft);
+        segmentListener.onCheckedChanged(rangePicker, R.id.segmentLeft);
     }
 
     private void updateCharts() {

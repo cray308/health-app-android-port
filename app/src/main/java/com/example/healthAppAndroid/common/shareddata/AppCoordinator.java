@@ -65,16 +65,12 @@ public class AppCoordinator {
         active = children[0];
     }
 
-    public void updatedUserInfo() {
-        homeCoordinator.resetUI();
-    }
+    public void updatedUserInfo() { homeCoordinator.resetUI(); }
 
     public void deletedAppData() {
         homeCoordinator.updateUI();
-        historyCoordinator.fetchData();
+        historyCoordinator.handleDataDeletion();
     }
 
-    public void updateMaxWeights() {
-        settingsCoordinator.updateWeightText();
-    }
+    public void updateMaxWeights() { settingsCoordinator.updateWeightText(); }
 }

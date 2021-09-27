@@ -29,7 +29,10 @@ public class HistoryTabCoordinator {
         PersistenceService.fetchHistoryData(viewModel.data, new FetchHandler(this));
     }
 
-    public void finishedLoadingHistoryData() {
-        fragment.performForegroundUpdate();
+    public void handleDataDeletion() {
+        viewModel.data.size = 0;
+        finishedLoadingHistoryData();
     }
+
+    public void finishedLoadingHistoryData() { fragment.performForegroundUpdate(); }
 }

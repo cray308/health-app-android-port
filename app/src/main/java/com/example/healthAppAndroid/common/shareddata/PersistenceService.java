@@ -16,6 +16,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.Update;
 
+import com.example.healthAppAndroid.BuildConfig;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.workouts.LiftType;
 import com.example.healthAppAndroid.common.workouts.Workout;
@@ -82,19 +83,20 @@ public abstract class PersistenceService extends RoomDatabase {
     public static PersistenceService shared;
 
     public static void setup(long tzDifference) {
-        DAO dao = PersistenceService.shared.dao();
-        if (tzDifference != 0)
-            shared.changeTimestamps(dao, tzDifference);
-        shared.performStartupUpdate(dao);
+        shared.performStartupUpdate(tzDifference);
         AppCoordinator.shared.historyCoordinator.fetchData();
     }
 
-    public static void createFromDB(Context context) {
-        shared = Room.databaseBuilder(
-            context, PersistenceService.class, DBName).createFromAsset("test.db").build();
+    public static void create(Context context) {
+        if (BuildConfig.DEBUG) {
+            shared = Room.databaseBuilder(
+                context, PersistenceService.class, DBName).createFromAsset("test.db").build();
+        } else {
+            init(context);
+        }
     }
 
-    public static void create(Context context) {
+    public static void init(Context context) {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
 
@@ -107,9 +109,21 @@ public abstract class PersistenceService extends RoomDatabase {
         dao.updateWeeks(data);
     }
 
-    private void performStartupUpdate(DAO dao) {
+    private void performStartupUpdate(long tzOffset) {
+        DAO dao = dao();
+        WeeklyData[] data;
         int count;
-        WeeklyData[] data = dao.getDataInInterval(0, DateHelper.twoYearsAgo());
+        if (tzOffset != 0) {
+            data = dao.getAll();
+            count = data.length;
+            if (count > 0) {
+                for (int i = 0; i < count; ++i)
+                    data[i].start += tzOffset;
+                saveChanges(dao, data);
+            }
+        }
+
+        data = dao.getDataInInterval(0, DateHelper.twoYearsAgo());
         deleteEntries(dao, data);
 
         data = dao.getDataInIntervalSorted(0, AppUserData.shared.weekStart);
@@ -152,37 +166,20 @@ public abstract class PersistenceService extends RoomDatabase {
         dao.insertWeeks(dataToSave);
     }
 
-    private void changeTimestamps(DAO dao, long difference) {
-        int count;
-        WeeklyData[] data = dao.getAll();
-        count = data.length;
-        if (count == 0) return;
-        for (int i = 0; i < count; ++i)
-            data[i].start += difference;
-        saveChanges(dao, data);
-    }
-
     private WeeklyData getCurrentWeek(DAO dao) {
         return dao.findCurrentWeek(AppUserData.shared.weekStart);
     }
 
     private static class DeleteDataTask implements Runnable {
-        private final Block block;
-
-        private DeleteDataTask(Block block) { this.block = block; }
-
         public void run() {
             PersistenceService service = PersistenceService.shared;
             DAO dao = service.dao();
             WeeklyData[] data = dao.getDataInInterval(0, AppUserData.shared.weekStart);
             service.deleteEntries(dao, data);
-            new Handler(Looper.getMainLooper()).post(block::completion);
         }
     }
 
-    public static void deleteAppData(Block block) {
-        new Thread(new DeleteDataTask(block)).start();
-    }
+    public static void deleteAppData() { new Thread(new DeleteDataTask()).start(); }
 
     private static class UpdateCurrentWeekTask implements Runnable {
         private final Workout workout;
