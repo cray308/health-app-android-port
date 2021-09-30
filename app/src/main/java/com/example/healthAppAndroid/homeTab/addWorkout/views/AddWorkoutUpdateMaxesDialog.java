@@ -39,7 +39,7 @@ public class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
 
         int[] ids = {R.id.firstInput, R.id.secondInput, R.id.thirdInput, R.id.fourthInput};
         for (int i = 0; i < 4; ++i)
-            validator.addChild((short) 1, (short) 999, view.findViewById(ids[i]));
+            validator.addChild((short) 999, view.findViewById(ids[i]));
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
         if (dialog != null)
             dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);

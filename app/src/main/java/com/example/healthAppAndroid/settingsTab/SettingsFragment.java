@@ -51,7 +51,7 @@ public class SettingsFragment extends Fragment {
 
         validator = new TextValidator(saveButton, AppColors.blue);
         for (int i = 0; i < 4; ++i)
-            validator.addChild((short) 0, (short) 999, view.findViewById(ids[i]));
+            validator.addChild((short) 999, view.findViewById(ids[i]));
         updateWeightFields();
         byte plan = AppUserData.shared.currentPlan;
         int checked = R.id.segmentNoPlan;

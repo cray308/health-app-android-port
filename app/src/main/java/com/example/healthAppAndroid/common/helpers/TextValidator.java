@@ -1,34 +1,71 @@
 package com.example.healthAppAndroid.common.helpers;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
-import com.example.healthAppAndroid.common.views.InputView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TextValidator {
-    private static class ChildValidator implements TextWatcher {
-        private final InputView view;
-        private final short min;
-        private final short max;
-        private final TextValidator delegate;
+    public static class InputView extends ConstraintLayout implements TextWatcher {
+        public TextInputLayout field;
+        private TextInputEditText textField;
+        private short min = 1;
+        private short max = 999;
+        private TextValidator delegate;
         private boolean valid = false;
         private boolean isInputNumeric = false;
-        public short result = 0;
+        private short result = 0;
 
-        private ChildValidator(short min, short max, InputView view, TextValidator delegate) {
-            this.min = min;
+        public InputView(Context context) {
+            super(context);
+            setup(null);
+        }
+
+        public InputView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            setup(attrs);
+        }
+
+        private void setup(AttributeSet attrs) {
+            inflate(getContext(), R.layout.input_view, this);
+            field = findViewById(R.id.field);
+            textField = findViewById(R.id.fieldTextView);
+            String hintText = null;
+            boolean zeroMin = false;
+
+            if (attrs != null) {
+                TypedArray a = getContext().getTheme().obtainStyledAttributes(
+                    attrs, R.styleable.InputView, 0, 0);
+                try {
+                    hintText = a.getString(R.styleable.InputView_fieldHint);
+                    zeroMin = a.getBoolean(R.styleable.InputView_zeroMin, false);
+                } finally {
+                    a.recycle();
+                }
+            }
+            field.setHint(hintText);
+            if (zeroMin)
+                min = 0;
+        }
+
+        public void setup(short max, TextValidator delegate) {
             this.max = max;
-            this.view = view;
             this.delegate = delegate;
-            view.textField.addTextChangedListener(this);
+            textField.addTextChangedListener(this);
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -66,7 +103,7 @@ public class TextValidator {
                 return;
             }
 
-            view.field.setError(null);
+            field.setError(null);
             valid = true;
             result = res;
             delegate.checkFields();
@@ -74,14 +111,14 @@ public class TextValidator {
 
         private void showErrorMsg() {
             valid = false;
-            view.field.setError(view.getContext().getString(R.string.inputFieldError, min, max));
+            field.setError(getContext().getString(R.string.inputFieldError, min, max));
             delegate.disableButton();
         }
     }
 
     private final Set<Character> validChars = new HashSet<>(
         Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
-    private final ChildValidator[] children = {null, null, null, null};
+    private final InputView[] children = {null, null, null, null};
     private int count = 0;
     private final Button button;
     private final int enabledColor;
@@ -111,16 +148,17 @@ public class TextValidator {
         enableButton();
     }
 
-    public void addChild(short min, short max, InputView view) {
-        children[count++] = new ChildValidator(min, max, view, this);
+    public void addChild(short max, InputView view) {
+        view.setup(max, this);
+        children[count++] = view;
     }
 
     public void reset(short[] values) {
         for (int i = 0; i < count; ++i) {
             children[i].result = values[i];
             children[i].valid = true;
-            children[i].view.field.setError(null);
-            children[i].view.textField.setText(ViewHelper.format("%d", values[i]));
+            children[i].field.setError(null);
+            children[i].textField.setText(ViewHelper.format("%d", values[i]));
         }
     }
 

@@ -38,7 +38,7 @@ public class TotalWorkoutsChart extends ChartContainer {
         setupChartView(xAxisFormatter);
     }
 
-    void update(int count, boolean isSmall) {
+    void update(boolean isSmall) {
         chartView.getAxisLeft().removeAllLimitLines();
         LimitLine limitLine = new LimitLine(viewModel.avgWorkouts);
         limitLine.enableDashedLine(10, 10, 0);
@@ -47,6 +47,6 @@ public class TotalWorkoutsChart extends ChartContainer {
         chartView.getAxisLeft().addLimitLine(limitLine);
         updateData(0, isSmall, viewModel.entries, 0, viewModel.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));
-        update(isSmall, count, viewModel.yMax);
+        update(isSmall, viewModel.yMax);
     }
 }

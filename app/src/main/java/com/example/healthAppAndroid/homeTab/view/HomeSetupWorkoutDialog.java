@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
-import com.example.healthAppAndroid.common.views.InputView;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -148,9 +147,9 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
 
         for (int i = 0; i < 3; ++i) {
             if (titles[i] == null) continue;
-            InputView v = new InputView(c);
+            TextValidator.InputView v = new TextValidator.InputView(c);
             v.field.setHint(titles[i]);
-            validator.addChild((short) 1, maxes[i], v);
+            validator.addChild(maxes[i], v);
             inputViewStack.addView(v);
             Space space = new Space(c);
             space.setMinimumHeight(20);

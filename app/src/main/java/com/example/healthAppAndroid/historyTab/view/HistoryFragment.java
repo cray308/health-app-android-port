@@ -86,9 +86,8 @@ public class HistoryFragment extends Fragment {
             return;
         }
 
-        int count = viewModel.totalWorkoutsViewModel.entries.length;
-        totalWorkoutsChart.update(count, viewModel.isSmall);
-        workoutTypeChart.update(count, viewModel.isSmall);
-        liftingChart.update(count, viewModel.isSmall);
+        totalWorkoutsChart.update(viewModel.isSmall);
+        workoutTypeChart.update(viewModel.isSmall);
+        liftingChart.update(viewModel.isSmall);
     }
 }

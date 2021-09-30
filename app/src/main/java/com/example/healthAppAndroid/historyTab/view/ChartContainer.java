@@ -95,9 +95,8 @@ public abstract class ChartContainer extends LinearLayout {
         legendEntries[iLegend].label.setText(text);
     }
 
-    void update(boolean isSmall, int count, float axisMax) {
+    void update(boolean isSmall, float axisMax) {
         chartView.getAxisLeft().setAxisMaximum(axisMax);
-        chartView.getXAxis().setLabelCount(isSmall ? count : 6);
         legendContainer.setVisibility(View.VISIBLE);
         data.setDrawValues(isSmall);
         chartView.setData(data);

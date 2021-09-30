@@ -136,10 +136,10 @@ public class WorkoutTypeChart extends ChartContainer {
         chartView.setRenderer(new Renderer(chartView));
     }
 
-    void update(int count, boolean isSmall) {
+    void update(boolean isSmall) {
         dataSets[0].setValues(Arrays.asList(viewModel.entries[0]));
         for (int i = 1; i < 5; ++i)
             updateData(i, isSmall, viewModel.entries[i], i - 1, viewModel.legendLabels[i - 1]);
-        update(isSmall, count, viewModel.yMax);
+        update(isSmall, viewModel.yMax);
     }
 }

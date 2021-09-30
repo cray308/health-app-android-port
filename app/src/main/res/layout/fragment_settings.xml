@@ -67,30 +67,38 @@
                     android:textSize="12sp" />
             </RadioGroup>
 
-            <com.example.healthAppAndroid.common.views.InputView
+            <view
                 android:id="@+id/inputFirst"
+                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:fieldHint="@string/maxWeightSquat" />
+                app:fieldHint="@string/maxWeightSquat"
+                app:zeroMin="true" />
 
-            <com.example.healthAppAndroid.common.views.InputView
+            <view
                 android:id="@+id/inputSecond"
+                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightPullUp" />
+                app:fieldHint="@string/maxWeightPullUp"
+                app:zeroMin="true" />
 
-            <com.example.healthAppAndroid.common.views.InputView
+            <view
                 android:id="@+id/inputThird"
+                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightBench" />
+                app:fieldHint="@string/maxWeightBench"
+                app:zeroMin="true" />
 
-            <com.example.healthAppAndroid.common.views.InputView
+            <view
                 android:id="@+id/inputFourth"
+                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightDeadLift" />
+                app:fieldHint="@string/maxWeightDeadLift"
+                app:zeroMin="true" />
 
             <Button
                 android:id="@+id/saveButton"

@@ -7,11 +7,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/systemGroupedBackground"
+        android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingTop="5dp"
         android:paddingRight="8dp"
-        android:orientation="vertical"
-        android:background="@color/systemGroupedBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,27 +42,31 @@
                 app:iconTint="@null" />
         </LinearLayout>
 
-        <com.example.healthAppAndroid.common.views.InputView
+        <view
             android:id="@+id/firstInput"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:fieldHint="@string/maxWeightSquat" />
 
-        <com.example.healthAppAndroid.common.views.InputView
+        <view
             android:id="@+id/secondInput"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightPullUp" />
 
-        <com.example.healthAppAndroid.common.views.InputView
+        <view
             android:id="@+id/thirdInput"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightBench" />
 
-        <com.example.healthAppAndroid.common.views.InputView
+        <view
             android:id="@+id/fourthInput"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightDeadLift" />

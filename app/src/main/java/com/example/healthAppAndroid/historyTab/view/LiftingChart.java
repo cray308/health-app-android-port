@@ -35,9 +35,9 @@ public class LiftingChart extends ChartContainer {
         setupChartView(xAxisFormatter);
     }
 
-    void update(int count, boolean isSmall) {
+    void update(boolean isSmall) {
         for (int i = 0; i < 4; ++i)
             updateData(i, isSmall, viewModel.entries[i], i, viewModel.legendLabels[i]);
-        update(isSmall, count, viewModel.yMax);
+        update(isSmall, viewModel.yMax);
     }
 }
