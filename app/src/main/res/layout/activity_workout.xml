@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".homeTab.addWorkout.views.WorkoutActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,22 +14,15 @@
         android:background="@color/secondarySystemBackground"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/workout_items"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/systemGroupedBackground"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +41,6 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
-
         </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

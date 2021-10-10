@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">HealthAppAndroid</string>
-    <string-array name="titles">
-        <item>Home</item>
-        <item>Workout History</item>
-        <item>App Settings</item>
-    </string-array>
     <string-array name="notifications">
         <item>Finished exercise!</item>
         <item>Finished AMRAP circuit!</item>

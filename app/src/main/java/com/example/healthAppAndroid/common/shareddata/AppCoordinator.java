@@ -18,7 +18,6 @@ public class AppCoordinator {
     private final Fragment[] children = {
         new HomeFragment(), new HistoryFragment(), new SettingsFragment()
     };
-    public final String[] titles;
     public final HomeTabCoordinator homeCoordinator;
     public final HistoryTabCoordinator historyCoordinator;
     public final SettingsTabCoordinator settingsCoordinator;
@@ -36,7 +35,6 @@ public class AppCoordinator {
         homeCoordinator = new HomeTabCoordinator(children[0]);
         historyCoordinator = new HistoryTabCoordinator(children[1]);
         settingsCoordinator = new SettingsTabCoordinator(children[2]);
-        titles = activity.getResources().getStringArray(R.array.titles);
     }
 
     private void setupTabs(BottomNavigationView tabBar) {
@@ -51,13 +49,10 @@ public class AppCoordinator {
 
             fm.beginTransaction().hide(active).show(children[index]).commit();
             active = children[index];
-            FragmentActivity activity = active.getActivity();
-            if (activity != null)
-                activity.setTitle(titles[index]);
             return true;
         });
 
-        for (int i = titles.length - 1; i > 0; --i) {
+        for (int i = children.length - 1; i > 0; --i) {
             String tag = Integer.toString(i + 1);
             fm.beginTransaction().add(R.id.container, children[i], tag).hide(children[i]).commit();
         }

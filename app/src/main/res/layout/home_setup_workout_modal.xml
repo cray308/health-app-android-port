@@ -1,84 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/systemGroupedBackground"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingTop="5dp"
+    android:paddingRight="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/systemGroupedBackground"
-        android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingTop="5dp"
-        android:paddingRight="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/homeSetupWorkoutModalCancel"
-                style="@null"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/cancel"
-                android:textAllCaps="false"
-                android:textColor="@color/systemBlue"
-                android:textSize="17sp"
-                app:iconTint="@null" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2" />
-
-            <Button
-                android:id="@+id/homeSetupWorkoutModalSubmit"
-                style="@null"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:enabled="false"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/go"
-                android:textAllCaps="false"
-                android:textColor="@color/secondaryLabel"
-                android:textSize="17sp"
-                app:iconTint="@null" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="@string/setupWorkoutPickerTitle"
-            android:textColor="@color/label"
-            android:textSize="13sp" />
-
-        <Spinner
-            android:id="@+id/workoutPicker"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/homeSetupWorkoutModalCancel"
+            style="@null"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginTop="2dp" />
+            android:layout_weight="1"
+            android:backgroundTint="@color/secondarySystemGroupedBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/systemBlue"
+            android:textSize="17sp"
+            app:iconTint="@null" />
 
-        <LinearLayout
-            android:id="@+id/textFieldStack"
-            android:layout_width="match_parent"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical" />
+            android:layout_weight="2" />
+
+        <Button
+            android:id="@+id/homeSetupWorkoutModalSubmit"
+            style="@null"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/secondarySystemGroupedBackground"
+            android:enabled="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/go"
+            android:textAllCaps="false"
+            android:textColor="@color/secondaryLabel"
+            android:textSize="17sp"
+            app:iconTint="@null" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:text="@string/setupWorkoutPickerTitle"
+        android:textColor="@color/label"
+        android:textSize="13sp" />
+
+    <Spinner
+        android:id="@+id/workoutPicker"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="2dp" />
+
+    <LinearLayout
+        android:id="@+id/textFieldStack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" />
+</LinearLayout>

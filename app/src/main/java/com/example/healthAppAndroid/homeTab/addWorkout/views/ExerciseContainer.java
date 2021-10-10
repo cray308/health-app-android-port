@@ -6,12 +6,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.workouts.ExerciseGroup;
 
-public class ExerciseContainer extends ConstraintLayout {
+public class ExerciseContainer extends LinearLayout {
     View divider;
     TextView headerLabel;
     ExerciseView[] viewsArr;

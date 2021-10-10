@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -63,20 +61,6 @@ public class HistoryFragment extends Fragment implements SegmentedControlDelegat
         workoutTypeChart.setup(viewModel.workoutTypeViewModel, formatter);
         liftingChart.setup(viewModel.liftViewModel, formatter);
         rangePicker.delegate = this;
-    }
-
-    @Override public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity == null) return;
-        ActionBar bar = activity.getSupportActionBar();
-        if (bar == null) return;
-
-        if (hidden) {
-            bar.show();
-        } else {
-            bar.hide();
-        }
     }
 
     public void didSelectSegment(byte index) {

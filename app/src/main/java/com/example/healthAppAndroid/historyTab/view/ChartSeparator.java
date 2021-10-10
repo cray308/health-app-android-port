@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.healthAppAndroid.R;
 
-public class ChartSeparator extends ConstraintLayout {
+public class ChartSeparator extends LinearLayout {
     public ChartSeparator(Context context) {
         super(context);
         setup(null);

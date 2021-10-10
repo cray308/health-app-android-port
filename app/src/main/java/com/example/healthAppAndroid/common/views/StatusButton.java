@@ -5,14 +5,13 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 
-public class StatusButton extends ConstraintLayout {
+public class StatusButton extends LinearLayout {
     public static abstract class State {
         public final static byte disabled = 0;
         public final static byte active = 1;

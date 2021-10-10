@@ -7,8 +7,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Button;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
+import android.widget.LinearLayout;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
@@ -20,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TextValidator {
-    public static class InputView extends ConstraintLayout implements TextWatcher {
+    public static class InputView extends LinearLayout implements TextWatcher {
         public TextInputLayout field;
         private TextInputEditText textField;
         private short min = 1;

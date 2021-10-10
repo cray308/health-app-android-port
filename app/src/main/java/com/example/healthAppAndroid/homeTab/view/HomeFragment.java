@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
-import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.StatusButton;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
@@ -69,9 +67,6 @@ public class HomeFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        FragmentActivity a = getActivity();
-        if (a != null)
-            a.setTitle(AppCoordinator.shared.titles[0]);
         if (delegate != null)
             delegate.checkForChildCoordinator();
         if (viewModel.updateTimeOfDay())
