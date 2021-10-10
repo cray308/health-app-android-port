@@ -6,9 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".historyTab.view.HistoryFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.example.healthAppAndroid.common.views.SegmentedControl
+            android:id="@+id/rangePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:leftTitle="@string/historySegment1"
+            app:midTitle="@string/historySegment2"
+            app:rightTitle="@string/historySegment3" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         android:background="@color/systemGroupedBackground"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,41 +48,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="8dp"
             android:orientation="vertical">
-
-            <RadioGroup
-                android:id="@+id/rangePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkedButton="@id/segmentLeft"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/segmentLeft"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/historySegment1"
-                    android:textColor="@color/label"
-                    android:textSize="12sp" />
-
-                <RadioButton
-                    android:id="@+id/segmentCenter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/historySegment2"
-                    android:textColor="@color/label"
-                    android:textSize="12sp" />
-
-                <RadioButton
-                    android:id="@+id/segmentRight"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/historySegment3"
-                    android:textColor="@color/label"
-                    android:textSize="12sp" />
-            </RadioGroup>
 
             <com.example.healthAppAndroid.historyTab.view.TotalWorkoutsChart
                 android:id="@+id/totalWorkoutsContainer"

@@ -8,6 +8,8 @@ import com.example.healthAppAndroid.R;
 
 public abstract class AppColors {
     public static int gray = 0;
+    public static int gray2 = 0;
+    public static int gray6 = 0;
     public static int blue = 0;
     public static int orange = 0;
     public static int green = 0;
@@ -18,6 +20,8 @@ public abstract class AppColors {
 
     public static void setColors(Context context) {
         gray = ContextCompat.getColor(context, R.color.systemGray);
+        gray2 = ContextCompat.getColor(context, R.color.systemGray2);
+        gray6 = ContextCompat.getColor(context, R.color.systemGray6);
         blue = ContextCompat.getColor(context, R.color.systemBlue);
         orange = ContextCompat.getColor(context, R.color.systemOrange);
         green = ContextCompat.getColor(context, R.color.systemGreen);

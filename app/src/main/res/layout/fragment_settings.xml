@@ -9,6 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/systemGroupedBackground"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,41 +32,14 @@
                 android:textColor="@color/label"
                 android:textSize="13sp" />
 
-            <RadioGroup
+            <com.example.healthAppAndroid.common.views.SegmentedControl
                 android:id="@+id/planPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:checkedButton="@id/segmentNoPlan"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/segmentNoPlan"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settingsSegment1"
-                    android:textColor="@color/label"
-                    android:textSize="12sp" />
-
-                <RadioButton
-                    android:id="@+id/segmentBaseBuilding"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settingsSegment2"
-                    android:textColor="@color/label"
-                    android:textSize="11sp" />
-
-                <RadioButton
-                    android:id="@+id/segmentContinuation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settingsSegment3"
-                    android:textColor="@color/label"
-                    android:textSize="12sp" />
-            </RadioGroup>
+                app:leftTitle="@string/settingsSegment1"
+                app:midTitle="@string/settingsSegment2"
+                app:rightTitle="@string/settingsSegment3" />
 
             <view
                 android:id="@+id/inputFirst"
@@ -105,8 +79,10 @@
                 style="@null"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:text="@string/settingsSaveButtonTitle"
                 android:textAllCaps="false"
                 android:textColor="@color/systemBlue"
@@ -118,8 +94,10 @@
                 style="@null"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:text="@string/settingsDeleteButtonTitle"
                 android:textAllCaps="false"
                 android:textColor="@color/systemRed"

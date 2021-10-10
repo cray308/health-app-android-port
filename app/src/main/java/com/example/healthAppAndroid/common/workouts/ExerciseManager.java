@@ -3,8 +3,6 @@ package com.example.healthAppAndroid.common.workouts;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.healthAppAndroid.common.shareddata.AppUserData;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +17,7 @@ public abstract class ExerciseManager {
         private final JSONObject root;
         private final JSONObject lib;
         private static final String[] libraryKeys = {"st", "se", "en", "hi"};
+        private static final String[] planKeys = {"bb", "cc"};
 
         private DictWrapper(JSONObject root, JSONObject lib) {
             this.root = root;
@@ -40,8 +39,7 @@ public abstract class ExerciseManager {
             JSONArray res = null;
             try {
                 JSONObject plans = root.getJSONObject("plans");
-                String planKey = plan == AppUserData.Plans.baseBuilding ? "bb" : "cc";
-                JSONArray weeks = plans.getJSONArray(planKey);
+                JSONArray weeks = plans.getJSONArray(planKeys[plan]);
                 if (week < weeks.length())
                     res = weeks.getJSONArray(week);
             } catch (JSONException e) {

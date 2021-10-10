@@ -8,10 +8,10 @@ import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.workouts.LiftType;
 
 public class AppUserData {
-    public static abstract class Plans {
-        public static final byte noPlan = -1;
-        public static final byte baseBuilding = 0;
-        public static final byte continuation = 1;
+    private static abstract class Plans {
+        private static final byte noPlan = -1;
+        private static final byte baseBuilding = 0;
+        private static final byte continuation = 1;
     }
     private static abstract class Keys {
         private static final String planStart = "planStart";
@@ -47,6 +47,7 @@ public class AppUserData {
     }
 
     public static int setupFromStorage(Context context) {
+        int[] planLengths = {8, 13};
         shared = new AppUserData(context);
         long now = DateHelper.getCurrentTime();
         long weekStart = DateHelper.calcStartOfWeek(now);
@@ -64,8 +65,7 @@ public class AppUserData {
             shared.weekStart = weekStart;
 
             if (shared.currentPlan >= 0) {
-                int nWeeks = shared.currentPlan == Plans.baseBuilding ? 8 : 13;
-                if (shared.getWeekInPlan() >= nWeeks) {
+                if (shared.getWeekInPlan() >= planLengths[shared.currentPlan]) {
                     if (shared.currentPlan == Plans.baseBuilding)
                         shared.currentPlan = Plans.continuation;
                     shared.planStart = weekStart;

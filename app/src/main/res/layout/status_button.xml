@@ -31,6 +31,8 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:backgroundTint="@color/secondarySystemGroupedBackground"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:textAllCaps="false"
             android:textColor="@android:color/primary_text_light"
             android:textSize="15sp"

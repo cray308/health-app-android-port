@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/buttonLeft"
+        style="@null"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/systemGray2"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textAllCaps="false"
+        android:textColor="@color/label"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="24dp"
+        android:background="@color/label" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp" />
+
+    <Button
+        android:id="@+id/buttonMid"
+        style="@null"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/systemGray6"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textAllCaps="false"
+        android:textColor="@color/label"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="24dp"
+        android:background="@color/label" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="24dp" />
+
+    <Button
+        android:id="@+id/buttonRight"
+        style="@null"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/systemGray6"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textAllCaps="false"
+        android:textColor="@color/label"
+        android:textSize="12sp" />
+
+</LinearLayout>

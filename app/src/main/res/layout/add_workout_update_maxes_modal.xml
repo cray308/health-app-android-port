@@ -35,6 +35,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/secondarySystemGroupedBackground"
                 android:enabled="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:text="@string/updates_maxes_finish_text"
                 android:textAllCaps="false"
                 android:textColor="@color/systemGray"

@@ -21,6 +21,8 @@
     <color name="separator">#4A3C3C43</color>
 
     <color name="systemGray">#FF8E8E93</color>
+    <color name="systemGray2">#FFAEAEB2</color>
+    <color name="systemGray6">#FFF2F2F7</color>
 
     <color name="systemBlue">#FF007AFF</color>
     <color name="systemGreen">#FF34C759</color>

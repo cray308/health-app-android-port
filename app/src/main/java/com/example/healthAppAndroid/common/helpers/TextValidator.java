@@ -111,7 +111,8 @@ public class TextValidator {
 
         private void showErrorMsg() {
             valid = false;
-            field.setError(getContext().getString(R.string.inputFieldError, min, max));
+            field.setError(getContext().getResources().getQuantityString(
+                R.plurals.inputFieldError, 1, min, max));
             delegate.disableButton();
         }
     }

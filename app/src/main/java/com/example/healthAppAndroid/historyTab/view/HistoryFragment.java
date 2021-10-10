@@ -4,19 +4,22 @@ import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
+import com.example.healthAppAndroid.common.views.SegmentedControl;
+import com.example.healthAppAndroid.common.views.SegmentedControlDelegate;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements SegmentedControlDelegate {
     private static class Formatter extends IndexAxisValueFormatter {
         private final String[] months;
         private final HistoryViewModel viewModel;
@@ -33,7 +36,7 @@ public class HistoryFragment extends Fragment {
     }
 
     public final HistoryViewModel viewModel = new HistoryViewModel();
-    private RadioGroup rangePicker;
+    private SegmentedControl rangePicker;
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
@@ -59,23 +62,30 @@ public class HistoryFragment extends Fragment {
         totalWorkoutsChart.setup(viewModel.totalWorkoutsViewModel, formatter);
         workoutTypeChart.setup(viewModel.workoutTypeViewModel, formatter);
         liftingChart.setup(viewModel.liftViewModel, formatter);
-        rangePicker.setOnCheckedChangeListener(segmentListener);
+        rangePicker.delegate = this;
     }
 
-    private final RadioGroup.OnCheckedChangeListener segmentListener = (radioGroup, i) -> {
-        byte segment = HistoryViewModel.Segment.sixMonths;
-        if (i == R.id.segmentCenter) {
-            segment = HistoryViewModel.Segment.oneYear;
-        } else if (i == R.id.segmentRight) {
-            segment = HistoryViewModel.Segment.twoYears;
+    @Override public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity == null) return;
+        ActionBar bar = activity.getSupportActionBar();
+        if (bar == null) return;
+
+        if (hidden) {
+            bar.show();
+        } else {
+            bar.hide();
         }
-        viewModel.formatDataForTimeRange(getContext(), segment);
+    }
+
+    public void didSelectSegment(byte index) {
+        viewModel.formatDataForTimeRange(getContext(), index);
         updateCharts();
-    };
+    }
 
     public void performForegroundUpdate() {
-        rangePicker.check(R.id.segmentLeft);
-        segmentListener.onCheckedChanged(rangePicker, R.id.segmentLeft);
+        rangePicker.setSelectedIndex((byte) 0);
     }
 
     private void updateCharts() {

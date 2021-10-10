@@ -182,8 +182,7 @@ public class Workout {
     }
 
     public void setDuration() {
-        long stopTime = DateHelper.getCurrentTime() + 1;
-        duration = (long) ((stopTime - startTime) / 60.0);
+        duration = ((long) ((DateHelper.getCurrentTime() - startTime) / 60f)) + 1;
         if (BuildConfig.DEBUG)
             duration *= 10;
     }

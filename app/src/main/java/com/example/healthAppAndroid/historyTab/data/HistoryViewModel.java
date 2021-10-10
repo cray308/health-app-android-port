@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class HistoryViewModel {
-    public static abstract class Segment {
-        public static final byte sixMonths = 0;
-        public static final byte oneYear = 1;
-        public static final byte twoYears = 2;
+    private static abstract class Segment {
+        private static final byte sixMonths = 0;
+        private static final byte oneYear = 1;
     }
 
     private String[] workoutNames;

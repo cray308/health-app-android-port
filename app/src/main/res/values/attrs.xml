@@ -9,7 +9,13 @@
         <attr name="fieldHint" format="string"/>
         <attr name="zeroMin" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="SegmentedControl">
+        <attr name="leftTitle" format="string"/>
+        <attr name="midTitle" format="string"/>
+        <attr name="rightTitle" format="string"/>
+    </declare-styleable>
     <declare-styleable name="ChartSeparator">
+        <attr name="hideDivider" format="boolean"/>
         <attr name="sepHeader" format="string"/>
     </declare-styleable>
     <declare-styleable name="HistoryChartLegendEntry">

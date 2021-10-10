@@ -77,13 +77,16 @@
 
     <string name="planPickerTitle">Change workout plan</string>
     <string name="settingsSegment1">None</string>
-    <string name="settingsSegment2">Base building</string>
+    <string name="settingsSegment2">Base-building</string>
     <string name="settingsSegment3">Continuation</string>
     <string name="maxWeightSquat">Max Squat Weight</string>
     <string name="maxWeightPullUp">Max Pull-up Weight</string>
     <string name="maxWeightBench">Max Bench Weight</string>
     <string name="maxWeightDeadLift">Max Deadlift Weight</string>
-    <string name="inputFieldError">Input must be between %1$d and %2$d</string>
+    <plurals name="inputFieldError">
+        <item quantity="one">Input must be between %1$d and %2$d</item>
+        <item quantity="other">Input must be between %1$d and %2$d</item>
+    </plurals>
     <string name="settingsSaveButtonTitle">Save Settings</string>
     <string name="settingsDeleteButtonTitle">Delete Data</string>
     <string name="settingsAlertTitle">Are you sure\?</string>

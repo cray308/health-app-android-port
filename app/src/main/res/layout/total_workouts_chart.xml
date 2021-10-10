@@ -10,6 +10,7 @@
     <com.example.healthAppAndroid.historyTab.view.ChartSeparator
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:hideDivider="true"
         app:sepHeader="@string/chartHeaderTotalWorkouts" />
 
     <com.github.mikephil.charting.charts.LineChart

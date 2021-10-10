@@ -12,6 +12,8 @@
     <color name="separator">#99545458</color>
 
     <color name="systemGray">#FF8E8E93</color>
+    <color name="systemGray2">#FF636366</color>
+    <color name="systemGray6">#FF1C1C1E</color>
 
     <color name="systemBlue">#FF0A84FF</color>
     <color name="systemGreen">#FF30D158</color>
