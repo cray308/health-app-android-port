@@ -7,27 +7,18 @@
     android:orientation="vertical"
     tools:context=".historyTab.view.HistoryFragment">
 
-    <LinearLayout
+    <com.example.healthAppAndroid.common.views.SegmentedControl
+        android:id="@+id/rangePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
-        android:background="@color/secondarySystemBackground"
-        android:orientation="vertical">
-
-        <com.example.healthAppAndroid.common.views.SegmentedControl
-            android:id="@+id/rangePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:leftTitle="@string/historySegment1"
-            app:midTitle="@string/historySegment2"
-            app:rightTitle="@string/historySegment3" />
-    </LinearLayout>
+        android:background="@color/systemBackground"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
+        app:leftTitle="@string/historySegment1"
+        app:midTitle="@string/historySegment2"
+        app:rightTitle="@string/historySegment3" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,10 +29,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="20dp">
 
             <com.example.healthAppAndroid.historyTab.view.TotalWorkoutsChart
                 android:id="@+id/totalWorkoutsContainer"
@@ -57,10 +49,6 @@
                 android:id="@+id/liftContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
