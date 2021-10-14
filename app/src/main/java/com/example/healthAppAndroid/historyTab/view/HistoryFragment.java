@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
-import com.example.healthAppAndroid.common.views.SegmentedControlDelegate;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-public class HistoryFragment extends Fragment implements SegmentedControlDelegate {
+public class HistoryFragment extends Fragment implements SegmentedControl.Delegate {
     private static class Formatter extends IndexAxisValueFormatter {
         private final String[] months;
         private final HistoryViewModel viewModel;

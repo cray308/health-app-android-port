@@ -110,7 +110,7 @@ public abstract class NotificationService {
         return new NotificationCompat.Builder(context, ChannelId)
             .setAutoCancel(true)
             .setDefaults(defaults)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pIntent)
