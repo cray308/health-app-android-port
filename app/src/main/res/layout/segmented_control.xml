@@ -11,12 +11,15 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
+        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="@color/systemGray2"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:maxLines="1"
         android:textAllCaps="false"
-        android:textColor="@color/label"
-        android:textSize="12sp" />
+        android:textColor="@color/label" />
 
     <View
         android:layout_width="2dp"
@@ -37,12 +40,15 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
+        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="@color/systemGray6"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:maxLines="1"
         android:textAllCaps="false"
-        android:textColor="@color/label"
-        android:textSize="12sp" />
+        android:textColor="@color/label" />
 
     <View
         android:layout_width="2dp"
@@ -63,11 +69,14 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
+        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeTextType="uniform"
         android:backgroundTint="@color/systemGray6"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:maxLines="1"
         android:textAllCaps="false"
-        android:textColor="@color/label"
-        android:textSize="12sp" />
+        android:textColor="@color/label" />
 
 </LinearLayout>

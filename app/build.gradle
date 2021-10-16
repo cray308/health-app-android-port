@@ -3,6 +3,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file(HA_STORE_FILE)
+            storePassword HA_STORE_PASS
+            keyAlias HA_KEY_ALIAS
+            keyPassword HA_KEY_PASS
+        }
+        release {
+            storeFile file(HA_STORE_FILE)
+            storePassword HA_STORE_PASS
+            keyAlias HA_KEY_ALIAS
+            keyPassword HA_KEY_PASS
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -19,6 +33,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         customDebugType {
             debuggable true
