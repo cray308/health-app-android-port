@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
@@ -26,6 +27,7 @@ public abstract class NotificationService {
     private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
+    private static int color;
     private static int filterId = 1;
     private static final String[] baseFilters = {
         "com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"
@@ -54,6 +56,7 @@ public abstract class NotificationService {
     public static void init(Context context) {
         messages = context.getResources().getStringArray(R.array.notifications);
         contentTitle = context.getString(R.string.workoutNotificationTitle);
+        color = ContextCompat.getColor(context, R.color.notification);
     }
 
     public static void setup(Context outerContext) {
@@ -63,18 +66,14 @@ public abstract class NotificationService {
 
         receivers[Type.Exercise] = new BroadcastReceiver() {
             @Override public void onReceive(Context context, Intent intent) {
-                NotificationCompat.Builder b = createNotification(context, Type.Exercise);
-                notificationMgr.notify(identifier++, b.build());
-                WorkoutActivity activity = (WorkoutActivity) context;
-                activity.finishedExercise();
+                notificationMgr.notify(identifier++, createNotification(context, Type.Exercise));
+                ((WorkoutActivity) context).finishedExercise();
             }
         };
         receivers[Type.Circuit] = new BroadcastReceiver() {
             @Override public void onReceive(Context context, Intent intent) {
-                NotificationCompat.Builder b = createNotification(context, Type.Circuit);
-                notificationMgr.notify(identifier++, b.build());
-                WorkoutActivity activity = (WorkoutActivity) context;
-                activity.finishedGroup();
+                notificationMgr.notify(identifier++, createNotification(context, Type.Circuit));
+                ((WorkoutActivity) context).finishedGroup();
             }
         };
         int id = filterId++;
@@ -103,18 +102,19 @@ public abstract class NotificationService {
         alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);
     }
 
-    private static NotificationCompat.Builder createNotification(Context context, byte type) {
+    private static Notification createNotification(Context context, byte type) {
         Intent intent = new Intent(context, WorkoutActivity.class);
         intent.setAction("timerAction");
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, flags);
         return new NotificationCompat.Builder(context, ChannelId)
             .setAutoCancel(true)
             .setDefaults(defaults)
-            .setSmallIcon(R.mipmap.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notif)
+            .setColor(color)
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pIntent)
             .setContentTitle(contentTitle)
-            .setContentText(messages[type]);
+            .setContentText(messages[type]).build();
     }
 }
