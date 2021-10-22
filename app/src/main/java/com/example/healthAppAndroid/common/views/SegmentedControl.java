@@ -68,7 +68,7 @@ public class SegmentedControl extends LinearLayout {
     public void setSelectedIndex(byte newIndex) {
         selectedIndex = newIndex;
         for (byte i = 0; i < 3; ++i)
-            buttons[i].setBackgroundColor(i == selectedIndex ? AppColors.gray2 : AppColors.gray6);
+            buttons[i].setBackgroundColor(i == selectedIndex ? AppColors.gray2 : AppColors.gray5);
         if (delegate != null)
             delegate.didSelectSegment(newIndex);
     }

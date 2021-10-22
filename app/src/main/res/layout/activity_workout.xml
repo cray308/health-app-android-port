@@ -10,8 +10,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/secondarySystemBackground"
+        android:layout_height="48dp"
+        android:background="@color/secondarySystemGroupedBackground"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
         app:menu="@menu/workout_items"
@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/systemGroupedBackground"
         android:fillViewport="true">
 
         <LinearLayout

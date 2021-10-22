@@ -37,7 +37,7 @@ public class SettingsFragment extends Fragment {
 
         Button saveButton = view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(view1 -> delegate.handleSaveTap(
-            validator.getResults(), (byte) (picker.selectedIndex - 1)));
+          validator.getResults(), (byte) (picker.selectedIndex - 1)));
 
         Button deleteButton = view.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(view2 -> delegate.handleDeleteTap());
@@ -51,5 +51,10 @@ public class SettingsFragment extends Fragment {
     public void updateWeightFields() {
         validator.reset(AppUserData.shared.liftArray);
         validator.enableButton();
+    }
+
+    @Override public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) validator.clearFocus();
     }
 }

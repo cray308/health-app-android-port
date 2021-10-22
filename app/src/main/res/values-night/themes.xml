@@ -1,12 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.HealthAppAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="colorPrimary">@color/systemBlue</item>
+        <item name="colorPrimaryVariant">@color/chartBlue</item>
+        <item name="colorOnPrimary">@color/label</item>
+        <item name="colorSecondary">@color/systemOrange</item>
+        <item name="colorSecondaryVariant">@color/chartOrange</item>
+        <item name="colorOnSecondary">@color/systemBackground</item>
+        <item name="colorSurface">@color/secondarySystemBackground</item>
+        <item name="android:colorBackground">@null</item>
+        <item name="android:windowBackground">@color/systemGroupedBackground</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/darkGray</item>
+        <item name="android:navigationBarColor">@color/darkGray</item>
     </style>
 </resources>

@@ -1,108 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".settingsTab.SettingsFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/systemGroupedBackground"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingTop="20dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="20dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="8dp"
-            android:paddingTop="20dp"
-            android:paddingRight="8dp"
-            android:paddingBottom="20dp">
+            android:text="@string/planPickerTitle"
+            android:textColor="@color/label"
+            android:textSize="13sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/planPickerTitle"
-                android:textColor="@color/label"
-                android:textSize="13sp" />
+        <com.example.healthAppAndroid.common.views.SegmentedControl
+            android:id="@+id/planPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:leftTitle="@string/settingsSegment1"
+            app:midTitle="@string/settingsSegment2"
+            app:rightTitle="@string/settingsSegment3" />
 
-            <com.example.healthAppAndroid.common.views.SegmentedControl
-                android:id="@+id/planPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                app:leftTitle="@string/settingsSegment1"
-                app:midTitle="@string/settingsSegment2"
-                app:rightTitle="@string/settingsSegment3" />
+        <view
+            android:id="@+id/inputFirst"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:fieldHint="@string/maxWeightSquat"
+            app:zeroMin="true" />
 
-            <view
-                android:id="@+id/inputFirst"
-                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:fieldHint="@string/maxWeightSquat"
-                app:zeroMin="true" />
+        <view
+            android:id="@+id/inputSecond"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fieldHint="@string/maxWeightPullUp"
+            app:zeroMin="true" />
 
-            <view
-                android:id="@+id/inputSecond"
-                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightPullUp"
-                app:zeroMin="true" />
+        <view
+            android:id="@+id/inputThird"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fieldHint="@string/maxWeightBench"
+            app:zeroMin="true" />
 
-            <view
-                android:id="@+id/inputThird"
-                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightBench"
-                app:zeroMin="true" />
+        <view
+            android:id="@+id/inputFourth"
+            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fieldHint="@string/maxWeightDeadLift"
+            app:zeroMin="true" />
 
-            <view
-                android:id="@+id/inputFourth"
-                class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldHint="@string/maxWeightDeadLift"
-                app:zeroMin="true" />
+        <Button
+            android:id="@+id/saveButton"
+            style="@style/AppButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/settingsSaveButtonTitle"
+            android:textColor="@color/systemBlue"
+            android:textSize="17sp" />
 
-            <Button
-                android:id="@+id/saveButton"
-                style="@null"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/settingsSaveButtonTitle"
-                android:textAllCaps="false"
-                android:textColor="@color/systemBlue"
-                android:textSize="17sp"
-                app:iconTint="@null" />
-
-            <Button
-                android:id="@+id/deleteButton"
-                style="@null"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="@color/secondarySystemGroupedBackground"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/settingsDeleteButtonTitle"
-                android:textAllCaps="false"
-                android:textColor="@color/systemRed"
-                android:textSize="17sp"
-                app:iconTint="@null" />
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/deleteButton"
+            style="@style/AppButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/settingsDeleteButtonTitle"
+            android:textColor="@color/systemRed"
+            android:textSize="17sp" />
+    </LinearLayout>
+</ScrollView>

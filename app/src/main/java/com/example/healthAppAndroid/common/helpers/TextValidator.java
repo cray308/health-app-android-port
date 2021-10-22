@@ -133,6 +133,10 @@ public class TextValidator {
         button.setTextColor(enabledColor);
     }
 
+    public void clearFocus() {
+        for (int i = 0; i < count; ++i) children[i].textField.clearFocus();
+    }
+
     private void disableButton() {
         button.setEnabled(false);
         button.setTextColor(AppColors.labelDisabled);

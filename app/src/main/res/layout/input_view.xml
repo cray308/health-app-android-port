@@ -7,16 +7,18 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/field"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:errorEnabled="true">
+        android:textColorHint="@color/label"
+        app:boxBackgroundColor="@color/systemGray5"
+        app:errorEnabled="true"
+        app:hintTextColor="@color/label">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fieldTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:cursorVisible="false"
-            android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="number"
             android:maxLines="1" />
