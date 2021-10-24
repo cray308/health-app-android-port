@@ -18,14 +18,14 @@ import androidx.annotation.NonNull;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
-import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
+public class HomeSetupWorkoutDialog
+  extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
     private static final String paramsKey = "HomeSetupWorkoutDialogParams";
 
     public static class Params implements Parcelable {
@@ -103,10 +103,10 @@ public class HomeSetupWorkoutDialog extends BottomSheetDialogFragment implements
                     output.reps = results[0];
                 default:
             }
-            delegate.finishedBottomSheet(HomeSetupWorkoutDialog.this, output);
+            delegate.finishedBottomSheet(this, output);
         });
 
-        validator = new TextValidator(submitButton, AppColors.blue);
+        validator = new TextValidator(submitButton);
         Spinner picker = view.findViewById(R.id.workoutPicker);
         LinearLayout inputViewStack = view.findViewById(R.id.textFieldStack);
         Context c = getContext();

@@ -62,7 +62,7 @@ public class ExerciseEntry {
                 }
                 return context.getString(R.string.exerciseTitleDurationSeconds, name, reps);
             default:
-                int rowingDist = (5 * reps) / 4;
+                int rowingDist = (5 * reps) >> 2;
                 return context.getString(R.string.exerciseTitleDistance, reps, rowingDist);
         }
     }

@@ -18,11 +18,12 @@ public class SettingsTabCoordinator {
     }
 
     public void handleSaveTap(short[] newLifts, byte plan) {
+        String neutral = fragment.getString(com.google.android.material.R.string.mtrl_picker_save);
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())
             .setTitle(fragment.getString(R.string.settingsAlertTitle))
             .setMessage(fragment.getString(R.string.settingsAlertMessageSave))
             .setNegativeButton(fragment.getString(R.string.cancel), null)
-            .setPositiveButton(fragment.getString(R.string.save), (dialogInterface, i) -> {
+            .setPositiveButton(neutral, (dialogInterface, i) -> {
                 AppUserData.shared.updateWeightMaxes(newLifts);
                 AppUserData.shared.setWorkoutPlan(plan);
                 AppCoordinator.shared.updatedUserInfo();
@@ -31,11 +32,13 @@ public class SettingsTabCoordinator {
     }
 
     public void handleDeleteTap() {
+        String neutral = fragment.getString(
+          androidx.appcompat.R.string.abc_menu_delete_shortcut_label);
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())
             .setTitle(fragment.getString(R.string.settingsAlertTitle))
             .setMessage(fragment.getString(R.string.settingsAlertMessageDelete))
             .setNegativeButton(fragment.getString(R.string.cancel), null)
-            .setNeutralButton(fragment.getString(R.string.delete), (dialogInterface, i) -> {
+            .setNeutralButton(neutral, (dialogInterface, i) -> {
                 AppUserData.shared.deleteSavedData();
                 AppCoordinator.shared.deletedAppData();
                 PersistenceService.deleteAppData();

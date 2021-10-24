@@ -12,7 +12,6 @@ import android.widget.Button;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
-import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
 
@@ -20,8 +19,6 @@ public class SettingsFragment extends Fragment {
     public SettingsTabCoordinator delegate;
     private SegmentedControl picker;
     private TextValidator validator;
-
-    public SettingsFragment() {}
 
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +39,7 @@ public class SettingsFragment extends Fragment {
         Button deleteButton = view.findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(view2 -> delegate.handleDeleteTap());
 
-        validator = new TextValidator(saveButton, AppColors.blue);
+        validator = new TextValidator(saveButton);
         for (int i = 0; i < 4; ++i)
             validator.addChild((short) 999, view.findViewById(ids[i]));
         updateWeightFields();

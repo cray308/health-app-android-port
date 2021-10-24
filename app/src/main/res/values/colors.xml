@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="darkGray">#FF1C1C1E</color>
-    <color name="systemBackground">#FFFFFFFF</color>
-    <color name="secondarySystemBackground">#FFF2F2F7</color>
-    <color name="systemGroupedBackground">#FFF2F2F7</color>
     <color name="secondarySystemGroupedBackground">#FFFFFFFF</color>
     <color name="tertiarySystemGroupedBackground">#FFF2F2F7</color>
 
     <color name="label">#FF000000</color>
-    <color name="secondaryLabel">#993C3C43</color>
+    <color name="secondaryLabel">#FF757575</color>
 
     <color name="separator">#4A3C3C43</color>
     <color name="notification">#FFD59431</color>
@@ -17,11 +13,12 @@
     <color name="systemGray2">#FFAEAEB2</color>
     <color name="systemGray5">#FFE5E5EA</color>
 
-    <color name="systemBlue">#FF007AFF</color>
-    <color name="systemGreen">#FF34C759</color>
+    <color name="systemBlue">#FF2962FF</color>
+    <color name="systemGreen">#FF2E7D32</color>
     <color name="systemOrange">#FFFF9500</color>
-    <color name="systemRed">#FFFF3B30</color>
+    <color name="systemRed">#FFD50000</color>
 
+    <color name="chartRed">#FFFF3B30</color>
     <color name="chartBlue">#FF329BA8</color>
     <color name="chartGreen">#FF1A632B</color>
     <color name="chartOrange">#FFDB8514</color>

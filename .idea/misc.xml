@@ -11,13 +11,14 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.13125" />
         <entry key="app/src/main/res/drawable/chart_gradient.xml" value="0.3717948717948718" />
         <entry key="app/src/main/res/drawable/circle_shape.xml" value="0.3717948717948718" />
+        <entry key="app/src/main/res/drawable/ic_bar_chart.xml" value="0.403125" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.3776041666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3717948717948718" />
         <entry key="app/src/main/res/drawable/ic_launcher_background_custom.xml" value="0.3717948717948718" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.375" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground_custom.xml" value="0.3717948717948718" />
         <entry key="app/src/main/res/drawable/workout_back_btn.xml" value="0.2390625" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_workout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/add_workout_update_maxes_modal.xml" value="0.33" />
         <entry key="app/src/main/res/layout/chart_separator.xml" value="0.3197252212272301" />
@@ -33,7 +34,7 @@
         <entry key="app/src/main/res/layout/home_setup_workout_modal.xml" value="0.33" />
         <entry key="app/src/main/res/layout/input_view.xml" value="0.5" />
         <entry key="app/src/main/res/layout/lift_chart.xml" value="0.3194444444444444" />
-        <entry key="app/src/main/res/layout/segmented_control.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/segmented_control.xml" value="0.5" />
         <entry key="app/src/main/res/layout/status_button.xml" value="0.335" />
         <entry key="app/src/main/res/layout/total_workouts_chart.xml" value="0.24351851851851852" />
         <entry key="app/src/main/res/layout/workout_start_stop_view.xml" value="0.335" />

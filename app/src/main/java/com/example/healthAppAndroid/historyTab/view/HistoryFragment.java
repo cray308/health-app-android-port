@@ -17,7 +17,7 @@ import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 public class HistoryFragment extends Fragment implements SegmentedControl.Delegate {
-    private static class Formatter extends IndexAxisValueFormatter {
+    private static final class Formatter extends IndexAxisValueFormatter {
         private final String[] months;
         private final HistoryViewModel viewModel;
 
@@ -37,8 +37,6 @@ public class HistoryFragment extends Fragment implements SegmentedControl.Delega
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
-
-    public HistoryFragment() {}
 
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup container, Bundle savedInstanceState) {

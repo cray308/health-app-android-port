@@ -13,7 +13,7 @@ import com.example.healthAppAndroid.settingsTab.SettingsFragment;
 import com.example.healthAppAndroid.settingsTab.SettingsTabCoordinator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class AppCoordinator {
+public final class AppCoordinator {
     private final FragmentManager fm;
     private final Fragment[] children = {
         new HomeFragment(), new HistoryFragment(), new SettingsFragment()
@@ -21,7 +21,7 @@ public class AppCoordinator {
     public final HomeTabCoordinator homeCoordinator;
     public final HistoryTabCoordinator historyCoordinator;
     public final SettingsTabCoordinator settingsCoordinator;
-    private Fragment active = null;
+    private Fragment active;
 
     public static AppCoordinator shared;
 
@@ -31,7 +31,7 @@ public class AppCoordinator {
     }
 
     private AppCoordinator(FragmentActivity activity) {
-        this.fm = activity.getSupportFragmentManager();
+        fm = activity.getSupportFragmentManager();
         homeCoordinator = new HomeTabCoordinator(children[0]);
         historyCoordinator = new HistoryTabCoordinator(children[1]);
         settingsCoordinator = new SettingsTabCoordinator(children[2]);

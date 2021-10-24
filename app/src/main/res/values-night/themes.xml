@@ -5,11 +5,11 @@
         <item name="colorOnPrimary">@color/label</item>
         <item name="colorSecondary">@color/systemOrange</item>
         <item name="colorSecondaryVariant">@color/chartOrange</item>
-        <item name="colorOnSecondary">@color/systemBackground</item>
-        <item name="colorSurface">@color/secondarySystemBackground</item>
+        <item name="colorOnSecondary">#FF000000</item>
+        <item name="colorSurface">#FF1C1C1E</item>
         <item name="android:colorBackground">@null</item>
-        <item name="android:windowBackground">@color/systemGroupedBackground</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/darkGray</item>
-        <item name="android:navigationBarColor">@color/darkGray</item>
+        <item name="android:windowBackground">#FF000000</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#FF1C1C1E</item>
+        <item name="android:navigationBarColor">#FF1C1C1E</item>
     </style>
 </resources>

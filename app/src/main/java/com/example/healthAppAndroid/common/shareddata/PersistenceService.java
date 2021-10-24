@@ -170,7 +170,7 @@ public abstract class PersistenceService extends RoomDatabase {
         return dao.findCurrentWeek(AppUserData.shared.weekStart);
     }
 
-    private static class DeleteDataTask implements Runnable {
+    private static final class DeleteDataTask implements Runnable {
         public void run() {
             PersistenceService service = PersistenceService.shared;
             DAO dao = service.dao();
@@ -181,7 +181,7 @@ public abstract class PersistenceService extends RoomDatabase {
 
     public static void deleteAppData() { new Thread(new DeleteDataTask()).start(); }
 
-    private static class UpdateCurrentWeekTask implements Runnable {
+    private static final class UpdateCurrentWeekTask implements Runnable {
         private final Workout workout;
         private final Block block;
 
@@ -227,7 +227,7 @@ public abstract class PersistenceService extends RoomDatabase {
         new Thread(new UpdateCurrentWeekTask(workout, block)).start();
     }
 
-    private static class HistoryFetchTask implements Runnable {
+    private static final class HistoryFetchTask implements Runnable {
         private final HistoryViewModel.WeekDataModel model;
         private final Block block;
 

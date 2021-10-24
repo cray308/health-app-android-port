@@ -38,8 +38,6 @@ public class HomeFragment extends Fragment {
     private LinearLayout weeklyWorkoutStack;
     private KonfettiView confettiView;
 
-    public HomeFragment() {}
-
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
@@ -101,7 +99,7 @@ public class HomeFragment extends Fragment {
         int count = weeklyWorkoutStack.getChildCount();
         if (!(viewModel.hasWorkoutsForThisWeek() && count > 0)) return;
 
-        final byte completed = AppUserData.shared.completedWorkouts;
+        byte completed = AppUserData.shared.completedWorkouts;
         for (int i = 0; i < count; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;

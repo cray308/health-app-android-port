@@ -30,7 +30,7 @@ public class TotalWorkoutsChart extends ChartContainer {
         this.viewModel = viewModel;
 
         Drawable fill = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
-        dataSets[0] = createDataSet(AppColors.red);
+        dataSets[0] = createDataSet(ContextCompat.getColor(getContext(), R.color.chartRed));
         dataSets[0].setFillDrawable(fill);
         dataSets[0].setDrawFilled(true);
         dataSets[0].setFillAlpha(191);

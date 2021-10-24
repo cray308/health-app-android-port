@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
-import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -33,9 +32,9 @@ public class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(view1 -> {
             workout.newLifts = validator.getResults();
-            delegate.completedWorkout(getActivity(), AddWorkoutUpdateMaxesDialog.this, false);
+            delegate.completedWorkout(getActivity(), this, false);
         });
-        validator = new TextValidator(finishButton, AppColors.blue);
+        validator = new TextValidator(finishButton);
 
         int[] ids = {R.id.firstInput, R.id.secondInput, R.id.thirdInput, R.id.fourthInput};
         for (int i = 0; i < 4; ++i)

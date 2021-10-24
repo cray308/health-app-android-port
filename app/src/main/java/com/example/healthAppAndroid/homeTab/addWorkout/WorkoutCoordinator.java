@@ -12,7 +12,7 @@ import com.example.healthAppAndroid.homeTab.addWorkout.views.AddWorkoutUpdateMax
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class WorkoutCoordinator {
-    private static class UpdateHandler implements PersistenceService.Block {
+    private final static class UpdateHandler implements PersistenceService.Block {
         private final short[] lifts;
 
         private UpdateHandler(short[] lifts) { this.lifts = lifts; }
@@ -32,7 +32,7 @@ public class WorkoutCoordinator {
     private final HomeTabCoordinator parent;
 
     public WorkoutCoordinator(Workout w, HomeTabCoordinator parent) {
-        this.workout = w;
+        workout = w;
         this.parent = parent;
     }
 

@@ -25,9 +25,9 @@ public class TextValidator {
         private short min = 1;
         private short max = 999;
         private TextValidator delegate;
-        private boolean valid = false;
-        private boolean isInputNumeric = false;
-        private short result = 0;
+        private boolean valid;
+        private boolean isInputNumeric;
+        private short result;
 
         public InputView(Context context) {
             super(context);
@@ -119,18 +119,14 @@ public class TextValidator {
     private final Set<Character> validChars = new HashSet<>(
         Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
     private final InputView[] children = {null, null, null, null};
-    private int count = 0;
+    private int count;
     private final Button button;
-    private final int enabledColor;
 
-    public TextValidator(Button button, int enabledColor) {
-        this.button = button;
-        this.enabledColor = enabledColor;
-    }
+    public TextValidator(Button button) { this.button = button; }
 
     public void enableButton() {
         button.setEnabled(true);
-        button.setTextColor(enabledColor);
+        button.setTextColor(AppColors.blue);
     }
 
     public void clearFocus() {

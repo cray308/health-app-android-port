@@ -15,9 +15,9 @@ public class SegmentedControl extends LinearLayout {
         void didSelectSegment(byte index);
     }
 
-    public byte selectedIndex = 0;
+    public byte selectedIndex;
     private final Button[] buttons = {null, null, null};
-    public Delegate delegate = null;
+    public Delegate delegate;
 
     private final View.OnClickListener listener = view -> {
         byte selected = 0;

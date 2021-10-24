@@ -80,7 +80,8 @@ public class HistoryViewModel {
     }
 
     public boolean isSmall;
-    public final TotalWorkoutsChartViewModel totalWorkoutsViewModel = new TotalWorkoutsChartViewModel();
+    public final TotalWorkoutsChartViewModel totalWorkoutsViewModel =
+      new TotalWorkoutsChartViewModel();
     public final WorkoutTypeChartViewModel workoutTypeViewModel = new WorkoutTypeChartViewModel();
     public final LiftChartViewModel liftViewModel = new LiftChartViewModel();
     public final WeekDataModel data = new WeekDataModel();

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="systemBackground">#FF000000</color>
-    <color name="secondarySystemBackground">#FF1C1C1E</color>
-    <color name="systemGroupedBackground">#FF000000</color>
     <color name="secondarySystemGroupedBackground">#FF1C1C1E</color>
     <color name="tertiarySystemGroupedBackground">#FF2C2C2E</color>
 
@@ -15,8 +12,9 @@
     <color name="systemGray2">#FF636366</color>
     <color name="systemGray5">#FF2C2C2E</color>
 
-    <color name="systemBlue">#FF0A84FF</color>
+    <color name="systemBlue">#FF8C9EFF</color>
     <color name="systemGreen">#FF30D158</color>
     <color name="systemOrange">#FFFF9F0A</color>
-    <color name="systemRed">#FFFF453A</color>
+    <color name="systemRed">#FFFF6E40</color>
+    <color name="chartRed">#FFFF453A</color>
 </resources>

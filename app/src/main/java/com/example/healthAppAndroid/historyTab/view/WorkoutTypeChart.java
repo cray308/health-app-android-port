@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkoutTypeChart extends ChartContainer {
-    private static class Renderer extends LineChartRenderer {
-        public static class Formatter implements IFillFormatter {
+    private static final class Renderer extends LineChartRenderer {
+        private static final class Formatter implements IFillFormatter {
             private final LineDataSet boundaryDataSet;
 
             private Formatter(LineDataSet boundaryDataSet) {
@@ -37,7 +37,7 @@ public class WorkoutTypeChart extends ChartContainer {
             }
         }
 
-        public Renderer(LineChart view) {
+        private Renderer(LineChart view) {
             super(view, view.getAnimator(), view.getViewPortHandler());
         }
 

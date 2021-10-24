@@ -34,7 +34,8 @@ public abstract class NotificationService {
     };
     private static final String[] filters = {null, null};
 
-    private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+    private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT |
+                                     PendingIntent.FLAG_IMMUTABLE;
     private static final int defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
     private static int identifier = 1;

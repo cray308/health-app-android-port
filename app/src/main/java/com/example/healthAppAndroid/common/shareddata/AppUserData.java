@@ -7,7 +7,7 @@ import com.example.healthAppAndroid.BuildConfig;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.workouts.LiftType;
 
-public class AppUserData {
+public final class AppUserData {
     private static abstract class Plans {
         private static final byte noPlan = -1;
         private static final byte baseBuilding = 0;

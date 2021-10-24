@@ -7,7 +7,7 @@ import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.example.healthAppAndroid.historyTab.view.HistoryFragment;
 
 public class HistoryTabCoordinator {
-    private static class FetchHandler implements PersistenceService.Block {
+    private static final class FetchHandler implements PersistenceService.Block {
         private final HistoryTabCoordinator coordinator;
 
         private FetchHandler(HistoryTabCoordinator coordinator) { this.coordinator = coordinator; }

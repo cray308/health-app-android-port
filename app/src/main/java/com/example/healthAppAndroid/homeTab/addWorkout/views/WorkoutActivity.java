@@ -69,7 +69,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 handleTap(0, 0, Workout.EventOption.startGroup);
             } else {
                 workout.setDuration();
-                delegate.stoppedWorkout(WorkoutActivity.this);
+                delegate.stoppedWorkout(this);
             }
         });
         return super.onCreateOptionsMenu(menu);
