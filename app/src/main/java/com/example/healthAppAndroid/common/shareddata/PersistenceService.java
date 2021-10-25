@@ -23,8 +23,9 @@ import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
+@SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 public abstract class PersistenceService extends RoomDatabase {
-    @Dao public interface DAO {
+    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor") @Dao public interface DAO {
         @Query("SELECT * FROM weeks") WeeklyData[] getAll();
 
         @Query("SELECT * FROM weeks WHERE start == :date LIMIT 1")
@@ -80,7 +81,7 @@ public abstract class PersistenceService extends RoomDatabase {
 
     private static final String DBName = "HealthApp-db";
     public abstract DAO dao();
-    public static PersistenceService shared;
+    private static PersistenceService shared;
 
     public static void setup(long tzDifference) {
         shared.performStartupUpdate(tzDifference);
@@ -100,12 +101,12 @@ public abstract class PersistenceService extends RoomDatabase {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
 
-    private void deleteEntries(DAO dao, WeeklyData[] data) {
+    private static void deleteEntries(DAO dao, WeeklyData[] data) {
         if (data.length != 0)
             dao.delete(data);
     }
 
-    private void saveChanges(DAO dao, WeeklyData[] data) {
+    private static void saveChanges(DAO dao, WeeklyData[] data) {
         dao.updateWeeks(data);
     }
 
@@ -166,16 +167,16 @@ public abstract class PersistenceService extends RoomDatabase {
         dao.insertWeeks(dataToSave);
     }
 
-    private WeeklyData getCurrentWeek(DAO dao) {
+    private static WeeklyData getCurrentWeek(DAO dao) {
         return dao.findCurrentWeek(AppUserData.shared.weekStart);
     }
 
     private static final class DeleteDataTask implements Runnable {
         public void run() {
-            PersistenceService service = PersistenceService.shared;
+            PersistenceService service = shared;
             DAO dao = service.dao();
             WeeklyData[] data = dao.getDataInInterval(0, AppUserData.shared.weekStart);
-            service.deleteEntries(dao, data);
+            deleteEntries(dao, data);
         }
     }
 
@@ -191,9 +192,9 @@ public abstract class PersistenceService extends RoomDatabase {
         }
 
         public void run() {
-            PersistenceService service = PersistenceService.shared;
+            PersistenceService service = shared;
             DAO dao = service.dao();
-            WeeklyData curr = service.getCurrentWeek(dao);
+            WeeklyData curr = getCurrentWeek(dao);
             curr.totalWorkouts += 1;
             switch (workout.type) {
                 case Workout.Type.SE:
@@ -216,7 +217,7 @@ public abstract class PersistenceService extends RoomDatabase {
                 curr.bestDeadlift = workout.newLifts[LiftType.deadlift];
             }
 
-            service.saveChanges(dao, new WeeklyData[]{curr});
+            saveChanges(dao, new WeeklyData[]{curr});
             if (block != null)
                 new Handler(Looper.getMainLooper()).post(block::completion);
         }
@@ -237,7 +238,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
 
         public void run() {
-            PersistenceService service = PersistenceService.shared;
+            PersistenceService service = shared;
             WeeklyData[] data = service.dao().getDataInInterval(
                 DateHelper.twoYearsAgo(), AppUserData.shared.weekStart);
             model.size = data.length;

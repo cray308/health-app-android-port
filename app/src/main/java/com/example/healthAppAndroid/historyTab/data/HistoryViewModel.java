@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.Entry;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class HistoryViewModel {
+public final class HistoryViewModel {
     private static abstract class Segment {
         private static final byte sixMonths = 0;
         private static final byte oneYear = 1;
@@ -21,36 +21,36 @@ public class HistoryViewModel {
     private String[] workoutNames;
     private String[] liftNames;
 
-    public static class TotalWorkoutsChartViewModel {
+    public final static class TotalWorkoutsChartViewModel {
         public Entry[] entries;
         public String legendLabel;
         public float avgWorkouts;
         public float yMax;
     }
 
-    public static class WorkoutTypeChartViewModel {
+    public final static class WorkoutTypeChartViewModel {
         public final Entry[][] entries = {null, null, null, null, null};
         public final String[] legendLabels = {null, null, null, null};
-        public final int[] totalByType = {0, 0, 0, 0};
+        private final int[] totalByType = {0, 0, 0, 0};
         public float yMax;
     }
 
-    public static class LiftChartViewModel {
+    public final static class LiftChartViewModel {
         public final Entry[][] entries = {null, null, null, null};
         public final String[] legendLabels = {null, null, null, null};
-        public final int[] totalByExercise = {0, 0, 0, 0};
+        private final int[] totalByExercise = {0, 0, 0, 0};
         public float yMax;
     }
 
-    public static class WeekDataModel {
+    public final static class WeekDataModel {
         public static class Week {
             public final int year;
             public final int month;
             public final int day;
-            public final int totalWorkouts;
-            public final int[] durationByType = {0, 0, 0, 0};
-            public final int[] cumulativeDuration = {0, 0, 0, 0};
-            public final int[] weightArray = {0, 0, 0, 0};
+            private final int totalWorkouts;
+            private final int[] durationByType = {0, 0, 0, 0};
+            private final int[] cumulativeDuration = {0, 0, 0, 0};
+            private final int[] weightArray = {0, 0, 0, 0};
 
             public Week(PersistenceService.WeeklyData d) {
                 int timeStrength = d.timeStrength;

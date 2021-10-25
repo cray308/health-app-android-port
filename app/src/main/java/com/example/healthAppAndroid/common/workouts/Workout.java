@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.BuildConfig;
+import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
@@ -13,7 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Workout {
+public final class Workout {
     public static abstract class Type {
         public static final byte strength = 0;
         public static final byte SE = 1;
@@ -25,7 +26,7 @@ public class Workout {
         public static final byte finishedCircuitDeleteFirst = 1;
         public static final byte finishedCircuit = 2;
         public static final byte finishedExercise = 3;
-        public static final byte noChange = 4;
+        private static final byte noChange = 4;
     }
     public static abstract class EventOption {
         public static final byte startGroup = 1;
@@ -34,11 +35,11 @@ public class Workout {
     public static final long MinWorkoutDuration = 15;
 
     private static abstract class LiftIndex {
-        static final int main = 0, test = 2;
+        private static final int main = 0, test = 2;
     }
 
-    public static class Params {
-        public final byte day;
+    public final static class Params {
+        private final byte day;
         public byte type;
         public int index;
         public int sets = 1;
@@ -90,17 +91,17 @@ public class Workout {
                     e.sets = params.sets;
                     e.reps = params.reps;
                 }
-                exercises[0].weight = (int) (multiplier * (float) lifts[LiftType.squat]);
+                exercises[0].weight = (int) (multiplier * lifts[LiftType.squat]);
                 if (params.index != LiftIndex.test) {
-                    exercises[1].weight = (int) (multiplier * (float) lifts[LiftType.bench]);
+                    exercises[1].weight = (int) (multiplier * lifts[LiftType.bench]);
                     if (params.index == LiftIndex.main) {
-                        exercises[2].weight = (int) (multiplier * (float) lifts[LiftType.pullUp]);
+                        exercises[2].weight = (int) (multiplier * lifts[LiftType.pullUp]);
                     } else {
-                        exercises[2].weight = (int) (multiplier * (float) lifts[LiftType.deadlift]);
+                        exercises[2].weight = (int) (multiplier * lifts[LiftType.deadlift]);
                     }
                 } else {
                     for (int i = 1; i < 4; ++i)
-                        exercises[i].weight = (int) (multiplier * (float) lifts[i]);
+                        exercises[i].weight = (int) (multiplier * lifts[i]);
                 }
                 break;
             case Type.SE:
@@ -109,9 +110,9 @@ public class Workout {
                     e.reps = params.reps;
                 break;
             case Type.endurance:
-                int duration = params.reps * 60;
+                int minutes = params.reps * 60;
                 for (ExerciseEntry e : exercises)
-                    e.reps = duration;
+                    e.reps = minutes;
             default:
         }
         group = activities[0];
@@ -122,13 +123,13 @@ public class Workout {
         group.index = 0;
         entry = group.exercises[0];
         for (ExerciseEntry e : group.exercises) {
-            e.state = ExerciseEntry.State.disabled;
+            e.state = ControlState.disabled;
             e.completedSets = 0;
         }
 
         if (group.type == ExerciseGroup.Type.AMRAP && startTimer) {
-            int duration = 60 * group.reps;
-            NotificationService.scheduleAlarm(context, duration, NotificationService.Type.Circuit);
+            int minutes = 60 * group.reps;
+            NotificationService.scheduleAlarm(context, minutes, NotificationService.Type.Circuit);
         }
     }
 
@@ -147,7 +148,7 @@ public class Workout {
         }
 
         if (entry.type == ExerciseEntry.Type.duration &&
-            entry.state == ExerciseEntry.State.active && !view.userInteractionEnabled) {
+            entry.state == ControlState.active && !view.userInteractionEnabled) {
             view.userInteractionEnabled = true;
             view.button.setEnabled(true);
             if (type == Type.endurance) return Transition.noChange;

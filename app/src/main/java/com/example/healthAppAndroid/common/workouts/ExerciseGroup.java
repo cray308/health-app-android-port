@@ -9,16 +9,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExerciseGroup {
+public final class ExerciseGroup {
     public static abstract class Type {
-        public static final byte rounds = 0;
-        public static final byte AMRAP = 1;
-        public static final byte decrement = 2;
+        private static final byte rounds = 0;
+        static final byte AMRAP = 1;
+        private static final byte decrement = 2;
     }
 
     public byte type;
-    public int reps;
-    public int completedReps;
+    int reps;
+    private int completedReps;
     public int index;
     public ExerciseEntry[] exercises;
 

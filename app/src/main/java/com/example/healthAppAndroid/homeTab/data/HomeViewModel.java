@@ -8,7 +8,7 @@ import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 
 import java.time.LocalDateTime;
 
-public class HomeViewModel {
+public final class HomeViewModel {
     private static abstract class Time {
         private static final byte morning = 0, afternoon = 1, evening = 2;
     }

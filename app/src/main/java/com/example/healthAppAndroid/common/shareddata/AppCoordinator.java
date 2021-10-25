@@ -20,7 +20,7 @@ public final class AppCoordinator {
     };
     public final HomeTabCoordinator homeCoordinator;
     public final HistoryTabCoordinator historyCoordinator;
-    public final SettingsTabCoordinator settingsCoordinator;
+    private final SettingsTabCoordinator settingsCoordinator;
     private Fragment active;
 
     public static AppCoordinator shared;

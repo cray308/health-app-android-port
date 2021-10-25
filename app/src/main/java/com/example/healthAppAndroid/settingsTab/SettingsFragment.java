@@ -15,7 +15,7 @@ import com.example.healthAppAndroid.common.helpers.TextValidator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
 
-public class SettingsFragment extends Fragment {
+public final class SettingsFragment extends Fragment {
     public SettingsTabCoordinator delegate;
     private SegmentedControl picker;
     private TextValidator validator;

@@ -4,11 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.StatusButton;
 import com.example.healthAppAndroid.common.workouts.ExerciseEntry;
 
-public class ExerciseView extends StatusButton {
+public final class ExerciseView extends StatusButton {
     public boolean userInteractionEnabled = true;
 
     public ExerciseView(Context context) { super(context); }
@@ -27,15 +28,15 @@ public class ExerciseView extends StatusButton {
         headerLabel.setText(e.createSetsTitle(context));
 
         switch (e.state) {
-            case ExerciseEntry.State.disabled:
+            case ControlState.disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 enableButton(false);
                 break;
 
-            case ExerciseEntry.State.active:
+            case ControlState.active:
                 if (e.type == ExerciseEntry.Type.duration)
                     userInteractionEnabled = false;
-            case ExerciseEntry.State.resting:
+            case ControlState.resting:
                 enableButton(true);
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;

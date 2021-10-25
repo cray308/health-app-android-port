@@ -23,7 +23,7 @@ import com.github.mikephil.charting.utils.Transformer;
 import java.util.Arrays;
 import java.util.List;
 
-public class WorkoutTypeChart extends ChartContainer {
+public final class WorkoutTypeChart extends ChartContainer {
     private static final class Renderer extends LineChartRenderer {
         private static final class Formatter implements IFillFormatter {
             private final LineDataSet boundaryDataSet;
@@ -53,7 +53,7 @@ public class WorkoutTypeChart extends ChartContainer {
                 currEnd = Math.min(currEnd, endIndex);
 
                 if (currStart <= currEnd) {
-                    generateFilledPath(dataSet, currStart, currEnd, filled);
+                    createFilledPath(dataSet, currStart, currEnd, filled);
                     trans.pathValueToPixel(filled);
                     Drawable drawable = dataSet.getFillDrawable();
                     if (drawable != null) {
@@ -66,7 +66,7 @@ public class WorkoutTypeChart extends ChartContainer {
             } while (currStart <= currEnd);
         }
 
-        private void generateFilledPath(ILineDataSet dataSet, int start, int end, Path filled) {
+        private void createFilledPath(ILineDataSet dataSet, int start, int end, Path filled) {
             Renderer.Formatter formatter = (Renderer.Formatter) dataSet.getFillFormatter();
             List<Entry> boundaryEntries = formatter.boundaryDataSet.getValues();
             float phaseY = mAnimator.getPhaseY();
@@ -89,7 +89,7 @@ public class WorkoutTypeChart extends ChartContainer {
         }
     }
 
-    private static class Formatter extends IndexAxisValueFormatter {
+    private static final class Formatter extends IndexAxisValueFormatter {
         @Override public String getFormattedValue(float value) {
             int minutes = (int) value;
             if (minutes == 0) {
@@ -102,34 +102,40 @@ public class WorkoutTypeChart extends ChartContainer {
         }
     }
 
-    HistoryViewModel.WorkoutTypeChartViewModel viewModel;
+    private HistoryViewModel.WorkoutTypeChartViewModel viewModel;
 
-    public WorkoutTypeChart(Context context) { super(context); }
+    public WorkoutTypeChart(Context context) {
+        super(context, R.layout.workout_type_chart);
+        setup();
+    }
 
-    public WorkoutTypeChart(Context context, AttributeSet attrs) { super(context, attrs); }
+    public WorkoutTypeChart(Context context, AttributeSet attrs) {
+        super(context, attrs, R.layout.workout_type_chart);
+        setup();
+    }
 
-    void setup() {
-        inflate(getContext(), R.layout.workout_type_chart, this);
-        init();
+    private void setup() {
         legendEntries[1] = findViewById(R.id.secondEntry);
         legendEntries[2] = findViewById(R.id.thirdEntry);
         legendEntries[3] = findViewById(R.id.fourthEntry);
     }
 
-    void setup(HistoryViewModel.WorkoutTypeChartViewModel viewModel,
+    void setup(HistoryViewModel.WorkoutTypeChartViewModel model,
                IndexAxisValueFormatter xAxisFormatter) {
-        this.viewModel = viewModel;
+        viewModel = model;
         Formatter formatter = new Formatter();
 
+        int[] colors = AppColors.getChartColors(getContext());
         dataSets[0] = createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {
-            dataSets[i] = createDataSet(AppColors.chartColors[i - 1]);
-            dataSets[i].setFillColor(AppColors.chartColors[i - 1]);
+            dataSets[i] = createDataSet(colors[i - 1]);
+            dataSets[i].setFillColor(colors[i - 1]);
             dataSets[i].setDrawFilled(true);
             dataSets[i].setFillAlpha(191);
             dataSets[i].setFillFormatter(new Renderer.Formatter(dataSets[i - 1]));
         }
-        setupChartData(new LineDataSet[]{dataSets[4], dataSets[3], dataSets[2], dataSets[1]}, 4);
+        LineDataSet[] orderedSets = {dataSets[4], dataSets[3], dataSets[2], dataSets[1]};
+        setupChartData(orderedSets, 4);
         data.setValueFormatter(formatter);
         setupChartView(xAxisFormatter);
         chartView.getAxisLeft().setValueFormatter(formatter);

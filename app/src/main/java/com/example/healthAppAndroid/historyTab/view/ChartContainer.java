@@ -20,34 +20,37 @@ import java.util.Collections;
 
 public abstract class ChartContainer extends LinearLayout {
     LineChart chartView;
-    LinearLayout legendContainer;
+    private LinearLayout legendContainer;
     final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
     final LineData data = new LineData();
 
-    public ChartContainer(Context context) {
+    public ChartContainer(Context context) { super(context); }
+
+    ChartContainer(Context context, int id) {
         super(context);
-        setup();
+        init(id);
     }
 
-    public ChartContainer(Context context, AttributeSet attrs) {
+    public ChartContainer(Context context, AttributeSet attrs) { super(context, attrs); }
+
+    ChartContainer(Context context, AttributeSet attrs, int id) {
         super(context, attrs);
-        setup();
+        init(id);
     }
 
-    abstract void setup();
-
-    void init() {
+    private void init(int id) {
+        inflate(getContext(), id, this);
         chartView = findViewById(R.id.chartView);
         legendContainer = findViewById(R.id.legendContainer);
         legendEntries[0] = findViewById(R.id.firstEntry);
     }
 
-    LineDataSet createEmptyDataSet() {
+    static LineDataSet createEmptyDataSet() {
         return new LineDataSet(Collections.emptyList(), null);
     }
 
-    LineDataSet createDataSet(int color) {
+    static LineDataSet createDataSet(int color) {
         LineDataSet dataSet = createEmptyDataSet();
         dataSet.setColor(color);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -59,9 +62,9 @@ public abstract class ChartContainer extends LinearLayout {
         return dataSet;
     }
 
-    void setupChartData(LineDataSet[] dataSets, int count) {
+    void setupChartData(LineDataSet[] sets, int count) {
         for (int i = 0; i < count; ++i)
-            data.addDataSet(dataSets[i]);
+            data.addDataSet(sets[i]);
     }
 
     void setupChartView(IndexAxisValueFormatter xAxisFormatter) {

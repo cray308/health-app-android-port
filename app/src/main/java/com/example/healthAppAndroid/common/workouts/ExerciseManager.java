@@ -24,7 +24,7 @@ public abstract class ExerciseManager {
             this.lib = lib;
         }
 
-        JSONArray getLibraryArrayForType(byte type) {
+        private JSONArray getLibraryArrayForType(byte type) {
             if (type > 3) return null;
             JSONArray res = null;
             try {
@@ -35,7 +35,7 @@ public abstract class ExerciseManager {
             return res;
         }
 
-        JSONArray getCurrentWeekForPlan(byte plan, int week) {
+        private JSONArray getCurrentWeekForPlan(byte plan, int week) {
             JSONArray res = null;
             try {
                 JSONObject plans = root.getJSONObject("plans");
@@ -61,13 +61,13 @@ public abstract class ExerciseManager {
             InputStreamReader input = new InputStreamReader(
                 context.getAssets().open("workoutData.json"), StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(input);
-            StringBuilder contents = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null)
+            StringBuilder contents = new StringBuilder(20000);
+            for (String line = reader.readLine(); line != null; line = reader.readLine())
                 contents.append(line);
             JSONObject root = new JSONObject(contents.toString());
             JSONObject lib  = root.getJSONObject("library");
             container = new DictWrapper(root, lib);
+            reader.close();
         } catch (IOException e) {
             Log.e("createRootAndLibDict", "Error while opening JSON", e);
         } catch (JSONException e) {

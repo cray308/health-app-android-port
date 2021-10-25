@@ -14,17 +14,16 @@ import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 import com.github.mikephil.charting.utils.Utils;
 
-public class MainActivity extends AppCompatActivity {
+public final class MainActivity extends AppCompatActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         SharedPreferences prefs = getSharedPreferences("AppDelPrefs", Context.MODE_PRIVATE);
         String hasLaunchedKey = "hasLaunched";
-        boolean hasLaunched = prefs.getBoolean(hasLaunchedKey, false);
         int tzOffset = 0;
 
-        if (!hasLaunched) {
+        if (!prefs.getBoolean(hasLaunchedKey, false)) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(hasLaunchedKey, true);
             editor.apply();

@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 
 import com.example.healthAppAndroid.R;
 
-public class StartStopView extends LinearLayout {
+public final class StartStopView extends LinearLayout {
     Button btn;
 
     public StartStopView(Context context) {

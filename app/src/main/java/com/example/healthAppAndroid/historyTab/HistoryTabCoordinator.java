@@ -6,7 +6,7 @@ import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.example.healthAppAndroid.historyTab.view.HistoryFragment;
 
-public class HistoryTabCoordinator {
+public final class HistoryTabCoordinator {
     private static final class FetchHandler implements PersistenceService.Block {
         private final HistoryTabCoordinator coordinator;
 
@@ -34,5 +34,5 @@ public class HistoryTabCoordinator {
         finishedLoadingHistoryData();
     }
 
-    public void finishedLoadingHistoryData() { fragment.performForegroundUpdate(); }
+    private void finishedLoadingHistoryData() { fragment.performForegroundUpdate(); }
 }

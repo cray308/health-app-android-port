@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.workouts.ExerciseGroup;
 
-public class ExerciseContainer extends LinearLayout {
+public final class ExerciseContainer extends LinearLayout {
     View divider;
     TextView headerLabel;
     ExerciseView[] viewsArr;

@@ -24,13 +24,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class HomeSetupWorkoutDialog
+public final class HomeSetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
     private static final String paramsKey = "HomeSetupWorkoutDialogParams";
 
-    public static class Params implements Parcelable {
-        public final byte type;
-        public final String[] names;
+    public static final class Params implements Parcelable {
+        private final byte type;
+        private final String[] names;
 
         public Params(byte type, String[] names) {
             this.type = type;

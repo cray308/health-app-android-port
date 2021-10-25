@@ -19,7 +19,7 @@ import com.example.healthAppAndroid.homeTab.view.HomeFragment;
 import com.example.healthAppAndroid.homeTab.view.HomeSetupWorkoutDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class HomeTabCoordinator {
+public final class HomeTabCoordinator {
     private static abstract class CustomWorkoutIndex {
         private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
     }

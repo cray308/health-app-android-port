@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
@@ -29,7 +30,7 @@ import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
-public class HomeFragment extends Fragment {
+public final class HomeFragment extends Fragment {
     private String[] timeNames;
     public final HomeViewModel viewModel = new HomeViewModel();
     public HomeTabCoordinator delegate;
@@ -87,7 +88,7 @@ public class HomeFragment extends Fragment {
             if (viewModel.workoutNames[i] == null) continue;
             StatusButton btn = new StatusButton(context);
             String dayName = days[i].getDisplayName(TextStyle.FULL, Locale.US);
-            btn.setProperties(dayName, viewModel.workoutNames[i], StatusButton.State.active, true);
+            btn.setProperties(dayName, viewModel.workoutNames[i], ControlState.active, true);
             ViewHelper.setTag(btn.button, i);
             btn.button.setOnClickListener(dayWorkoutListener);
             weeklyWorkoutStack.addView(btn);
@@ -103,7 +104,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < count; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;
-            byte state = enabled ? StatusButton.State.disabled : StatusButton.State.finished;
+            byte state = enabled ? ControlState.disabled : ControlState.finished;
             v.updateStateAndButton(state, enabled);
         }
     }

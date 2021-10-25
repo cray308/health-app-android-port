@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
 
-public class HistoryChartLegendEntry extends LinearLayout {
-    View form;
+public final class HistoryChartLegendEntry extends LinearLayout {
     TextView label;
 
     public HistoryChartLegendEntry(Context context) {
@@ -25,7 +24,7 @@ public class HistoryChartLegendEntry extends LinearLayout {
 
     private void setup(AttributeSet attrs) {
         inflate(getContext(), R.layout.history_chart_legend_entry, this);
-        form = findViewById(R.id.form);
+        View form = findViewById(R.id.form);
         label = findViewById(R.id.label);
         int color = 0;
 

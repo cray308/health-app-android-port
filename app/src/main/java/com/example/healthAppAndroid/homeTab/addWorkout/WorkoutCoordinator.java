@@ -11,7 +11,7 @@ import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.AddWorkoutUpdateMaxesDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class WorkoutCoordinator {
+public final class WorkoutCoordinator {
     private final static class UpdateHandler implements PersistenceService.Block {
         private final short[] lifts;
 

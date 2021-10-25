@@ -4,19 +4,16 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.views.StatusButton;
+import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExerciseEntry {
+public final class ExerciseEntry {
     public static abstract class Type {
         public static final byte reps = 0;
         public static final byte duration = 1;
-    }
-    public static abstract class State extends StatusButton.State {
-        public static final byte resting = 2;
     }
 
     public byte type;
@@ -24,9 +21,9 @@ public class ExerciseEntry {
     public int weight;
     public int reps;
     public int sets = 1;
-    public int rest;
+    private int rest;
     public int completedSets;
-    String name;
+    private String name;
 
     public ExerciseEntry(JSONObject e) {
         try {
@@ -46,7 +43,7 @@ public class ExerciseEntry {
     }
 
     public String createTitle(Context context) {
-        if (state == State.resting)
+        if (state == ControlState.resting)
             return context.getString(R.string.exerciseTitleRest, rest);
         switch (type) {
             case Type.reps:
@@ -70,24 +67,24 @@ public class ExerciseEntry {
     public boolean cycle(Context context) {
         boolean completed = false;
         switch (state) {
-            case State.disabled:
-                state = State.active;
+            case ControlState.disabled:
+                state = ControlState.active;
                 if (type == Type.duration)
                     NotificationService.scheduleAlarm(context, reps,
                                                       NotificationService.Type.Exercise);
                 break;
 
-            case State.active:
+            case ControlState.active:
                 if (rest != 0) {
-                    state = State.resting;
+                    state = ControlState.resting;
                     break;
                 }
-            case State.resting:
+            case ControlState.resting:
                 if (++completedSets == sets) {
-                    state = State.finished;
+                    state = ControlState.finished;
                     completed = true;
                 } else {
-                    state = State.active;
+                    state = ControlState.active;
                 }
             default:
         }

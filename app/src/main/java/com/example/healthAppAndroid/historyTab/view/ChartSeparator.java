@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
 
-public class ChartSeparator extends LinearLayout {
+public final class ChartSeparator extends LinearLayout {
     public ChartSeparator(Context context) {
         super(context);
         setup(null);

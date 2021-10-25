@@ -20,7 +20,7 @@ import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 
-public class WorkoutActivity extends AppCompatActivity {
+public final class WorkoutActivity extends AppCompatActivity {
     private WorkoutCoordinator delegate;
     private Workout workout;
     private LinearLayout groupsStack;
@@ -41,7 +41,8 @@ public class WorkoutActivity extends AppCompatActivity {
         groupsStack = findViewById(R.id.workoutGroupsStack);
         NotificationService.setup(this);
 
-        for (int i = 0; i < workout.activities.length; ++i) {
+        int count = workout.activities.length;
+        for (int i = 0; i < count; ++i) {
             ExerciseContainer v = new ExerciseContainer(this);
             v.setup(workout.activities[i], i, tapHandler);
             groupsStack.addView(v);

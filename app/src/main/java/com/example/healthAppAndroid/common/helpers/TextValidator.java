@@ -18,16 +18,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TextValidator {
-    public static class InputView extends LinearLayout implements TextWatcher {
+public final class TextValidator {
+    public static final class InputView extends LinearLayout implements TextWatcher {
         public TextInputLayout field;
         private TextInputEditText textField;
         private short min = 1;
         private short max = 999;
         private TextValidator delegate;
-        private boolean valid;
-        private boolean isInputNumeric;
-        private short result;
+        private boolean valid = false;
+        private boolean isInputNumeric = false;
+        private short result = 0;
 
         public InputView(Context context) {
             super(context);
@@ -61,9 +61,9 @@ public class TextValidator {
                 min = 0;
         }
 
-        public void setup(short max, TextValidator delegate) {
-            this.max = max;
-            this.delegate = delegate;
+        private void setup(short maxVal, TextValidator validator) {
+            max = maxVal;
+            delegate = validator;
             textField.addTextChangedListener(this);
         }
 
@@ -93,13 +93,13 @@ public class TextValidator {
             short res = -1;
             try {
                 res = (short) Integer.parseInt(s.toString());
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 Log.e("checkInput", "Error while validating input", e);
-            }
-
-            if (res < min || res > max) {
-                showErrorMsg();
-                return;
+            } finally {
+                if (res < min || res > max) {
+                    showErrorMsg();
+                    return;
+                }
             }
 
             field.setError(null);
@@ -119,7 +119,7 @@ public class TextValidator {
     private final Set<Character> validChars = new HashSet<>(
         Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
     private final InputView[] children = {null, null, null, null};
-    private int count;
+    private int count = 0;
     private final Button button;
 
     public TextValidator(Button button) { this.button = button; }
@@ -163,7 +163,7 @@ public class TextValidator {
     }
 
     public short[] getResults() {
-        short[] results = new short[4];
+        short[] results = {0, 0, 0, 0};
         for (int i = 0; i < count; ++i)
             results[i] = children[i].result;
         return results;

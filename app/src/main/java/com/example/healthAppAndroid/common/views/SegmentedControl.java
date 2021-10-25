@@ -9,15 +9,12 @@ import android.widget.LinearLayout;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
+import com.example.healthAppAndroid.historyTab.view.HistoryFragment;
 
-public class SegmentedControl extends LinearLayout {
-    public interface Delegate {
-        void didSelectSegment(byte index);
-    }
-
-    public byte selectedIndex;
+public final class SegmentedControl extends LinearLayout {
+    public byte selectedIndex = 0;
     private final Button[] buttons = {null, null, null};
-    public Delegate delegate;
+    public HistoryFragment delegate;
 
     private final View.OnClickListener listener = view -> {
         byte selected = 0;

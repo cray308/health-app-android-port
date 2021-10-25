@@ -29,7 +29,7 @@ public final class AppUserData {
 
     public long planStart;
     public long weekStart;
-    public int tzOffset;
+    private int tzOffset;
     public byte currentPlan = Plans.noPlan;
     public byte completedWorkouts;
     public final short[] liftArray = {0, 0, 0, 0};
@@ -95,7 +95,7 @@ public final class AppUserData {
         liftArray[LiftType.deadlift] = (short) prefs.getInt(Keys.deadLiftMax, 0);
     }
 
-    public void saveData() {
+    private void saveData() {
         SharedPreferences.Editor editor = prefs.edit();
         writePrefs(editor);
         editor.apply();

@@ -9,17 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 
 public class StatusButton extends LinearLayout {
-    public static abstract class State {
-        public final static byte disabled = 0;
-        public final static byte active = 1;
-        public final static byte finished = 3;
-    }
-
-    public View checkbox;
-    public TextView headerLabel;
+    protected View checkbox;
+    protected TextView headerLabel;
     public Button button;
 
     public StatusButton(Context context) {
@@ -70,10 +65,10 @@ public class StatusButton extends LinearLayout {
         button.setEnabled(enableButton);
         button.setTextColor(enableButton ? AppColors.labelNormal : AppColors.labelDisabled);
         switch (state) {
-            case State.disabled:
+            case ControlState.disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 break;
-            case State.active:
+            case ControlState.active:
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;
             default:

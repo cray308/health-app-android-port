@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.TimeZone;
 
 public abstract class DateHelper {
-    public final static long daySeconds = 86400;
+    private final static long daySeconds = 86400;
     public final static long weekSeconds = 604800;
 
     private static long getStartOfDay(long date, LocalDateTime info) {

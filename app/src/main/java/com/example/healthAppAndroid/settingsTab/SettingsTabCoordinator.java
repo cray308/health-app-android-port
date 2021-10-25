@@ -9,7 +9,7 @@ import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 
-public class SettingsTabCoordinator {
+public final class SettingsTabCoordinator {
     private final SettingsFragment fragment;
 
     public SettingsTabCoordinator(Fragment fragment) {
