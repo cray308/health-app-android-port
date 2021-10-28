@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background_custom.xml" value="0.3717948717948718" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.375" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground_custom.xml" value="0.3717948717948718" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.43385416666666665" />
         <entry key="app/src/main/res/drawable/workout_back_btn.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_workout.xml" value="0.25" />

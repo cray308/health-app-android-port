@@ -12,20 +12,20 @@ import org.json.JSONObject;
 
 public final class ExerciseEntry {
     public static abstract class Type {
-        public static final byte reps = 0;
+        static final byte reps = 0;
         public static final byte duration = 1;
     }
 
     public byte type;
     public byte state;
     public int weight;
-    public int reps;
-    public int sets = 1;
+    int reps;
+    int sets = 1;
     private int rest;
-    public int completedSets;
+    int completedSets;
     private String name;
 
-    public ExerciseEntry(JSONObject e) {
+    ExerciseEntry(JSONObject e) {
         try {
             type = (byte) e.getInt(ExerciseManager.Keys.type);
             reps = e.getInt(ExerciseManager.Keys.reps);
@@ -64,7 +64,7 @@ public final class ExerciseEntry {
         }
     }
 
-    public boolean cycle(Context context) {
+    boolean cycle(Context context) {
         boolean completed = false;
         switch (state) {
             case ControlState.disabled:

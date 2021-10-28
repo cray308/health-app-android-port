@@ -21,12 +21,12 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
     public WorkoutCoordinator delegate;
     public Workout workout;
 
-    @Override public View onCreateView(LayoutInflater inflater,
-                                       ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.add_workout_update_maxes_modal, container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);

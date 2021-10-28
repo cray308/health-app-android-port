@@ -19,7 +19,7 @@ public final class AppCoordinator {
         new HomeFragment(), new HistoryFragment(), new SettingsFragment()
     };
     public final HomeTabCoordinator homeCoordinator;
-    public final HistoryTabCoordinator historyCoordinator;
+    final HistoryTabCoordinator historyCoordinator;
     private final SettingsTabCoordinator settingsCoordinator;
     private Fragment active;
 

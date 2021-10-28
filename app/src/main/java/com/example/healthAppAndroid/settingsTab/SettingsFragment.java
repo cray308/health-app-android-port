@@ -20,12 +20,12 @@ public final class SettingsFragment extends Fragment {
     private SegmentedControl picker;
     private TextValidator validator;
 
-    @Override public View onCreateView(LayoutInflater inflater,
-                                       ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
@@ -50,7 +50,7 @@ public final class SettingsFragment extends Fragment {
         validator.enableButton();
     }
 
-    @Override public void onHiddenChanged(boolean hidden) {
+    public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden) validator.clearFocus();
     }

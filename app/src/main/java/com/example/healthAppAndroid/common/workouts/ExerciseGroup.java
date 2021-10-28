@@ -22,7 +22,7 @@ public final class ExerciseGroup {
     public int index;
     public ExerciseEntry[] exercises;
 
-    public ExerciseGroup(JSONObject g) {
+    ExerciseGroup(JSONObject g) {
         try {
             type = (byte) g.getInt(ExerciseManager.Keys.type);
             reps = g.getInt(ExerciseManager.Keys.reps);
@@ -50,7 +50,7 @@ public final class ExerciseGroup {
         return null;
     }
 
-    public boolean didFinish() {
+    boolean didFinish() {
         boolean isDone = false;
         switch (type) {
             case Type.rounds:

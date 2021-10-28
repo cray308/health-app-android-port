@@ -39,12 +39,12 @@ public final class HomeFragment extends Fragment {
     private LinearLayout weeklyWorkoutStack;
     private KonfettiView confettiView;
 
-    @Override public View onCreateView(LayoutInflater inflater,
-                                       ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         greetingLabel = view.findViewById(R.id.greetingLabel);
         timeNames = getResources().getStringArray(R.array.timesOfDay);
@@ -64,7 +64,7 @@ public final class HomeFragment extends Fragment {
         createWorkoutsList();
     }
 
-    @Override public void onResume() {
+    public void onResume() {
         super.onResume();
         if (delegate != null)
             delegate.checkForChildCoordinator();
@@ -114,13 +114,13 @@ public final class HomeFragment extends Fragment {
     }
 
     private final View.OnClickListener customBtnListener = new View.OnClickListener() {
-        @Override public void onClick(View view) {
+        public void onClick(View view) {
             delegate.addWorkoutFromCustomButton(ViewHelper.getTag(view));
         }
     };
 
     private final View.OnClickListener dayWorkoutListener = new View.OnClickListener() {
-        @Override public void onClick(View view) {
+        public void onClick(View view) {
             delegate.addWorkoutFromPlan(ViewHelper.getTag(view));
         }
     };

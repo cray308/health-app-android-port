@@ -50,9 +50,9 @@ public final class HomeSetupWorkoutDialog
         }
 
         public static final Creator<Params> CREATOR = new Creator<Params>() {
-            @Override public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
+            public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
 
-            @Override public Params[] newArray(int i) { return new Params[i]; }
+            public Params[] newArray(int i) { return new Params[i]; }
         };
     }
 
@@ -69,7 +69,7 @@ public final class HomeSetupWorkoutDialog
         return fragment;
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
@@ -78,12 +78,12 @@ public final class HomeSetupWorkoutDialog
         }
     }
 
-    @Override public View onCreateView(LayoutInflater inflater,
-                                       ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_setup_workout_modal, container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button cancelButton = view.findViewById(R.id.homeSetupWorkoutModalCancel);
         cancelButton.setOnClickListener(view1 -> dismiss());

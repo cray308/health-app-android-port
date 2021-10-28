@@ -15,7 +15,7 @@ import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService
 import com.github.mikephil.charting.utils.Utils;
 
 public final class MainActivity extends AppCompatActivity {
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

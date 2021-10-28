@@ -41,8 +41,8 @@ public final class WorkoutTypeChart extends ChartContainer {
             super(view, view.getAnimator(), view.getViewPortHandler());
         }
 
-        @Override protected void drawLinearFill(Canvas c, ILineDataSet dataSet,
-                                                Transformer trans, XBounds bounds) {
+        protected void drawLinearFill(Canvas c, ILineDataSet dataSet,
+                                      Transformer trans, XBounds bounds) {
             Path filled = mGenerateFilledPathBuffer;
             int startIndex = bounds.min, endIndex = bounds.range + bounds.min, indexInterval = 128;
             int currStart, currEnd, i = 0;
@@ -90,7 +90,7 @@ public final class WorkoutTypeChart extends ChartContainer {
     }
 
     private static final class Formatter extends IndexAxisValueFormatter {
-        @Override public String getFormattedValue(float value) {
+        public String getFormattedValue(float value) {
             int minutes = (int) value;
             if (minutes == 0) {
                 return "";

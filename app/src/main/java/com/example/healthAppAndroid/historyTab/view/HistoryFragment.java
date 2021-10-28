@@ -26,7 +26,7 @@ public final class HistoryFragment extends Fragment {
             months = res.getStringArray(R.array.months);
         }
 
-        @Override public String getFormattedValue(float value) {
+        public String getFormattedValue(float value) {
             HistoryViewModel.WeekDataModel.Week model = viewModel.data.arr[(int) value];
             return ViewHelper.format("%s/%d/%d", months[model.month], model.day, model.year);
         }
@@ -38,12 +38,12 @@ public final class HistoryFragment extends Fragment {
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
 
-    @Override public View onCreateView(LayoutInflater inflater,
-                                       ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
-    @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         rangePicker = view.findViewById(R.id.rangePicker);

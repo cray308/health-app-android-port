@@ -23,9 +23,8 @@ import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
-@SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 public abstract class PersistenceService extends RoomDatabase {
-    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor") @Dao public interface DAO {
+    @Dao public interface DAO {
         @Query("SELECT * FROM weeks") WeeklyData[] getAll();
 
         @Query("SELECT * FROM weeks WHERE start == :date LIMIT 1")
@@ -45,7 +44,7 @@ public abstract class PersistenceService extends RoomDatabase {
     }
 
     @Entity(tableName = "weeks") public static class WeeklyData {
-        @PrimaryKey(autoGenerate = true) public int uid;
+        @PrimaryKey(autoGenerate = true) int uid;
 
         @ColumnInfo(name = "start") public long start;
 

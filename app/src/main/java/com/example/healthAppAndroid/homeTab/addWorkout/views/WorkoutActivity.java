@@ -26,7 +26,7 @@ public final class WorkoutActivity extends AppCompatActivity {
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,12 +52,12 @@ public final class WorkoutActivity extends AppCompatActivity {
         firstContainer.divider.setVisibility(View.GONE);
     }
 
-    @Override protected void onDestroy() {
+    protected void onDestroy() {
         NotificationService.cleanup(this);
         super.onDestroy();
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.workout_items, menu);
         MenuItem item = menu.findItem(R.id.action_startStop);
         StartStopView startStopView = (StartStopView) item.getActionView();

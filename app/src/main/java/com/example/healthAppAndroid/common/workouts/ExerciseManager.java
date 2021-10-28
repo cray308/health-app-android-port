@@ -49,7 +49,7 @@ public abstract class ExerciseManager {
         }
     }
     public static abstract class Keys {
-        public static final String reps = "reps";
+        static final String reps = "reps";
         public static final String type = "type";
         private static final String index = "index";
         public static final String title = "title";

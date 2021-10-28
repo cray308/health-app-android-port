@@ -60,7 +60,7 @@ public final class Workout {
     public ExerciseEntry entry;
     public ExerciseGroup[] activities;
 
-    public Workout(JSONObject dict, Params params) {
+    Workout(JSONObject dict, Params params) {
         day = params.day;
         type = params.type;
         boolean success = true;

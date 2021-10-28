@@ -17,7 +17,7 @@ public final class SettingsTabCoordinator {
         this.fragment.delegate = this;
     }
 
-    public void handleSaveTap(short[] newLifts, byte plan) {
+    void handleSaveTap(short[] newLifts, byte plan) {
         String neutral = fragment.getString(com.google.android.material.R.string.mtrl_picker_save);
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())
             .setTitle(fragment.getString(R.string.settingsAlertTitle))
@@ -31,7 +31,7 @@ public final class SettingsTabCoordinator {
         builder.create().show();
     }
 
-    public void handleDeleteTap() {
+    void handleDeleteTap() {
         String neutral = fragment.getString(
           androidx.appcompat.R.string.abc_menu_delete_shortcut_label);
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())

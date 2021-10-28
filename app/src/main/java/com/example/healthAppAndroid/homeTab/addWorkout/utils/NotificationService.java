@@ -66,13 +66,13 @@ public abstract class NotificationService {
         alarmMgr = (AlarmManager) outerContext.getSystemService(Context.ALARM_SERVICE);
 
         receivers[Type.Exercise] = new BroadcastReceiver() {
-            @Override public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent) {
                 notificationMgr.notify(identifier++, createNotification(context, Type.Exercise));
                 ((WorkoutActivity) context).finishedExercise();
             }
         };
         receivers[Type.Circuit] = new BroadcastReceiver() {
-            @Override public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent) {
                 notificationMgr.notify(identifier++, createNotification(context, Type.Circuit));
                 ((WorkoutActivity) context).finishedGroup();
             }
