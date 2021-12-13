@@ -10,7 +10,6 @@ import com.example.healthAppAndroid.historyTab.view.HistoryFragment;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 import com.example.healthAppAndroid.homeTab.view.HomeFragment;
 import com.example.healthAppAndroid.settingsTab.SettingsFragment;
-import com.example.healthAppAndroid.settingsTab.SettingsTabCoordinator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public final class AppCoordinator {
@@ -20,7 +19,6 @@ public final class AppCoordinator {
     };
     public final HomeTabCoordinator homeCoordinator;
     final HistoryTabCoordinator historyCoordinator;
-    private final SettingsTabCoordinator settingsCoordinator;
     private Fragment active;
 
     public static AppCoordinator shared;
@@ -34,7 +32,6 @@ public final class AppCoordinator {
         fm = activity.getSupportFragmentManager();
         homeCoordinator = new HomeTabCoordinator(children[0]);
         historyCoordinator = new HistoryTabCoordinator(children[1]);
-        settingsCoordinator = new SettingsTabCoordinator(children[2]);
     }
 
     private void setupTabs(BottomNavigationView tabBar) {
@@ -60,12 +57,27 @@ public final class AppCoordinator {
         active = children[0];
     }
 
-    public void updatedUserInfo() { homeCoordinator.resetUI(); }
+    public void updateUserInfo(byte plan, short[] lifts) {
+        boolean updateHome = plan != AppUserData.shared.currentPlan;
+        AppUserData.shared.updateSettings(plan, lifts);
+        if (updateHome)
+            homeCoordinator.fragment.createWorkoutsList();
+    }
 
-    public void deletedAppData() {
-        homeCoordinator.updateUI();
+    public void deleteAppData() {
+        boolean updateHome = AppUserData.shared.completedWorkouts != 0;
+        AppUserData.shared.deleteSavedData();
+        PersistenceService.deleteAppData();
+        if (updateHome)
+            homeCoordinator.fragment.updateWorkoutsList();
         historyCoordinator.handleDataDeletion();
     }
 
-    public void updateMaxWeights() { settingsCoordinator.updateWeightText(); }
+    public void updateMaxWeights(short[] lifts) {
+        boolean updateSettings = AppUserData.shared.updateWeightMaxes(lifts);
+        if (updateSettings) {
+            SettingsFragment frag = (SettingsFragment) children[2];
+            frag.updateWeightFields();
+        }
+    }
 }

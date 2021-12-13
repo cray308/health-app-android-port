@@ -1,6 +1,5 @@
 package com.example.healthAppAndroid.homeTab;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -8,13 +7,11 @@ import android.os.Handler;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
-import com.example.healthAppAndroid.homeTab.data.HomeViewModel;
 import com.example.healthAppAndroid.homeTab.view.HomeFragment;
 import com.example.healthAppAndroid.homeTab.view.HomeSetupWorkoutDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -24,13 +21,11 @@ public final class HomeTabCoordinator {
         private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
     }
 
-    private final HomeFragment fragment;
-    private final HomeViewModel viewModel;
+    public final HomeFragment fragment;
     public WorkoutCoordinator child;
 
     public HomeTabCoordinator(Fragment fragment) {
         this.fragment = (HomeFragment) fragment;
-        viewModel = this.fragment.viewModel;
         this.fragment.delegate = this;
     }
 
@@ -45,19 +40,17 @@ public final class HomeTabCoordinator {
         main.startActivity(new Intent(main, WorkoutActivity.class));
     }
 
-    public void showWeeklyGoalDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity())
-            .setTitle(fragment.getString(R.string.homeAlertTitle))
-            .setMessage(fragment.getString(R.string.homeAlertMessage))
-            .setPositiveButton(fragment.getString(R.string.ok), null);
-        builder.create().show();
-    }
-
     public void finishedAddingWorkout(FragmentActivity activity, int totalCompletedWorkouts) {
-        child = null;
-        activity.finish();
-        fragment.updateWorkoutsList();
-        if (viewModel.shouldShowConfetti(totalCompletedWorkouts))
+        boolean updateFragment = totalCompletedWorkouts != 0;
+        if (updateFragment)
+            fragment.updateWorkoutsList();
+
+        if (activity != null) {
+            child = null;
+            activity.finish();
+        }
+
+        if (updateFragment && fragment.numWorkouts == totalCompletedWorkouts)
             new Handler().postDelayed(fragment::showConfetti, 750);
     }
 
@@ -95,8 +88,7 @@ public final class HomeTabCoordinator {
                 params.sets = params.reps = 1;
                 params.weight = 100;
                 Workout w = ExerciseManager.getWorkoutFromLibrary(context, params);
-                if (w != null)
-                    navigateToAddWorkout(null, w);
+                navigateToAddWorkout(null, w);
                 return;
 
             case CustomWorkoutIndex.Endurance:
@@ -117,14 +109,5 @@ public final class HomeTabCoordinator {
         Workout w = ExerciseManager.getWorkoutFromLibrary(fragment.getContext(), params);
         if (w != null)
             navigateToAddWorkout(modal, w);
-    }
-
-    public void updateUI() {
-        fragment.updateWorkoutsList();
-    }
-
-    public void resetUI() {
-        viewModel.fetchData(fragment.getContext());
-        fragment.createWorkoutsList();
     }
 }

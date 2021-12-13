@@ -4,39 +4,45 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.healthAppAndroid.common.helpers.ControlState;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.views.StatusButton;
 import com.example.healthAppAndroid.common.workouts.ExerciseEntry;
 
 public final class ExerciseView extends StatusButton {
     public boolean userInteractionEnabled = true;
+    private ExerciseEntry entry;
 
     public ExerciseView(Context context) { super(context); }
 
     public ExerciseView(Context context, AttributeSet attrs) { super(context, attrs); }
 
     void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
+        entry = e;
         button.setId(tag);
         button.setOnClickListener(action);
-        configure(e);
+        if (e.headerStr.toString().isEmpty())
+            headerLabel.setVisibility(GONE);
+        configure();
     }
 
-    public void configure(ExerciseEntry e) {
-        Context context = getContext();
-        button.setText(e.createTitle(context));
-        headerLabel.setText(e.createSetsTitle(context));
+    public void configure() {
+        headerLabel.setText(entry.headerStr);
+        if (entry.state == ExerciseEntry.State.resting) {
+            button.setText(entry.restStr);
+        } else {
+            button.setText(entry.titleStr);
+        }
 
-        switch (e.state) {
-            case ControlState.disabled:
+        switch (entry.state) {
+            case ExerciseEntry.State.disabled:
                 checkbox.setBackgroundColor(AppColors.gray);
                 enableButton(false);
                 break;
 
-            case ControlState.active:
-                if (e.type == ExerciseEntry.Type.duration)
+            case ExerciseEntry.State.active:
+                if (entry.type == ExerciseEntry.Type.duration)
                     userInteractionEnabled = false;
-            case ControlState.resting:
+            case ExerciseEntry.State.resting:
                 enableButton(true);
                 checkbox.setBackgroundColor(AppColors.orange);
                 break;

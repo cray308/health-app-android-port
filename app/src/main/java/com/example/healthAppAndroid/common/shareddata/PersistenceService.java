@@ -22,8 +22,10 @@ import com.example.healthAppAndroid.common.workouts.LiftType;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 
+@SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
 public abstract class PersistenceService extends RoomDatabase {
+    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
     @Dao public interface DAO {
         @Query("SELECT * FROM weeks") WeeklyData[] getAll();
 
@@ -183,10 +185,12 @@ public abstract class PersistenceService extends RoomDatabase {
 
     private static final class UpdateCurrentWeekTask implements Runnable {
         private final Workout workout;
+        private final short[] lifts;
         private final Block block;
 
-        private UpdateCurrentWeekTask(Workout workout, Block block) {
+        private UpdateCurrentWeekTask(Workout workout, short[] lifts, Block block) {
             this.workout = workout;
+            this.lifts = lifts;
             this.block = block;
         }
 
@@ -209,11 +213,11 @@ public abstract class PersistenceService extends RoomDatabase {
                     curr.timeEndurance += workout.duration;
             }
 
-            if (workout.newLifts != null) {
-                curr.bestSquat = workout.newLifts[LiftType.squat];
-                curr.bestPullup = workout.newLifts[LiftType.pullUp];
-                curr.bestBench = workout.newLifts[LiftType.bench];
-                curr.bestDeadlift = workout.newLifts[LiftType.deadlift];
+            if (lifts != null) {
+                curr.bestSquat = lifts[LiftType.squat];
+                curr.bestPullup = lifts[LiftType.pullUp];
+                curr.bestBench = lifts[LiftType.bench];
+                curr.bestDeadlift = lifts[LiftType.deadlift];
             }
 
             saveChanges(dao, new WeeklyData[]{curr});
@@ -222,9 +226,9 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    public static void updateCurrentWeek(Workout workout, Block block) {
+    public static void updateCurrentWeek(Workout workout, short[] lifts, Block block) {
         if (workout.duration < Workout.MinWorkoutDuration) return;
-        new Thread(new UpdateCurrentWeekTask(workout, block)).start();
+        new Thread(new UpdateCurrentWeekTask(workout, lifts, block)).start();
     }
 
     private static final class HistoryFetchTask implements Runnable {

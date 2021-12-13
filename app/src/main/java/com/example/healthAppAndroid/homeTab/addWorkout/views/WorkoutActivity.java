@@ -1,11 +1,10 @@
 package com.example.healthAppAndroid.homeTab.addWorkout.views;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,10 +14,12 @@ import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
-import com.example.healthAppAndroid.common.workouts.ExerciseEntry;
+import com.example.healthAppAndroid.common.workouts.Circuit;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
+
+import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
     private WorkoutCoordinator delegate;
@@ -29,15 +30,25 @@ public final class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+        delegate = AppCoordinator.shared.homeCoordinator.child;
+        workout = delegate.workout;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         if (bar != null)
             bar.setDisplayHomeAsUpEnabled(true);
-
-        delegate = AppCoordinator.shared.homeCoordinator.child;
-        workout = delegate.workout;
-        setTitle(workout.title);
+        ((TextView) toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
+        ((Button) toolbar.findViewById(R.id.startStopButton)).setOnClickListener(view -> {
+            Button btn = (Button) view;
+            if (btn.getText().equals(getString(R.string.start))) {
+                btn.setText(getString(R.string.end));
+                btn.setTextColor(AppColors.red);
+                workout.startTime = DateHelper.getCurrentTime();
+                handleTap(0, 0, Workout.EventOption.startGroup);
+            } else {
+                delegate.stoppedWorkout(this);
+            }
+        });
         groupsStack = findViewById(R.id.workoutGroupsStack);
         NotificationService.setup(this);
 
@@ -49,31 +60,12 @@ public final class WorkoutActivity extends AppCompatActivity {
         }
 
         firstContainer = (ExerciseContainer) groupsStack.getChildAt(0);
-        firstContainer.divider.setVisibility(View.GONE);
+        firstContainer.headerView.divider.setVisibility(View.GONE);
     }
 
     protected void onDestroy() {
         NotificationService.cleanup(this);
         super.onDestroy();
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.workout_items, menu);
-        MenuItem item = menu.findItem(R.id.action_startStop);
-        StartStopView startStopView = (StartStopView) item.getActionView();
-        startStopView.btn.setOnClickListener(view -> {
-            Button btn = (Button) view;
-            if (btn.getText().equals(getString(R.string.start))) {
-                btn.setText(getString(R.string.end));
-                btn.setTextColor(AppColors.red);
-                workout.startTime = DateHelper.getCurrentTime();
-                handleTap(0, 0, Workout.EventOption.startGroup);
-            } else {
-                workout.setDuration();
-                delegate.stoppedWorkout(this);
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
     }
 
     private final View.OnClickListener tapHandler = view -> {
@@ -91,28 +83,33 @@ public final class WorkoutActivity extends AppCompatActivity {
         switch (workout.findTransitionForEvent(this, v, option)) {
             case Workout.Transition.completedWorkout:
                 finishedWorkout = true;
-                workout.setDuration();
                 break;
 
             case Workout.Transition.finishedCircuitDeleteFirst:
                 firstContainer = (ExerciseContainer) groupsStack.getChildAt(1);
                 groupsStack.removeViewAt(0);
+                firstContainer.headerView.divider.setVisibility(View.GONE);
             case Workout.Transition.finishedCircuit:
-                firstContainer.divider.setVisibility(View.GONE);
-                firstContainer.headerLabel.setText(workout.group.createHeader(this));
-                int i = 0;
-                for (ExerciseEntry e : workout.group.exercises)
-                    firstContainer.viewsArr[i++].configure(e);
+                if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
+                    String newNumber = String.format(Locale.US, "%d",
+                                                     workout.group.completedReps + 1);
+                    workout.group.headerStr.replace(
+                      workout.group.numberRange.index, workout.group.numberRange.end, newNumber);
+                    firstContainer.headerView.headerLabel.setText(workout.group.headerStr);
+                }
+                int nExercises = workout.group.exercises.length;
+                for (int i = 0; i < nExercises; ++i) {
+                    firstContainer.viewsArr[i].configure();
+                }
                 break;
 
             case Workout.Transition.finishedExercise:
-                v = firstContainer.viewsArr[workout.group.index];
-                v.configure(workout.entry);
+                firstContainer.viewsArr[workout.group.index].configure();
             default:
         }
 
         if (finishedWorkout)
-            delegate.completedWorkout(this, null, true);
+            delegate.completedWorkout(this, null, true, null);
     }
 
     public void finishedGroup() {

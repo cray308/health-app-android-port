@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
-import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -19,7 +18,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
     private TextValidator validator;
     public WorkoutCoordinator delegate;
-    public Workout workout;
 
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,8 +29,8 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
 
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(view1 -> {
-            workout.newLifts = validator.getResults();
-            delegate.completedWorkout(getActivity(), this, false);
+            short[] lifts = validator.getResults();
+            delegate.completedWorkout(getActivity(), this, false, lifts);
         });
         validator = new TextValidator(finishButton);
 

@@ -48,6 +48,7 @@ public final class AppUserData {
 
     public static int setupFromStorage(Context context) {
         int[] planLengths = {8, 13};
+        boolean madeChange = false;
         shared = new AppUserData(context);
         long now = DateHelper.getCurrentTime();
         long weekStart = DateHelper.calcStartOfWeek(now);
@@ -55,12 +56,13 @@ public final class AppUserData {
         int newOffset = DateHelper.getOffsetFromGMT(now);
         int tzDiff = shared.tzOffset - newOffset;
         if (tzDiff != 0) {
+            madeChange = true;
             shared.weekStart += tzDiff;
             shared.tzOffset = newOffset;
-            shared.saveData();
         }
 
         if (weekStart != shared.weekStart) {
+            madeChange = true;
             shared.completedWorkouts = 0;
             shared.weekStart = weekStart;
 
@@ -71,8 +73,10 @@ public final class AppUserData {
                     shared.planStart = weekStart;
                 }
             }
-            shared.saveData();
         }
+
+        if (madeChange)
+            shared.saveData();
         return tzDiff;
     }
 
@@ -97,11 +101,6 @@ public final class AppUserData {
 
     private void saveData() {
         SharedPreferences.Editor editor = prefs.edit();
-        writePrefs(editor);
-        editor.apply();
-    }
-
-    private void writePrefs(SharedPreferences.Editor editor) {
         editor.putLong(Keys.planStart, planStart);
         editor.putLong(Keys.weekStart, weekStart);
         editor.putInt(Keys.tzOffset, tzOffset);
@@ -111,23 +110,14 @@ public final class AppUserData {
         editor.putInt(Keys.pullUpMax, liftArray[LiftType.pullUp]);
         editor.putInt(Keys.benchMax, liftArray[LiftType.bench]);
         editor.putInt(Keys.deadLiftMax, liftArray[LiftType.deadlift]);
+        editor.apply();
     }
 
-    public void setWorkoutPlan(byte plan) {
-        if (plan >= 0 && plan != currentPlan) {
-            if (BuildConfig.DEBUG) {
-                planStart = weekStart;
-            } else {
-                planStart = weekStart + DateHelper.weekSeconds;
-            }
+    void deleteSavedData() {
+        if (completedWorkouts != 0) {
+            completedWorkouts = 0;
+            saveData();
         }
-        currentPlan = plan;
-        saveData();
-    }
-
-    public void deleteSavedData() {
-        completedWorkouts = 0;
-        saveData();
     }
 
     public int addCompletedWorkout(byte day) {
@@ -143,11 +133,31 @@ public final class AppUserData {
 
     public int getWeekInPlan() { return (int) ((weekStart - planStart) / DateHelper.weekSeconds); }
 
-    public void updateWeightMaxes(short[] newLifts) {
+    boolean updateWeightMaxes(short[] newLifts) {
+        boolean madeChange = false;
         for (int i = 0; i < 4; ++i) {
-            if (newLifts[i] > liftArray[i])
+            if (newLifts[i] > liftArray[i]) {
+                madeChange = true;
                 liftArray[i] = newLifts[i];
+            }
         }
-        saveData();
+        if (madeChange)
+            saveData();
+        return madeChange;
+    }
+
+    void updateSettings(byte plan, short[] newLifts) {
+        boolean madeChange = plan != currentPlan;
+        if (plan != -1 && madeChange) {
+            if (BuildConfig.DEBUG) {
+                planStart = weekStart;
+            } else {
+                planStart = weekStart + DateHelper.weekSeconds;
+            }
+        }
+        currentPlan = plan;
+
+        if (!updateWeightMaxes(newLifts) && madeChange)
+            saveData();
     }
 }

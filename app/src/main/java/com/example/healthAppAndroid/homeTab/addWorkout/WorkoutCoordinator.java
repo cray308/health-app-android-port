@@ -23,8 +23,7 @@ public final class WorkoutCoordinator {
         }
 
         public void completion() {
-            AppUserData.shared.updateWeightMaxes(lifts);
-            AppCoordinator.shared.updateMaxWeights();
+            AppCoordinator.shared.updateMaxWeights(lifts);
         }
     }
 
@@ -36,40 +35,50 @@ public final class WorkoutCoordinator {
         this.parent = parent;
     }
 
-    private void finishedAddingWorkout(FragmentActivity activity, BottomSheetDialogFragment dialog,
-                                       int totalCompletedWorkouts) {
+    private void handleFinishedWorkout(FragmentActivity activity,
+                                       BottomSheetDialogFragment dialog, short[] lifts) {
+        int totalCompleted = 0;
+        if (workout.duration >= Workout.MinWorkoutDuration && workout.day >= 0)
+            totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
+
+        PersistenceService.updateCurrentWeek(workout, lifts, UpdateHandler.init(lifts));
         if (dialog != null)
             dialog.dismiss();
-        parent.finishedAddingWorkout(activity, totalCompletedWorkouts);
+        parent.finishedAddingWorkout(activity, totalCompleted);
     }
 
-    public void completedWorkout(FragmentActivity activity,
-                                 BottomSheetDialogFragment dialog, boolean showModalIfNeeded) {
+    public void completedWorkout(FragmentActivity activity, BottomSheetDialogFragment dialog,
+                                 boolean showModalIfNeeded, short[] lifts) {
+        if (showModalIfNeeded)
+            workout.setDuration();
         if (showModalIfNeeded &&
             workout.title.equalsIgnoreCase(activity.getString(R.string.workoutTitleTestDay))) {
             AddWorkoutUpdateMaxesDialog modal = new AddWorkoutUpdateMaxesDialog();
             modal.delegate = this;
-            modal.workout = workout;
             modal.show(activity.getSupportFragmentManager(), "AddWorkoutUpdateMaxesDialog");
-            return;
+        } else {
+            handleFinishedWorkout(activity, dialog, lifts);
         }
-
-        int totalCompleted = 0;
-        if (workout.day >= 0 && workout.duration >= Workout.MinWorkoutDuration)
-            totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
-        PersistenceService.updateCurrentWeek(workout, UpdateHandler.init(workout.newLifts));
-        finishedAddingWorkout(activity, dialog, totalCompleted);
     }
 
     public void stoppedWorkout(FragmentActivity activity) {
-        PersistenceService.updateCurrentWeek(workout, null);
-        finishedAddingWorkout(activity, null, 0);
+        workout.setDuration();
+        if (workout.checkEnduranceDuration()) {
+            handleFinishedWorkout(activity, null, null);
+        } else {
+            PersistenceService.updateCurrentWeek(workout, null, null);
+            parent.finishedAddingWorkout(activity, 0);
+        }
     }
 
     public void stopWorkoutFromBackButtonPress() {
         if (workout.startTime != 0) {
             workout.setDuration();
-            PersistenceService.updateCurrentWeek(workout, null);
+            if (workout.checkEnduranceDuration()) {
+                handleFinishedWorkout(null, null, null);
+                return;
+            }
         }
+        PersistenceService.updateCurrentWeek(workout, null, null);
     }
 }

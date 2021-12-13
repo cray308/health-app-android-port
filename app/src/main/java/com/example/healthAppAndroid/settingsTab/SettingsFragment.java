@@ -1,5 +1,6 @@
 package com.example.healthAppAndroid.settingsTab;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,11 @@ import android.widget.Button;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
+import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
 
 public final class SettingsFragment extends Fragment {
-    public SettingsTabCoordinator delegate;
     private SegmentedControl picker;
     private TextValidator validator;
 
@@ -33,11 +34,30 @@ public final class SettingsFragment extends Fragment {
         picker.setSelectedIndex((byte) (AppUserData.shared.currentPlan + 1));
 
         Button saveButton = view.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(view1 -> delegate.handleSaveTap(
-          validator.getResults(), (byte) (picker.selectedIndex - 1)));
+        saveButton.setOnClickListener(view1 -> {
+            String neutral = getString(com.google.android.material.R.string.mtrl_picker_save);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+              .setTitle(getString(R.string.settingsAlertTitle))
+              .setMessage(getString(R.string.settingsAlertMessageSave))
+              .setNegativeButton(getString(R.string.cancel), null)
+              .setPositiveButton(neutral, (dialogInterface, i)
+                -> AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1),
+                                                        validator.getResults()));
+            builder.create().show();
+        });
 
         Button deleteButton = view.findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(view2 -> delegate.handleDeleteTap());
+        deleteButton.setOnClickListener(view2 -> {
+            String neutral = getString(
+              androidx.appcompat.R.string.abc_menu_delete_shortcut_label);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+              .setTitle(getString(R.string.settingsAlertTitle))
+              .setMessage(getString(R.string.settingsAlertMessageDelete))
+              .setNegativeButton(getString(R.string.cancel), null)
+              .setNeutralButton(neutral, (dialogInterface, i)
+                -> AppCoordinator.shared.deleteAppData());
+            builder.create().show();
+        });
 
         validator = new TextValidator(saveButton);
         for (int i = 0; i < 4; ++i)

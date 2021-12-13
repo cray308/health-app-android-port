@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="StatusButton">
         <attr name="hideCheckbox" format="boolean"/>
-        <attr name="hideHeader" format="boolean"/>
         <attr name="buttonLabel" format="string"/>
     </declare-styleable>
     <declare-styleable name="InputView">
@@ -14,9 +13,9 @@
         <attr name="midTitle" format="string"/>
         <attr name="rightTitle" format="string"/>
     </declare-styleable>
-    <declare-styleable name="ChartSeparator">
-        <attr name="hideDivider" format="boolean"/>
-        <attr name="sepHeader" format="string"/>
+    <declare-styleable name="HeaderView">
+        <attr name="hideSeparator" format="boolean"/>
+        <attr name="headerText" format="string"/>
     </declare-styleable>
     <declare-styleable name="HistoryChartLegendEntry">
         <attr name="formColor" format="color"/>

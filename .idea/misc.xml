@@ -27,9 +27,10 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/exercise_container.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_history.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_workout.xml" value="0.34814814814814815" />
+        <entry key="app/src/main/res/layout/header_view.xml" value="0.5" />
         <entry key="app/src/main/res/layout/history_chart_legend.xml" value="0.2935185185185185" />
         <entry key="app/src/main/res/layout/history_chart_legend_entry.xml" value="0.335" />
         <entry key="app/src/main/res/layout/home_setup_workout_modal.xml" value="0.33" />

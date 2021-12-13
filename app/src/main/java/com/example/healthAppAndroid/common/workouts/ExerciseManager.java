@@ -119,7 +119,7 @@ public abstract class ExerciseManager {
             params.weight = day.getInt("weight");
 
             JSONObject foundWorkout = libArr.getJSONObject(params.index);
-            w = new Workout(foundWorkout, params);
+            w = new Workout(context, foundWorkout, params);
         } catch (JSONException e) {
             Log.e("getWeeklyWorkoutAtIndex", "Error while parsing JSON", e);
         }
@@ -156,7 +156,7 @@ public abstract class ExerciseManager {
 
         try {
             JSONObject foundWorkout = libArr.getJSONObject(params.index);
-            w = new Workout(foundWorkout, params);
+            w = new Workout(context, foundWorkout, params);
         } catch (JSONException e) {
             Log.e("getWorkoutFromLibrary", "Error while parsing JSON", e);
         }

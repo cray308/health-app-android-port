@@ -4,14 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.workouts.ExerciseGroup;
+import com.example.healthAppAndroid.common.workouts.Circuit;
 
 public final class ExerciseContainer extends LinearLayout {
-    View divider;
-    TextView headerLabel;
+    HeaderView headerView;
     ExerciseView[] viewsArr;
 
     public ExerciseContainer(Context context) {
@@ -26,14 +24,16 @@ public final class ExerciseContainer extends LinearLayout {
 
     private void setup() {
         inflate(getContext(), R.layout.exercise_container, this);
-        divider = findViewById(R.id.topDivider);
-        headerLabel = findViewById(R.id.headerLabel);
+        headerView = findViewById(R.id.headerView);
     }
 
-    void setup(ExerciseGroup g, int idx, View.OnClickListener action) {
+    void setup(Circuit g, int idx, View.OnClickListener action) {
         int size = g.exercises.length;
         viewsArr = new ExerciseView[size];
-        headerLabel.setText(g.createHeader(getContext()));
+        String headerStr = g.headerStr.toString();
+        headerView.headerLabel.setText(headerStr);
+        if (headerStr.isEmpty())
+            headerView.headerLabel.setVisibility(GONE);
         LinearLayout vStack = findViewById(R.id.mainStack);
 
         for (int i = 0; i < size; ++i) {

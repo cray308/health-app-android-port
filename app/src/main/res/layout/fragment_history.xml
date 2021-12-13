@@ -34,15 +34,33 @@
             android:paddingRight="8dp"
             android:paddingBottom="20dp">
 
+            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:headerText="@string/chartHeaderTotalWorkouts"
+                app:hideSeparator="true" />
+
             <com.example.healthAppAndroid.historyTab.view.TotalWorkoutsChart
                 android:id="@+id/totalWorkoutsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:headerText="@string/chartHeaderWorkoutType" />
+
             <com.example.healthAppAndroid.historyTab.view.WorkoutTypeChart
                 android:id="@+id/workoutTypeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:headerText="@string/chartHeaderLifts" />
 
             <com.example.healthAppAndroid.historyTab.view.LiftingChart
                 android:id="@+id/liftContainer"

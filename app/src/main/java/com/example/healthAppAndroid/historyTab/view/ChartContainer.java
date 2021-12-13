@@ -99,6 +99,7 @@ public abstract class ChartContainer extends LinearLayout {
     }
 
     void update(boolean isSmall, float axisMax) {
+        chartView.zoom(0.01f, 0.01f, 0, 0);
         chartView.getAxisLeft().setAxisMaximum(axisMax);
         legendContainer.setVisibility(View.VISIBLE);
         data.setDrawValues(isSmall);

@@ -1,5 +1,6 @@
 package com.example.healthAppAndroid.homeTab.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -14,15 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.ControlState;
+import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.StatusButton;
+import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
-import com.example.healthAppAndroid.homeTab.data.HomeViewModel;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -32,7 +34,7 @@ import nl.dionsegijn.konfetti.models.Size;
 
 public final class HomeFragment extends Fragment {
     private String[] timeNames;
-    public final HomeViewModel viewModel = new HomeViewModel();
+    public int numWorkouts = 0;
     public HomeTabCoordinator delegate;
     private TextView greetingLabel;
     private View weeklyWkContainer;
@@ -59,8 +61,6 @@ public final class HomeFragment extends Fragment {
         weeklyWkContainer.setVisibility(View.GONE);
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
         confettiView = view.findViewById(R.id.confettiView);
-        updateGreeting();
-        viewModel.fetchData(getContext());
         createWorkoutsList();
     }
 
@@ -68,49 +68,62 @@ public final class HomeFragment extends Fragment {
         super.onResume();
         if (delegate != null)
             delegate.checkForChildCoordinator();
-        if (viewModel.updateTimeOfDay())
-            updateGreeting();
+
+        LocalDateTime localInfo = DateHelper.localTime(DateHelper.getCurrentTime());
+        int hour = localInfo.getHour();
+        int timeOfDay = 0;
+
+        if (hour >= 12 && hour < 17) {
+            timeOfDay = 1;
+        } else if (hour < 5 || hour >= 17) {
+            timeOfDay = 2;
+        }
+        greetingLabel.setText(timeNames[timeOfDay]);
     }
 
     public void createWorkoutsList() {
         weeklyWorkoutStack.removeAllViews();
-
+        numWorkouts = 0;
         Context context = getContext();
-        if (!viewModel.hasWorkoutsForThisWeek() || context == null) {
+
+        byte plan = AppUserData.shared.currentPlan;
+        if (plan < 0 || AppUserData.shared.planStart > DateHelper.getCurrentTime()
+            || context == null) {
             weeklyWkContainer.setVisibility(View.GONE);
             return;
         }
-        weeklyWkContainer.setVisibility(View.VISIBLE);
+
+        String[] workoutNames = {null, null, null, null, null, null, null};
+        ExerciseManager.setWeeklyWorkoutNames(
+          context, plan, AppUserData.shared.getWeekInPlan(), workoutNames);
 
         DayOfWeek[] days = DayOfWeek.values();
 
         for (int i = 0; i < 7; ++i) {
-            if (viewModel.workoutNames[i] == null) continue;
+            if (workoutNames[i] == null) continue;
             StatusButton btn = new StatusButton(context);
-            String dayName = days[i].getDisplayName(TextStyle.FULL, Locale.US);
-            btn.setProperties(dayName, viewModel.workoutNames[i], ControlState.active, true);
             ViewHelper.setTag(btn.button, i);
             btn.button.setOnClickListener(dayWorkoutListener);
+            btn.headerLabel.setText(days[i].getDisplayName(TextStyle.FULL, Locale.US));
+            btn.button.setText(workoutNames[i]);
             weeklyWorkoutStack.addView(btn);
+            numWorkouts += 1;
         }
+        weeklyWkContainer.setVisibility(View.VISIBLE);
         updateWorkoutsList();
     }
 
     public void updateWorkoutsList() {
-        int count = weeklyWorkoutStack.getChildCount();
-        if (!(viewModel.hasWorkoutsForThisWeek() && count > 0)) return;
+        if (numWorkouts == 0) return;
 
         byte completed = AppUserData.shared.completedWorkouts;
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < numWorkouts; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;
-            byte state = enabled ? ControlState.disabled : ControlState.finished;
-            v.updateStateAndButton(state, enabled);
+            v.button.setEnabled(enabled);
+            v.button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
+            v.checkbox.setBackgroundColor(enabled ? AppColors.gray : AppColors.green);
         }
-    }
-
-    private void updateGreeting() {
-        greetingLabel.setText(timeNames[viewModel.timeOfDay]);
     }
 
     private final View.OnClickListener customBtnListener = new View.OnClickListener() {
@@ -139,8 +152,11 @@ public final class HomeFragment extends Fragment {
             .streamFor(128, 4500);
         new Handler().postDelayed(() -> {
             confettiView.setVisibility(View.GONE);
-            if (delegate != null)
-                delegate.showWeeklyGoalDialog();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+              .setTitle(getString(R.string.homeAlertTitle))
+              .setMessage(getString(R.string.homeAlertMessage))
+              .setPositiveButton(getString(R.string.ok), null);
+            builder.create().show();
         }, 5500);
     }
 }
