@@ -16,6 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public final class TextValidator {
@@ -158,7 +159,7 @@ public final class TextValidator {
             children[i].result = values[i];
             children[i].valid = true;
             children[i].field.setError(null);
-            children[i].textField.setText(ViewHelper.format("%d", values[i]));
+            children[i].textField.setText(String.format(Locale.US, "%d", values[i]));
         }
     }
 

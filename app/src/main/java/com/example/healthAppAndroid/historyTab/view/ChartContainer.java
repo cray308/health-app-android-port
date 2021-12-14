@@ -88,8 +88,15 @@ public abstract class ChartContainer extends LinearLayout {
 
     void disable() {
         legendContainer.setVisibility(View.GONE);
+        for (int i = 0; i < 5; ++i) {
+            if (dataSets[i] != null)
+                dataSets[i].setValues(null);
+        }
         chartView.setData(null);
         chartView.notifyDataSetChanged();
+        HistoryFragment.Formatter formatter =
+          (HistoryFragment.Formatter) chartView.getXAxis().getValueFormatter();
+        formatter.timeData = null;
     }
 
     void updateData(int index, boolean isSmall, Entry[] entries, int iLegend, String text) {

@@ -9,11 +9,17 @@ import com.example.healthAppAndroid.historyTab.view.HistoryFragment;
 public final class HistoryTabCoordinator {
     private static final class FetchHandler implements PersistenceService.Block {
         private final HistoryTabCoordinator coordinator;
+        private final HistoryViewModel.WeekDataModel data;
 
-        private FetchHandler(HistoryTabCoordinator coordinator) { this.coordinator = coordinator; }
+        private FetchHandler(HistoryTabCoordinator coordinator,
+                             HistoryViewModel.WeekDataModel data) {
+            this.coordinator = coordinator;
+            this.data = data;
+        }
 
         public void completion() {
-            coordinator.finishedLoadingHistoryData();
+            coordinator.viewModel.populateData(data);
+            coordinator.fragment.refresh();
         }
     }
 
@@ -26,13 +32,14 @@ public final class HistoryTabCoordinator {
     }
 
     public void fetchData() {
-        PersistenceService.fetchHistoryData(viewModel.data, new FetchHandler(this));
+        HistoryViewModel.WeekDataModel model = new HistoryViewModel.WeekDataModel();
+        PersistenceService.fetchHistoryData(model, new FetchHandler(this, model));
     }
 
     public void handleDataDeletion() {
-        viewModel.data.size = 0;
-        finishedLoadingHistoryData();
+        if (viewModel.nEntries[2] != 0) {
+            viewModel.clearData();
+            fragment.refresh();
+        }
     }
-
-    private void finishedLoadingHistoryData() { fragment.performForegroundUpdate(); }
 }

@@ -181,7 +181,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    public static void deleteAppData() { new Thread(new DeleteDataTask()).start(); }
+    static void deleteAppData() { new Thread(new DeleteDataTask()).start(); }
 
     private static final class UpdateCurrentWeekTask implements Runnable {
         private final Workout workout;

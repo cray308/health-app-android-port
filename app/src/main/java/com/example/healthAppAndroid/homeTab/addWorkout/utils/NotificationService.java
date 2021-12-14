@@ -15,8 +15,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity;
+
+import java.util.Locale;
 
 public abstract class NotificationService {
     public static abstract class Type {
@@ -79,7 +80,7 @@ public abstract class NotificationService {
         };
         int id = filterId++;
         for (int i = 0; i < 2; ++i) {
-            filters[i] = ViewHelper.format("%s.%d", baseFilters[i], id);
+            filters[i] = String.format(Locale.US, "%s.%d", baseFilters[i], id);
             outerContext.registerReceiver(receivers[i], new IntentFilter(filters[i]));
         }
     }

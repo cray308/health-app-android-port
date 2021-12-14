@@ -38,15 +38,15 @@ public final class TotalWorkoutsChart extends ChartContainer {
         setupChartView(xAxisFormatter);
     }
 
-    void update(boolean isSmall) {
+    void updateChart(boolean isSmall, byte index) {
         chartView.getAxisLeft().removeAllLimitLines();
-        LimitLine limitLine = new LimitLine(viewModel.avgWorkouts);
+        LimitLine limitLine = new LimitLine(viewModel.avgs[index]);
         limitLine.enableDashedLine(10, 10, 0);
         limitLine.setLineWidth(2);
         limitLine.setLineColor(lineColor);
         chartView.getAxisLeft().addLimitLine(limitLine);
-        updateData(0, isSmall, viewModel.entries, 0, viewModel.legendLabel);
+        updateData(0, isSmall, viewModel.dynamicEntries, 0, viewModel.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));
-        update(isSmall, viewModel.yMax);
+        update(isSmall, viewModel.maxes[index]);
     }
 }

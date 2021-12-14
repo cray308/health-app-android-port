@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.charts.LineChart;
@@ -22,6 +21,7 @@ import com.github.mikephil.charting.utils.Transformer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public final class WorkoutTypeChart extends ChartContainer {
     private static final class Renderer extends LineChartRenderer {
@@ -95,9 +95,9 @@ public final class WorkoutTypeChart extends ChartContainer {
             if (minutes == 0) {
                 return "";
             } else if (minutes < 60) {
-                return ViewHelper.format("%dm", minutes);
+                return String.format(Locale.US, "%dm", minutes);
             } else {
-                return ViewHelper.format("%dh %dm", minutes / 60, minutes % 60);
+                return String.format(Locale.US, "%dh %dm", minutes / 60, minutes % 60);
             }
         }
     }
@@ -142,10 +142,12 @@ public final class WorkoutTypeChart extends ChartContainer {
         chartView.setRenderer(new Renderer(chartView));
     }
 
-    void update(boolean isSmall) {
-        dataSets[0].setValues(Arrays.asList(viewModel.entries[0]));
-        for (int i = 1; i < 5; ++i)
-            updateData(i, isSmall, viewModel.entries[i], i - 1, viewModel.legendLabels[i - 1]);
-        update(isSmall, viewModel.yMax);
+    void updateChart(boolean isSmall, byte index) {
+        dataSets[0].setValues(Arrays.asList(viewModel.dynamicEntries[0]));
+        for (int i = 1; i < 5; ++i) {
+            updateData(i, isSmall,
+                       viewModel.dynamicEntries[i], i - 1, viewModel.legendLabels[i - 1]);
+        }
+        update(isSmall, viewModel.maxes[index]);
     }
 }

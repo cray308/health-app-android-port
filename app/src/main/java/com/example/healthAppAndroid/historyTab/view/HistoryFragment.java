@@ -11,24 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-public final class HistoryFragment extends Fragment {
-    private static final class Formatter extends IndexAxisValueFormatter {
-        private final String[] months;
-        private final HistoryViewModel viewModel;
+import java.util.Locale;
 
-        private Formatter(HistoryViewModel viewModel, Resources res) {
-            this.viewModel = viewModel;
+public final class HistoryFragment extends Fragment {
+    static final class Formatter extends IndexAxisValueFormatter {
+        private final String[] months;
+        HistoryViewModel.WeekDataModel.TimeData[] timeData;
+
+        private Formatter(HistoryViewModel.WeekDataModel.TimeData[] timeData, Resources res) {
+            this.timeData = timeData;
             months = res.getStringArray(R.array.months);
         }
 
         public String getFormattedValue(float value) {
-            HistoryViewModel.WeekDataModel.Week model = viewModel.data.arr[(int) value];
-            return ViewHelper.format("%s/%d/%d", months[model.month], model.day, model.year);
+            HistoryViewModel.WeekDataModel.TimeData data = timeData[(int) value];
+            return String.format(Locale.US, "%s/%d/%d", months[data.month], data.day, data.year);
         }
     }
 
@@ -51,34 +52,31 @@ public final class HistoryFragment extends Fragment {
         workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
         liftingChart = view.findViewById(R.id.liftContainer);
         Resources res = getResources();
-        Formatter formatter = new Formatter(viewModel, res);
+        Formatter formatter = new Formatter(viewModel.timeData, res);
         viewModel.setup(res);
 
-        totalWorkoutsChart.setup(viewModel.totalWorkoutsViewModel, formatter);
-        workoutTypeChart.setup(viewModel.workoutTypeViewModel, formatter);
-        liftingChart.setup(viewModel.liftViewModel, formatter);
+        totalWorkoutsChart.setup(viewModel.totalWorkouts, formatter);
+        workoutTypeChart.setup(viewModel.workoutTypes, formatter);
+        liftingChart.setup(viewModel.lifts, formatter);
         rangePicker.delegate = this;
     }
 
     public void didSelectSegment(byte index) {
-        viewModel.formatDataForTimeRange(getContext(), index);
-        updateCharts();
-    }
-
-    public void performForegroundUpdate() {
-        rangePicker.setSelectedIndex((byte) 0);
-    }
-
-    private void updateCharts() {
-        if (viewModel.data.size == 0) {
+        if (viewModel.nEntries[2] == 0) {
             totalWorkoutsChart.disable();
             workoutTypeChart.disable();
             liftingChart.disable();
             return;
         }
 
-        totalWorkoutsChart.update(viewModel.isSmall);
-        workoutTypeChart.update(viewModel.isSmall);
-        liftingChart.update(viewModel.isSmall);
+        viewModel.formatDataForTimeRange(getContext(), index);
+        boolean isSmall = viewModel.nEntries[index] < 7;
+        totalWorkoutsChart.updateChart(isSmall, index);
+        workoutTypeChart.updateChart(isSmall, index);
+        liftingChart.updateChart(isSmall, index);
+    }
+
+    public void refresh() {
+        rangePicker.setSelectedIndex((byte) 0);
     }
 }

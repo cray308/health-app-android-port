@@ -39,9 +39,10 @@ public final class LiftingChart extends ChartContainer {
         setupChartView(xAxisFormatter);
     }
 
-    void update(boolean isSmall) {
-        for (int i = 0; i < 4; ++i)
-            updateData(i, isSmall, viewModel.entries[i], i, viewModel.legendLabels[i]);
-        update(isSmall, viewModel.yMax);
+    void updateChart(boolean isSmall, byte index) {
+        for (int i = 0; i < 4; ++i) {
+            updateData(i, isSmall, viewModel.dynamicEntries[i], i, viewModel.legendLabels[i]);
+        }
+        update(isSmall, viewModel.maxes[index]);
     }
 }

@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.DateHelper;
-import com.example.healthAppAndroid.common.helpers.ViewHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.StatusButton;
@@ -54,7 +53,7 @@ public final class HomeFragment extends Fragment {
             R.id.customButton4, R.id.customButton5};
         for (int i = 0; i < 5; ++i) {
             StatusButton currBtn = view.findViewById(customBtnIds[i]);
-            ViewHelper.setTag(currBtn.button, i);
+            setTag(currBtn.button, i);
             currBtn.button.setOnClickListener(customBtnListener);
         }
         weeklyWkContainer = view.findViewById(R.id.weeklyWorkoutsContainer);
@@ -81,6 +80,15 @@ public final class HomeFragment extends Fragment {
         greetingLabel.setText(timeNames[timeOfDay]);
     }
 
+    private static int getTag(View v) {
+        int tag = v.getId();
+        return --tag;
+    }
+
+    private static void setTag(View v, int tag) {
+        v.setId(tag + 1);
+    }
+
     public void createWorkoutsList() {
         weeklyWorkoutStack.removeAllViews();
         numWorkouts = 0;
@@ -102,7 +110,7 @@ public final class HomeFragment extends Fragment {
         for (int i = 0; i < 7; ++i) {
             if (workoutNames[i] == null) continue;
             StatusButton btn = new StatusButton(context);
-            ViewHelper.setTag(btn.button, i);
+            setTag(btn.button, i);
             btn.button.setOnClickListener(dayWorkoutListener);
             btn.headerLabel.setText(days[i].getDisplayName(TextStyle.FULL, Locale.US));
             btn.button.setText(workoutNames[i]);
@@ -119,7 +127,7 @@ public final class HomeFragment extends Fragment {
         byte completed = AppUserData.shared.completedWorkouts;
         for (int i = 0; i < numWorkouts; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
-            boolean enabled = (completed & (1 << ViewHelper.getTag(v.button))) == 0;
+            boolean enabled = (completed & (1 << getTag(v.button))) == 0;
             v.button.setEnabled(enabled);
             v.button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
             v.checkbox.setBackgroundColor(enabled ? AppColors.gray : AppColors.green);
@@ -128,13 +136,13 @@ public final class HomeFragment extends Fragment {
 
     private final View.OnClickListener customBtnListener = new View.OnClickListener() {
         public void onClick(View view) {
-            delegate.addWorkoutFromCustomButton(ViewHelper.getTag(view));
+            delegate.addWorkoutFromCustomButton(getTag(view));
         }
     };
 
     private final View.OnClickListener dayWorkoutListener = new View.OnClickListener() {
         public void onClick(View view) {
-            delegate.addWorkoutFromPlan(ViewHelper.getTag(view));
+            delegate.addWorkoutFromPlan(getTag(view));
         }
     };
 
