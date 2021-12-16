@@ -8,7 +8,6 @@
     android:paddingTop="5dp"
     android:paddingRight="8dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,17 +19,14 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:autoSizeMaxTextSize="15sp"
-            android:autoSizeMinTextSize="12sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
             android:text="@string/cancel"
-            android:textColor="@color/systemBlue" />
+            android:textColor="@color/systemBlue"
+            android:textSize="15sp" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/homeSetupWorkoutModalSubmit"
@@ -47,7 +43,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:text="@string/setupWorkoutPickerTitle"
         android:textColor="@color/label"
         android:textSize="13sp" />

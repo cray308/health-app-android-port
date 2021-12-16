@@ -54,7 +54,7 @@ public abstract class ChartContainer extends LinearLayout {
         LineDataSet dataSet = createEmptyDataSet();
         dataSet.setColor(color);
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        dataSet.setValueTextSize(11);
+        dataSet.setValueTextSize(10);
         dataSet.setValueTextColor(AppColors.labelNormal);
         dataSet.setCircleColor(color);
         dataSet.setDrawCircleHole(false);
@@ -72,13 +72,14 @@ public abstract class ChartContainer extends LinearLayout {
         chartView.getDescription().setEnabled(false);
         YAxis leftAxis = chartView.getAxisLeft();
         leftAxis.setAxisMinimum(0);
+        leftAxis.setTextSize(10);
         leftAxis.setTextColor(AppColors.labelNormal);
         chartView.getAxisRight().setEnabled(false);
         chartView.getLegend().setEnabled(false);
         XAxis xAxis = chartView.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGridLineWidth(0.5f);
-        xAxis.setTextSize(12);
+        xAxis.setTextSize(10);
         xAxis.setTextColor(AppColors.labelNormal);
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);

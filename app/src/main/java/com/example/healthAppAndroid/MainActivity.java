@@ -39,8 +39,8 @@ public final class MainActivity extends AppCompatActivity {
         NotificationService.init(this);
         Utils.init(this);
 
-        AppCoordinator.create(this);
+        PersistenceService.Block block = (PersistenceService.Block) AppCoordinator.create(this);
         int finalTzOffset = tzOffset;
-        AsyncTask.execute(() -> PersistenceService.setup(finalTzOffset));
+        AsyncTask.execute(() -> PersistenceService.start(finalTzOffset, block));
     }
 }

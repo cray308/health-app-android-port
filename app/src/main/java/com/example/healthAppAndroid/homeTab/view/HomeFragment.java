@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.StatusButton;
@@ -23,7 +22,9 @@ import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -68,7 +69,9 @@ public final class HomeFragment extends Fragment {
         if (delegate != null)
             delegate.checkForChildCoordinator();
 
-        LocalDateTime localInfo = DateHelper.localTime(DateHelper.getCurrentTime());
+        long now = Instant.now().getEpochSecond();
+        LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(now),
+                                                          ZoneId.systemDefault());
         int hour = localInfo.getHour();
         int timeOfDay = 0;
 
@@ -95,7 +98,7 @@ public final class HomeFragment extends Fragment {
         Context context = getContext();
 
         byte plan = AppUserData.shared.currentPlan;
-        if (plan < 0 || AppUserData.shared.planStart > DateHelper.getCurrentTime()
+        if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()
             || context == null) {
             weeklyWkContainer.setVisibility(View.GONE);
             return;

@@ -17,10 +17,11 @@ import androidx.room.RoomDatabase;
 import androidx.room.Update;
 
 import com.example.healthAppAndroid.BuildConfig;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.workouts.LiftType;
 import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
+
+import java.time.ZoneId;
 
 @SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
@@ -84,9 +85,9 @@ public abstract class PersistenceService extends RoomDatabase {
     public abstract DAO dao();
     private static PersistenceService shared;
 
-    public static void setup(long tzDifference) {
+    public static void start(long tzDifference, Block block) {
         shared.performStartupUpdate(tzDifference);
-        AppCoordinator.shared.historyCoordinator.fetchData();
+        block.completion();
     }
 
     public static void create(Context context) {
@@ -101,6 +102,8 @@ public abstract class PersistenceService extends RoomDatabase {
     public static void init(Context context) {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
+
+    private static long twoYearsAgo() { return AppUserData.shared.weekStart - 63244800; }
 
     private static void deleteEntries(DAO dao, WeeklyData[] data) {
         if (data.length != 0)
@@ -125,7 +128,7 @@ public abstract class PersistenceService extends RoomDatabase {
             }
         }
 
-        data = dao.getDataInInterval(0, DateHelper.twoYearsAgo());
+        data = dao.getDataInInterval(0, twoYearsAgo());
         deleteEntries(dao, data);
 
         data = dao.getDataInIntervalSorted(0, AppUserData.shared.weekStart);
@@ -147,9 +150,9 @@ public abstract class PersistenceService extends RoomDatabase {
         WeeklyData[] newWeeks = new WeeklyData[128];
         WeeklyData last = data[count - 1];
         int newEntryCount = 0;
-        for (long currStart = last.start + DateHelper.weekSeconds;
+        for (long currStart = last.start + AppUserData.weekSeconds;
              currStart < AppUserData.shared.weekStart;
-             currStart += DateHelper.weekSeconds) {
+             currStart += AppUserData.weekSeconds) {
             WeeklyData thisWeek = new WeeklyData();
             thisWeek.start = currStart;
             thisWeek.copyLiftMaxes(last);
@@ -241,12 +244,14 @@ public abstract class PersistenceService extends RoomDatabase {
         }
 
         public void run() {
+            ZoneId zoneId = ZoneId.systemDefault();
             PersistenceService service = shared;
-            WeeklyData[] data = service.dao().getDataInInterval(
-                DateHelper.twoYearsAgo(), AppUserData.shared.weekStart);
+            WeeklyData[] data = service.dao().getDataInInterval(twoYearsAgo(),
+                                                                AppUserData.shared.weekStart);
             model.size = data.length;
-            for (int i = 0; i < model.size; ++i)
-                model.arr[i] = new HistoryViewModel.WeekDataModel.Week(data[i]);
+            for (int i = 0; i < model.size; ++i) {
+                model.arr[i] = new HistoryViewModel.WeekDataModel.Week(data[i], zoneId);
+            }
             new Handler(Looper.getMainLooper()).post(block::completion);
         }
     }

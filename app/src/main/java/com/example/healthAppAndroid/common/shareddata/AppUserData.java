@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.healthAppAndroid.BuildConfig;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.workouts.LiftType;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 public final class AppUserData {
     private static abstract class Plans {
@@ -25,15 +29,41 @@ public final class AppUserData {
         private static final String deadLiftMax = "deadLiftMax";
     }
 
+    private static long getStartOfDay(long date, LocalDateTime info) {
+        int seconds = (info.getHour() * 3600) + (info.getMinute() * 60) + info.getSecond();
+        return date - seconds;
+    }
+
+    private static long calcStartOfWeek(long date, ZoneId zoneId) {
+        LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(date), zoneId);
+        int weekday = localInfo.getDayOfWeek().getValue();
+
+        if (weekday == 1) return getStartOfDay(date, localInfo);
+
+        date -= weekSeconds;
+        while (weekday != 1) {
+            date += 86400;
+            weekday = weekday == 7 ? 1 : weekday + 1;
+        }
+        localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(date), zoneId);
+        return getStartOfDay(date, localInfo);
+    }
+
+    private static int getOffsetFromGMT(long date, ZoneId zoneId) {
+        OffsetDateTime time = OffsetDateTime.ofInstant(Instant.ofEpochSecond(date), zoneId);
+        return time.getOffset().getTotalSeconds();
+    }
+
     private final SharedPreferences prefs;
 
     public long planStart;
-    public long weekStart;
+    long weekStart;
     private int tzOffset;
     public byte currentPlan = Plans.noPlan;
     public byte completedWorkouts;
     public final short[] liftArray = {0, 0, 0, 0};
 
+    final static long weekSeconds = 604800;
     public static AppUserData shared;
 
     private static SharedPreferences getDict(Context context) {
@@ -41,8 +71,7 @@ public final class AppUserData {
     }
 
     public static void create(Context context) {
-        long now = DateHelper.getCurrentTime();
-        shared = new AppUserData(context, now, DateHelper.calcStartOfWeek(now));
+        shared = new AppUserData(context, Instant.now().getEpochSecond());
         shared.saveData();
     }
 
@@ -50,10 +79,11 @@ public final class AppUserData {
         int[] planLengths = {8, 13};
         boolean madeChange = false;
         shared = new AppUserData(context);
-        long now = DateHelper.getCurrentTime();
-        long weekStart = DateHelper.calcStartOfWeek(now);
+        ZoneId zoneId = ZoneId.systemDefault();
+        long now = Instant.now().getEpochSecond();
+        long weekStart = calcStartOfWeek(now, zoneId);
 
-        int newOffset = DateHelper.getOffsetFromGMT(now);
+        int newOffset = getOffsetFromGMT(now, zoneId);
         int tzDiff = shared.tzOffset - newOffset;
         if (tzDiff != 0) {
             madeChange = true;
@@ -80,10 +110,11 @@ public final class AppUserData {
         return tzDiff;
     }
 
-    private AppUserData(Context context, long now, long weekStart) {
+    private AppUserData(Context context, long now) {
         prefs = getDict(context);
-        this.weekStart = weekStart;
-        tzOffset = DateHelper.getOffsetFromGMT(now);
+        ZoneId zoneId = ZoneId.systemDefault();
+        weekStart = calcStartOfWeek(now, zoneId);
+        tzOffset = getOffsetFromGMT(now, zoneId);
     }
 
     private AppUserData(Context context) {
@@ -131,7 +162,7 @@ public final class AppUserData {
         return total;
     }
 
-    public int getWeekInPlan() { return (int) ((weekStart - planStart) / DateHelper.weekSeconds); }
+    public int getWeekInPlan() { return (int) ((weekStart - planStart) / weekSeconds); }
 
     boolean updateWeightMaxes(short[] newLifts) {
         boolean madeChange = false;
@@ -152,7 +183,7 @@ public final class AppUserData {
             if (BuildConfig.DEBUG) {
                 planStart = weekStart;
             } else {
-                planStart = weekStart + DateHelper.weekSeconds;
+                planStart = weekStart + weekSeconds;
             }
         }
         currentPlan = plan;

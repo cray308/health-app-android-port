@@ -4,13 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.BuildConfig;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 import com.example.healthAppAndroid.homeTab.addWorkout.views.ExerciseView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.time.Instant;
 
 public final class Workout {
     public static abstract class Type {
@@ -144,7 +145,7 @@ public final class Workout {
     }
 
     public void setDuration() {
-        duration = ((long) ((DateHelper.getCurrentTime() - startTime) / 60f)) + 1;
+        duration = ((long) ((Instant.now().getEpochSecond() - startTime) / 60f)) + 1;
         if (BuildConfig.DEBUG)
             duration *= 10;
     }

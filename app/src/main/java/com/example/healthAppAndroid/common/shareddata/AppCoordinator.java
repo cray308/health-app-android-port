@@ -18,20 +18,22 @@ public final class AppCoordinator {
         new HomeFragment(), new HistoryFragment(), new SettingsFragment()
     };
     public final HomeTabCoordinator homeCoordinator;
-    final HistoryTabCoordinator historyCoordinator;
+    private final HistoryTabCoordinator historyCoordinator;
     private Fragment active;
 
     public static AppCoordinator shared;
 
-    public static void create(FragmentActivity activity) {
-        shared = new AppCoordinator(activity);
+    public static Object create(FragmentActivity activity) {
+        Object[] blockArray = {null};
+        shared = new AppCoordinator(activity, blockArray);
         shared.setupTabs(activity.findViewById(R.id.bottom_nav));
+        return blockArray[0];
     }
 
-    private AppCoordinator(FragmentActivity activity) {
+    private AppCoordinator(FragmentActivity activity, Object[] blockArray) {
         fm = activity.getSupportFragmentManager();
         homeCoordinator = new HomeTabCoordinator(children[0]);
-        historyCoordinator = new HistoryTabCoordinator(children[1]);
+        historyCoordinator = HistoryTabCoordinator.create(blockArray, children[1]);
     }
 
     private void setupTabs(BottomNavigationView tabBar) {
@@ -74,10 +76,7 @@ public final class AppCoordinator {
     }
 
     public void updateMaxWeights(short[] lifts) {
-        boolean updateSettings = AppUserData.shared.updateWeightMaxes(lifts);
-        if (updateSettings) {
-            SettingsFragment frag = (SettingsFragment) children[2];
-            frag.updateWeightFields();
-        }
+        if (AppUserData.shared.updateWeightMaxes(lifts))
+            ((SettingsFragment) children[2]).updateWeightFields();
     }
 }

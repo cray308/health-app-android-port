@@ -12,10 +12,10 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
-        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMaxTextSize="13sp"
         android:autoSizeMinTextSize="8sp"
         android:autoSizeTextType="uniform"
-        android:backgroundTint="@color/systemGray2"
+        android:maxLines="1"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View
@@ -37,10 +37,11 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
-        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMaxTextSize="13sp"
         android:autoSizeMinTextSize="8sp"
         android:autoSizeTextType="uniform"
         android:backgroundTint="@color/systemGray5"
+        android:maxLines="1"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View
@@ -62,10 +63,11 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_weight="1"
-        android:autoSizeMaxTextSize="12sp"
+        android:autoSizeMaxTextSize="13sp"
         android:autoSizeMinTextSize="8sp"
         android:autoSizeTextType="uniform"
         android:backgroundTint="@color/systemGray5"
+        android:maxLines="1"
         tools:ignore="SpeakableTextPresentCheck" />
 
 </LinearLayout>

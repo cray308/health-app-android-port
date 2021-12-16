@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
 import com.example.healthAppAndroid.common.workouts.Circuit;
@@ -19,6 +18,7 @@ import com.example.healthAppAndroid.common.workouts.Workout;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
 
+import java.time.Instant;
 import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
@@ -38,12 +38,12 @@ public final class WorkoutActivity extends AppCompatActivity {
         if (bar != null)
             bar.setDisplayHomeAsUpEnabled(true);
         ((TextView) toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
-        ((Button) toolbar.findViewById(R.id.startStopButton)).setOnClickListener(view -> {
+        toolbar.findViewById(R.id.startStopButton).setOnClickListener(view -> {
             Button btn = (Button) view;
             if (btn.getText().equals(getString(R.string.start))) {
                 btn.setText(getString(R.string.end));
                 btn.setTextColor(AppColors.red);
-                workout.startTime = DateHelper.getCurrentTime();
+                workout.startTime = Instant.now().getEpochSecond();
                 handleTap(0, 0, Workout.EventOption.startGroup);
             } else {
                 delegate.stoppedWorkout(this);

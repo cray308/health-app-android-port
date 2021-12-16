@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -151,9 +150,6 @@ public final class HomeSetupWorkoutDialog
             v.field.setHint(titles[i]);
             validator.addChild(maxes[i], v);
             inputViewStack.addView(v);
-            Space space = new Space(c);
-            space.setMinimumHeight(20);
-            inputViewStack.addView(space);
         }
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
         if (dialog != null)

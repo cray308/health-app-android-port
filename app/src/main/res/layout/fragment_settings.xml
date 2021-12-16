@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="20dp"
             app:leftTitle="@string/settingsSegment1"
             app:midTitle="@string/settingsSegment2"
             app:rightTitle="@string/settingsSegment3" />
@@ -37,7 +38,6 @@
             class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             app:fieldHint="@string/maxWeightSquat"
             app:zeroMin="true" />
 
@@ -70,7 +70,7 @@
             style="@style/AppButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:text="@string/settingsSaveButtonTitle"
             android:textColor="@color/systemBlue"
             android:textSize="17sp" />

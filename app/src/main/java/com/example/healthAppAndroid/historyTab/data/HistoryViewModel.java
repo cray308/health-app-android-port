@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.common.helpers.DateHelper;
 import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.github.mikephil.charting.data.Entry;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -60,9 +61,10 @@ public final class HistoryViewModel {
             private final int[] cumulativeDuration = {0, 0, 0, 0};
             private final int[] weightArray = {0, 0, 0, 0};
 
-            public Week(PersistenceService.WeeklyData d) {
+            public Week(PersistenceService.WeeklyData d, ZoneId zoneId) {
                 int timeStrength = d.timeStrength;
-                LocalDateTime localInfo = DateHelper.localTime(d.start);
+                LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(d.start),
+                                                                  zoneId);
 
                 timeData = new TimeData(localInfo);
                 totalWorkouts = d.totalWorkouts;
