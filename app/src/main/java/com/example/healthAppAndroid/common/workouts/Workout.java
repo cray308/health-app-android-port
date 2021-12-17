@@ -1,6 +1,8 @@
 package com.example.healthAppAndroid.common.workouts;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.example.healthAppAndroid.BuildConfig;
@@ -35,8 +37,10 @@ public final class Workout {
     }
 
     public static final long MinWorkoutDuration = 15;
+    public static final String finishedNotification = "FinishedWorkoutNotification";
+    public static final String userInfoKey = "totalWorkouts";
 
-    public final static class Params {
+    public final static class Params implements Parcelable {
         private final byte day;
         public byte type;
         public int index;
@@ -45,6 +49,32 @@ public final class Workout {
         public int weight = 1;
 
         public Params(byte day) { this.day = day; }
+
+        public int describeContents() { return 0; }
+
+        public void writeToParcel(Parcel out, int flags) {
+            out.writeByte(day);
+            out.writeByte(type);
+            out.writeInt(index);
+            out.writeInt(sets);
+            out.writeInt(reps);
+            out.writeInt(weight);
+        }
+
+        public static final Parcelable.Creator<Params> CREATOR = new Parcelable.Creator<Params>() {
+            public Params createFromParcel(Parcel in) { return new Params(in); }
+
+            public Params[] newArray(int size) { return new Params[size]; }
+        };
+
+        private Params(Parcel in) {
+            day = in.readByte();
+            type = in.readByte();
+            index = in.readInt();
+            sets = in.readInt();
+            reps = in.readInt();
+            weight = in.readInt();
+        }
     }
 
     public final byte type;

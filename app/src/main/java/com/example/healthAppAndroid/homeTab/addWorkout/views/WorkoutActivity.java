@@ -1,6 +1,8 @@
 package com.example.healthAppAndroid.homeTab.addWorkout.views;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -9,20 +11,39 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppCoordinator;
+import com.example.healthAppAndroid.common.shareddata.AppUserData;
+import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.example.healthAppAndroid.common.workouts.Circuit;
+import com.example.healthAppAndroid.common.workouts.ExerciseManager;
 import com.example.healthAppAndroid.common.workouts.Workout;
-import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutCoordinator;
 import com.example.healthAppAndroid.homeTab.addWorkout.utils.NotificationService;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.Instant;
 import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
-    private WorkoutCoordinator delegate;
+    private final static class UpdateHandler implements PersistenceService.Block {
+        private final short[] lifts;
+
+        private UpdateHandler(short[] lifts) { this.lifts = lifts; }
+
+        private static UpdateHandler init(short[] lifts) {
+            if (lifts == null) return null;
+            return new UpdateHandler(lifts);
+        }
+
+        public void completion() {
+            AppCoordinator.shared.updateMaxWeights(lifts);
+        }
+    }
+
+    public final static String bundleKey = "WorkoutActivityKey";
     private Workout workout;
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
@@ -30,8 +51,12 @@ public final class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
-        delegate = AppCoordinator.shared.homeCoordinator.child;
-        workout = delegate.workout;
+        Bundle args = getIntent().getExtras();
+        if (args != null) {
+            Workout.Params params = args.getParcelable(bundleKey);
+            workout = ExerciseManager.getWorkoutFromLibrary(this, params);
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
@@ -46,7 +71,14 @@ public final class WorkoutActivity extends AppCompatActivity {
                 workout.startTime = Instant.now().getEpochSecond();
                 handleTap(0, 0, Workout.EventOption.startGroup);
             } else {
-                delegate.stoppedWorkout(this);
+                workout.setDuration();
+                if (workout.checkEnduranceDuration()) {
+                    handleFinishedWorkout(null, null, true);
+                } else {
+                    PersistenceService.updateCurrentWeek(workout, null, null);
+                    sendBroadcast(0);
+                    finish();
+                }
             }
         });
         groupsStack = findViewById(R.id.workoutGroupsStack);
@@ -66,6 +98,25 @@ public final class WorkoutActivity extends AppCompatActivity {
     protected void onDestroy() {
         NotificationService.cleanup(this);
         super.onDestroy();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (workout.startTime != 0) {
+                workout.setDuration();
+                if (workout.checkEnduranceDuration()) {
+                    handleFinishedWorkout(null, null, false);
+                } else {
+                    PersistenceService.updateCurrentWeek(workout, null, null);
+                    sendBroadcast(0);
+                }
+            } else {
+                sendBroadcast(0);
+            }
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private final View.OnClickListener tapHandler = view -> {
@@ -108,8 +159,15 @@ public final class WorkoutActivity extends AppCompatActivity {
             default:
         }
 
-        if (finishedWorkout)
-            delegate.completedWorkout(this, null, true, null);
+        if (finishedWorkout) {
+            workout.setDuration();
+            if (workout.title.equalsIgnoreCase(getString(R.string.workoutTitleTestDay))) {
+                AddWorkoutUpdateMaxesDialog modal = new AddWorkoutUpdateMaxesDialog();
+                modal.show(getSupportFragmentManager(), "AddWorkoutUpdateMaxesDialog");
+            } else {
+                handleFinishedWorkout(null, null, true);
+            }
+        }
     }
 
     public void finishedGroup() {
@@ -118,5 +176,24 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     public void finishedExercise() {
         handleTap(workout.index, workout.group.index, (byte) 0);
+    }
+
+    private void sendBroadcast(int totalCompleted) {
+        Intent intent = new Intent(Workout.finishedNotification);
+        intent.putExtra(Workout.userInfoKey, totalCompleted);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    void handleFinishedWorkout(BottomSheetDialogFragment dialog, short[] lifts, boolean close) {
+        int totalCompleted = 0;
+        if (workout.duration >= Workout.MinWorkoutDuration && workout.day >= 0)
+            totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
+
+        PersistenceService.updateCurrentWeek(workout, lifts, UpdateHandler.init(lifts));
+        if (dialog != null)
+            dialog.dismiss();
+        sendBroadcast(totalCompleted);
+        if (close)
+            finish();
     }
 }

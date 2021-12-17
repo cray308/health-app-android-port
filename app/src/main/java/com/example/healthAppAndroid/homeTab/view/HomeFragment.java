@@ -1,11 +1,16 @@
 package com.example.healthAppAndroid.homeTab.view;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -19,7 +24,9 @@ import com.example.healthAppAndroid.common.shareddata.AppColors;
 import com.example.healthAppAndroid.common.shareddata.AppUserData;
 import com.example.healthAppAndroid.common.views.StatusButton;
 import com.example.healthAppAndroid.common.workouts.ExerciseManager;
-import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
+import com.example.healthAppAndroid.common.workouts.Workout;
+import com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -33,13 +40,22 @@ import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
 public final class HomeFragment extends Fragment {
+    private static abstract class CustomWorkoutIndex {
+        private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
+    }
+
     private String[] timeNames;
-    public int numWorkouts = 0;
-    public HomeTabCoordinator delegate;
+    private int numWorkouts = 0;
     private TextView greetingLabel;
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
     private KonfettiView confettiView;
+
+    private final BroadcastReceiver workoutNotificationReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            handleFinishedWorkout(intent.getIntExtra(Workout.userInfoKey, 0));
+        }
+    };
 
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,8 +82,6 @@ public final class HomeFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-        if (delegate != null)
-            delegate.checkForChildCoordinator();
 
         long now = Instant.now().getEpochSecond();
         LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(now),
@@ -104,10 +118,8 @@ public final class HomeFragment extends Fragment {
             return;
         }
 
-        String[] workoutNames = {null, null, null, null, null, null, null};
-        ExerciseManager.setWeeklyWorkoutNames(
-          context, plan, AppUserData.shared.getWeekInPlan(), workoutNames);
-
+        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(
+          context, plan, AppUserData.shared.getWeekInPlan());
         DayOfWeek[] days = DayOfWeek.values();
 
         for (int i = 0; i < 7; ++i) {
@@ -137,19 +149,73 @@ public final class HomeFragment extends Fragment {
         }
     }
 
-    private final View.OnClickListener customBtnListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            delegate.addWorkoutFromCustomButton(getTag(view));
+    private final View.OnClickListener customBtnListener = view -> {
+        Context context = getContext();
+        int index = getTag(view);
+        byte type = Workout.Type.strength;
+        if (index == CustomWorkoutIndex.SE) {
+            type = Workout.Type.SE;
+        } else if (index == CustomWorkoutIndex.HIC) {
+            type = Workout.Type.HIC;
+        } else if (index == CustomWorkoutIndex.Endurance) {
+            type = Workout.Type.endurance;
+        } else if (index == CustomWorkoutIndex.TestMax) {
+            Workout.Params params = new Workout.Params((byte) -1);
+            params.type = Workout.Type.strength;
+            params.index = 2;
+            params.sets = params.reps = 1;
+            params.weight = 100;
+            navigateToAddWorkout(null, params);
+            return;
         }
+
+        String[] names = ExerciseManager.getWorkoutNamesForType(context, type);
+        if (names == null || names.length == 0) return;
+
+        HomeSetupWorkoutDialog.Params params = new HomeSetupWorkoutDialog.Params(type, names);
+        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(params);
+        modal.show(getParentFragmentManager(), "HomeSetupWorkoutDialog");
     };
 
-    private final View.OnClickListener dayWorkoutListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            delegate.addWorkoutFromPlan(getTag(view));
-        }
+    private final View.OnClickListener dayWorkoutListener = view -> {
+        byte plan = AppUserData.shared.currentPlan;
+        Workout.Params params = ExerciseManager.getWeeklyWorkoutParams(
+          getContext(), plan, AppUserData.shared.getWeekInPlan(), getTag(view));
+        if (params != null)
+            navigateToAddWorkout(null, params);
     };
 
-    public void showConfetti() {
+    void navigateToAddWorkout(BottomSheetDialogFragment dialog, Workout.Params params) {
+        if (dialog != null)
+            dialog.dismiss();
+
+        FragmentActivity activity = getActivity();
+        Context context = getContext();
+        if (activity == null || context == null) return;
+
+        IntentFilter filter = new IntentFilter(Workout.finishedNotification);
+        LocalBroadcastManager.getInstance(context).registerReceiver(
+          workoutNotificationReceiver, filter);
+
+        Intent intent = new Intent(activity, WorkoutActivity.class);
+        intent.putExtra(WorkoutActivity.bundleKey, params);
+        activity.startActivity(intent);
+    }
+
+    private void handleFinishedWorkout(int totalCompleted) {
+        Context context = getContext();
+        if (context != null)
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(workoutNotificationReceiver);
+
+        boolean update = totalCompleted != 0;
+        if (update)
+            updateWorkoutsList();
+
+        if (update && numWorkouts == totalCompleted)
+            new Handler().postDelayed(this::showConfetti, 2500);
+    }
+
+    private void showConfetti() {
         confettiView.setVisibility(View.VISIBLE);
         confettiView.build()
             .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)

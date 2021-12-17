@@ -6,11 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.common.shareddata.PersistenceService;
 import com.example.healthAppAndroid.common.views.SegmentedControl;
 import com.example.healthAppAndroid.historyTab.data.HistoryViewModel;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
@@ -18,6 +20,34 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.Locale;
 
 public final class HistoryFragment extends Fragment {
+    private static final class FetchHandler implements PersistenceService.Block {
+        private final HistoryFragment fragment;
+        private final HistoryViewModel.WeekDataModel data;
+
+        private FetchHandler(HistoryFragment fragment,
+                             HistoryViewModel.WeekDataModel data) {
+            this.fragment = fragment;
+            this.data = data;
+        }
+
+        public void completion() {
+            if (data.size != 0)
+                fragment.viewModel.populateData(data);
+            new android.os.Handler(Looper.getMainLooper()).post(fragment::refresh);
+        }
+    }
+
+    private static final class StartupHandler implements PersistenceService.Block {
+        private final HistoryFragment fragment;
+
+        private StartupHandler(HistoryFragment fragment) { this.fragment = fragment; }
+
+        public void completion() {
+            HistoryViewModel.WeekDataModel model = new HistoryViewModel.WeekDataModel();
+            PersistenceService.fetchHistoryData(model, new FetchHandler(fragment, model));
+        }
+    }
+
     static final class Formatter extends IndexAxisValueFormatter {
         private final String[] months;
         HistoryViewModel.WeekDataModel.TimeData[] timeData;
@@ -33,11 +63,17 @@ public final class HistoryFragment extends Fragment {
         }
     }
 
-    public final HistoryViewModel viewModel = new HistoryViewModel();
+    private final HistoryViewModel viewModel = new HistoryViewModel();
     private SegmentedControl rangePicker;
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
+
+    public static HistoryFragment init(Object[] blockArray) {
+        HistoryFragment fragment = new HistoryFragment();
+        blockArray[0] = new StartupHandler(fragment);
+        return fragment;
+    }
 
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +112,14 @@ public final class HistoryFragment extends Fragment {
         liftingChart.updateChart(isSmall, index);
     }
 
-    public void refresh() {
+    private void refresh() {
         rangePicker.setSelectedIndex((byte) 0);
+    }
+
+    public void handleDataDeletion() {
+        if (viewModel.nEntries[2] != 0) {
+            viewModel.clearData();
+            refresh();
+        }
     }
 }

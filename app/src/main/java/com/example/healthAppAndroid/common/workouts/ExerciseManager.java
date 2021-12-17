@@ -76,10 +76,11 @@ public abstract class ExerciseManager {
         return container;
     }
 
-    public static void setWeeklyWorkoutNames(Context context, byte plan, int week, String[] names) {
+    public static String[] getWeeklyWorkoutNames(Context context, byte plan, int week) {
+        String[] names = {null, null, null, null, null, null, null};
         DictWrapper data = createRootAndLibDict(context);
         JSONArray currWeek = data.getCurrentWeekForPlan(plan, week);
-        if (currWeek == null) return;
+        if (currWeek == null) return names;
 
         for (int i = 0; i < 7; ++i) {
             try {
@@ -97,33 +98,32 @@ public abstract class ExerciseManager {
                 Log.e("setWeeklyWorkoutNames", "Error while parsing JSON", e);
             }
         }
+        return names;
     }
 
-    public static Workout getWeeklyWorkoutAtIndex(Context context, byte plan, int week, int index) {
-        Workout w = null;
-        Workout.Params params = new Workout.Params((byte) index);
+    public static Workout.Params getWeeklyWorkoutParams(Context context,
+                                                        byte plan, int week, int index) {
+        Workout.Params params = null;
         DictWrapper data = createRootAndLibDict(context);
         JSONArray currWeek = data.getCurrentWeekForPlan(plan, week);
         if (currWeek == null) return null;
 
         try {
             JSONObject day = currWeek.getJSONObject(index);
-
-            params.type = (byte) day.getInt(Keys.type);
-            JSONArray libArr = data.getLibraryArrayForType(params.type);
+            byte type = (byte) day.getInt(Keys.type);
+            JSONArray libArr = data.getLibraryArrayForType(type);
             if (libArr == null) return null;
 
+            params = new Workout.Params((byte) index);
+            params.type = type;
             params.index = day.getInt(Keys.index);
             params.sets = day.getInt("sets");
             params.reps = day.getInt(Keys.reps);
             params.weight = day.getInt("weight");
-
-            JSONObject foundWorkout = libArr.getJSONObject(params.index);
-            w = new Workout(context, foundWorkout, params);
         } catch (JSONException e) {
-            Log.e("getWeeklyWorkoutAtIndex", "Error while parsing JSON", e);
+            Log.e("getWeeklyWorkoutParams", "Error while parsing JSON", e);
         }
-        return w;
+        return params;
     }
 
     public static String[] getWorkoutNamesForType(Context context, byte type) {

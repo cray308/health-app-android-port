@@ -14,14 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.common.helpers.TextValidator;
 import com.example.healthAppAndroid.common.workouts.Workout;
-import com.example.healthAppAndroid.homeTab.HomeTabCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.List;
 
 public final class HomeSetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
@@ -57,7 +59,6 @@ public final class HomeSetupWorkoutDialog
 
     private Params params;
     private final Workout.Params output = new Workout.Params((byte) -1);
-    public HomeTabCoordinator delegate;
     private TextValidator validator;
 
     public static HomeSetupWorkoutDialog newInstance(Params params) {
@@ -102,7 +103,15 @@ public final class HomeSetupWorkoutDialog
                     output.reps = results[0];
                 default:
             }
-            delegate.finishedBottomSheet(this, output);
+            List<Fragment> fragments = getParentFragmentManager().getFragments();
+            HomeFragment home = null;
+            for (Fragment fragment : fragments) {
+                if ("1".equals(fragment.getTag()))
+                    home = (HomeFragment) fragment;
+            }
+
+            if (home != null)
+                home.navigateToAddWorkout(this, output);
         });
 
         validator = new TextValidator(submitButton);
