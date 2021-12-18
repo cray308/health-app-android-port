@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
+public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
     private TextValidator validator;
 
     public View onCreateView(LayoutInflater inflater,

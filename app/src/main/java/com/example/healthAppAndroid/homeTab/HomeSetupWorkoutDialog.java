@@ -26,7 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
 
-final class HomeSetupWorkoutDialog
+public final class HomeSetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
     private static final String paramsKey = "HomeSetupWorkoutDialogParams";
 
