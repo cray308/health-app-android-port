@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthAppAndroid">
         <activity
-            android:name="com.example.healthAppAndroid.MainActivity"
+            android:name="com.example.healthAppAndroid.core.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -21,12 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.healthAppAndroid.homeTab.addWorkout.views.WorkoutActivity"
+            android:name="com.example.healthAppAndroid.homeTab.addWorkout.WorkoutActivity"
             android:launchMode="singleTop"
-            android:parentActivityName="com.example.healthAppAndroid.MainActivity">
+            android:parentActivityName="com.example.healthAppAndroid.core.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.healthAppAndroid.MainActivity"/>
+                android:value="com.example.healthAppAndroid.core.MainActivity"/>
         </activity>
     </application>
 

@@ -20,25 +20,25 @@
         android:orientation="vertical"
         tools:visibility="gone">
 
-        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartBlue" />
 
-        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/secondEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartGreen" />
 
-        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/thirdEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartOrange" />
 
-        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/fourthEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

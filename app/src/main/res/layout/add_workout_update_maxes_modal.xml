@@ -33,28 +33,28 @@
 
     <view
         android:id="@+id/firstInput"
-        class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+        class="com.example.healthAppAndroid.core.TextValidator$InputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:fieldHint="@string/maxWeightSquat" />
 
     <view
         android:id="@+id/secondInput"
-        class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+        class="com.example.healthAppAndroid.core.TextValidator$InputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:fieldHint="@string/maxWeightPullUp" />
 
     <view
         android:id="@+id/thirdInput"
-        class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+        class="com.example.healthAppAndroid.core.TextValidator$InputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:fieldHint="@string/maxWeightBench" />
 
     <view
         android:id="@+id/fourthInput"
-        class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+        class="com.example.healthAppAndroid.core.TextValidator$InputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:fieldHint="@string/maxWeightDeadLift" />

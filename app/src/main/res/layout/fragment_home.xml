@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".homeTab.view.HomeFragment">
+    tools:context=".homeTab.HomeFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-                <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+                <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:headerText="@string/weeklyWorkoutsHeader"
@@ -53,40 +53,40 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-                <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+                <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:headerText="@string/customWorkoutsHeader" />
 
-                <com.example.healthAppAndroid.common.views.StatusButton
+                <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:buttonLabel="@string/workoutTypeTestMax"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.common.views.StatusButton
+                <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:buttonLabel="@string/workoutTypeEndurance"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.common.views.StatusButton
+                <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:buttonLabel="@string/workoutTypeStrength"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.common.views.StatusButton
+                <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:buttonLabel="@string/workoutTypeSE"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.common.views.StatusButton
+                <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

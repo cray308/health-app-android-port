@@ -6,7 +6,7 @@
     android:layout_marginRight="8dp"
     android:orientation="vertical">
 
-    <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+    <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
         android:id="@+id/headerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

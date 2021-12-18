@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".historyTab.view.HistoryFragment">
+    tools:context=".historyTab.HistoryFragment">
 
-    <com.example.healthAppAndroid.common.views.SegmentedControl
+    <com.example.healthAppAndroid.core.SegmentedControl
         android:id="@+id/rangePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,35 +34,35 @@
             android:paddingRight="8dp"
             android:paddingBottom="20dp">
 
-            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+            <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:headerText="@string/chartHeaderTotalWorkouts"
                 app:hideSeparator="true" />
 
-            <com.example.healthAppAndroid.historyTab.view.TotalWorkoutsChart
+            <com.example.healthAppAndroid.historyTab.TotalWorkoutsChart
                 android:id="@+id/totalWorkoutsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+            <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:headerText="@string/chartHeaderWorkoutType" />
 
-            <com.example.healthAppAndroid.historyTab.view.WorkoutTypeChart
+            <com.example.healthAppAndroid.historyTab.WorkoutTypeChart
                 android:id="@+id/workoutTypeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.example.healthAppAndroid.homeTab.addWorkout.views.HeaderView
+            <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:headerText="@string/chartHeaderLifts" />
 
-            <com.example.healthAppAndroid.historyTab.view.LiftingChart
+            <com.example.healthAppAndroid.historyTab.LiftingChart
                 android:id="@+id/liftContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

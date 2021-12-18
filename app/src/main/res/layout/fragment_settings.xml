@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".settingsTab.SettingsFragment">
+    tools:context=".core.SettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:textColor="@color/label"
             android:textSize="13sp" />
 
-        <com.example.healthAppAndroid.common.views.SegmentedControl
+        <com.example.healthAppAndroid.core.SegmentedControl
             android:id="@+id/planPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
 
         <view
             android:id="@+id/inputFirst"
-            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightSquat"
@@ -43,7 +43,7 @@
 
         <view
             android:id="@+id/inputSecond"
-            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightPullUp"
@@ -51,7 +51,7 @@
 
         <view
             android:id="@+id/inputThird"
-            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightBench"
@@ -59,7 +59,7 @@
 
         <view
             android:id="@+id/inputFourth"
-            class="com.example.healthAppAndroid.common.helpers.TextValidator$InputView"
+            class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:fieldHint="@string/maxWeightDeadLift"

@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.example.healthAppAndroid.historyTab.view.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
