@@ -5,22 +5,11 @@ import com.example.healthAppAndroid.core.PersistenceService;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Locale;
 
 public final class WeekDataModel {
-    final static class TimeData {
-        final int year;
-        final int month;
-        final int day;
-
-        private TimeData(LocalDateTime info) {
-            year = info.getYear() % 100;
-            month = info.getMonthValue() - 1;
-            day = info.getDayOfMonth();
-        }
-    }
-
     public static class Week {
-        final TimeData timeData;
+        final String axisString;
         final int totalWorkouts;
         final int[] durationByType = {0, 0, 0, 0};
         final int[] cumulativeDuration = {0, 0, 0, 0};
@@ -28,10 +17,9 @@ public final class WeekDataModel {
 
         public Week(PersistenceService.WeeklyData d, ZoneId zoneId) {
             int timeStrength = d.timeStrength;
-            LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(d.start),
-                                                              zoneId);
-
-            timeData = new TimeData(localInfo);
+            LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochSecond(d.start), zoneId);
+            axisString = String.format(Locale.US, "%d/%d/%d", time.getMonthValue(),
+                                       time.getDayOfMonth(), time.getYear() % 100);
             totalWorkouts = d.totalWorkouts;
             weightArray[0] = d.bestSquat;
             weightArray[1] = d.bestPullup;

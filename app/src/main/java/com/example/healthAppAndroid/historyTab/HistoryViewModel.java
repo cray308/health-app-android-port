@@ -13,7 +13,6 @@ import java.util.Locale;
 final class HistoryViewModel extends IndexAxisValueFormatter {
     private String[] workoutNames;
     private String[] liftNames;
-    private String[] months;
 
     final static class TotalWorkoutsChartViewModel {
         private Entry[] entries;
@@ -53,17 +52,16 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     final TotalWorkoutsChartViewModel totalWorkouts = new TotalWorkoutsChartViewModel();
     final WorkoutTypeChartViewModel workoutTypes = new WorkoutTypeChartViewModel();
     final LiftChartViewModel lifts = new LiftChartViewModel();
-    private final WeekDataModel.TimeData[] timeData = new WeekDataModel.TimeData[128];
+    private final String[] axisStrings = new String[128];
     final int[] nEntries = {0, 0, 0};
     private final int[] refIndices = {0, 0, 0};
 
     public void setup(Resources res) {
         workoutNames = res.getStringArray(R.array.workoutTypes);
         liftNames = res.getStringArray(R.array.liftTypes);
-        months = res.getStringArray(R.array.months);
     }
 
-    void populateData(com.example.healthAppAndroid.historyTab.WeekDataModel results) {
+    void populateData(WeekDataModel results) {
         refIndices[0] = results.size - 26;
         refIndices[1] = results.size - 52;
         if (refIndices[1] < 0)
@@ -82,114 +80,49 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         }
         workoutTypes.entries[4] = new Entry[results.size];
 
-        int[] totalWorkoutsArr = {0, 0, 0}, maxWorkouts = {0, 0, 0};
+        int[] sectionIndices = {results.size, refIndices[0], refIndices[1], 0};
+        int[] totalWorkoutsArr = {0, 0, 0}, maxWorkouts = {0, 0, 0}, innerLimits = {-1, 0, 1};
         int[] maxTime = {0, 0, 0}, maxWeight = {0, 0, 0};
         int[][] totalByType = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
         int[][] totalByExercise = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
 
-        for (int i = 0; i < refIndices[1]; ++i) {
-            WeekDataModel.Week e = results.arr[i];
-            timeData[i] = e.timeData;
+        for (int section = 3; section > 0; --section) {
+            int limit = sectionIndices[section - 1];
+            int jEnd = innerLimits[section - 1];
+            for (int i = sectionIndices[section]; i < limit; ++i) {
+                WeekDataModel.Week e = results.arr[i];
+                axisStrings[i] = e.axisString;
 
-            totalWorkoutsArr[2] += e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[2])
-                maxWorkouts[2] = e.totalWorkouts;
-            totalWorkouts.entries[i] = new Entry(i, e.totalWorkouts);
+                for (int j = 2; j > jEnd; --j) {
+                    totalWorkoutsArr[j] += e.totalWorkouts;
+                    if (e.totalWorkouts > maxWorkouts[j])
+                        maxWorkouts[j] = e.totalWorkouts;
+                }
+                totalWorkouts.entries[i] = new Entry(i, e.totalWorkouts);
 
-            for (int j = 0; j < 4; ++j) {
-                totalByType[2][j] += e.durationByType[j];
+                for (int x = 0; x < 4; ++x) {
+                    for (int j = 2; j > jEnd; --j) {
+                        totalByType[j][x] += e.durationByType[x];
+                        totalByExercise[j][x] += e.weightArray[x];
+                        if (e.weightArray[x] > maxWeight[j])
+                            maxWeight[j] = e.weightArray[x];
+                    }
+                    lifts.entries[x][i] = new Entry(i, e.weightArray[x]);
+                }
 
-                totalByExercise[2][j] += e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[2])
-                    maxWeight[2] = e.weightArray[j];
-                lifts.entries[j][i] = new Entry(i, e.weightArray[j]);
-            }
-
-            if (e.cumulativeDuration[3] > maxTime[2])
-                maxTime[2] = e.cumulativeDuration[3];
-            workoutTypes.entries[0][i] = new Entry(i, 0);
-            for (int j = 1; j < 5; ++j) {
-                workoutTypes.entries[j][i] = new Entry(i, e.cumulativeDuration[j - 1]);
-            }
-        }
-
-        for (int i = refIndices[1]; i < refIndices[0]; ++i) {
-            WeekDataModel.Week e = results.arr[i];
-            timeData[i] = e.timeData;
-
-            totalWorkoutsArr[2] += e.totalWorkouts;
-            totalWorkoutsArr[1] += e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[2])
-                maxWorkouts[2] = e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[1])
-                maxWorkouts[1] = e.totalWorkouts;
-            totalWorkouts.entries[i] = new Entry(i, e.totalWorkouts);
-
-            for (int j = 0; j < 4; ++j) {
-                totalByType[2][j] += e.durationByType[j];
-                totalByType[1][j] += e.durationByType[j];
-
-                totalByExercise[2][j] += e.weightArray[j];
-                totalByExercise[1][j] += e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[2])
-                    maxWeight[2] = e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[1])
-                    maxWeight[1] = e.weightArray[j];
-                lifts.entries[j][i] = new Entry(i, e.weightArray[j]);
-            }
-
-            if (e.cumulativeDuration[3] > maxTime[2])
-                maxTime[2] = e.cumulativeDuration[3];
-            if (e.cumulativeDuration[3] > maxTime[1])
-                maxTime[1] = e.cumulativeDuration[3];
-            workoutTypes.entries[0][i] = new Entry(i, 0);
-            for (int j = 1; j < 5; ++j) {
-                workoutTypes.entries[j][i] = new Entry(i, e.cumulativeDuration[j - 1]);
+                for (int j = 2; j > jEnd; --j) {
+                    if (e.cumulativeDuration[3] > maxTime[j])
+                        maxTime[j] = e.cumulativeDuration[3];
+                }
+                workoutTypes.entries[0][i] = new Entry(i, 0);
+                for (int x = 1; x < 5; ++x) {
+                    workoutTypes.entries[x][i] = new Entry(i, e.cumulativeDuration[x - 1]);
+                }
             }
         }
 
-        for (int i = refIndices[0]; i < results.size; ++i) {
-            WeekDataModel.Week e = results.arr[i];
-            timeData[i] = e.timeData;
-
-            totalWorkoutsArr[2] += e.totalWorkouts;
-            totalWorkoutsArr[1] += e.totalWorkouts;
-            totalWorkoutsArr[0] += e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[2])
-                maxWorkouts[2] = e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[1])
-                maxWorkouts[1] = e.totalWorkouts;
-            if (e.totalWorkouts > maxWorkouts[0])
-                maxWorkouts[0] = e.totalWorkouts;
-            totalWorkouts.entries[i] = new Entry(i, e.totalWorkouts);
-
-            for (int j = 0; j < 4; ++j) {
-                totalByType[2][j] += e.durationByType[j];
-                totalByType[1][j] += e.durationByType[j];
-                totalByType[0][j] += e.durationByType[j];
-
-                totalByExercise[2][j] += e.weightArray[j];
-                totalByExercise[1][j] += e.weightArray[j];
-                totalByExercise[0][j] += e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[2])
-                    maxWeight[2] = e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[1])
-                    maxWeight[1] = e.weightArray[j];
-                if (e.weightArray[j] > maxWeight[0])
-                    maxWeight[0] = e.weightArray[j];
-                lifts.entries[j][i] = new Entry(i, e.weightArray[j]);
-            }
-
-            if (e.cumulativeDuration[3] > maxTime[2])
-                maxTime[2] = e.cumulativeDuration[3];
-            if (e.cumulativeDuration[3] > maxTime[1])
-                maxTime[1] = e.cumulativeDuration[3];
-            if (e.cumulativeDuration[3] > maxTime[0])
-                maxTime[0] = e.cumulativeDuration[3];
-            workoutTypes.entries[0][i] = new Entry(i, 0);
-            for (int j = 1; j < 5; ++j) {
-                workoutTypes.entries[j][i] = new Entry(i, e.cumulativeDuration[j - 1]);
-            }
+        for (int i = results.size; i < 128; ++i) {
+            axisStrings[i] = "";
         }
 
         for (int i = 0; i < 3; ++i) {
@@ -247,8 +180,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     }
 
     public String getFormattedValue(float value) {
-        WeekDataModel.TimeData data = timeData[(int) value];
-        return String.format(Locale.US, "%s/%d/%d", months[data.month], data.day, data.year);
+        int val = (int) value;
+        return (val >= 0) ? axisStrings[val] : "";
     }
 
     void clearData() {
@@ -258,7 +191,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         Arrays.fill(totalWorkouts.maxes, 0);
         Arrays.fill(lifts.maxes, 0);
         Arrays.fill(workoutTypes.maxes, 0);
-        Arrays.fill(timeData, null);
+        Arrays.fill(axisStrings, null);
 
         for (int i = 0; i < 3; ++i) {
             Arrays.fill(workoutTypes.avgs[i], 0);
