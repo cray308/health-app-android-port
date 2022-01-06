@@ -20,18 +20,10 @@
             android:paddingRight="8dp"
             android:paddingBottom="20dp">
 
-            <TextView
-                android:id="@+id/greetingLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/label"
-                android:textSize="28sp" />
-
             <LinearLayout
                 android:id="@+id/weeklyWorkoutsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
                 <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView

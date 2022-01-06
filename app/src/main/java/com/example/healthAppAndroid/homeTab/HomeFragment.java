@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
@@ -31,8 +30,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -45,9 +42,7 @@ public final class HomeFragment extends Fragment {
         private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
     }
 
-    private String[] timeNames;
     private int numWorkouts = 0;
-    private TextView greetingLabel;
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
     private KonfettiView confettiView;
@@ -65,8 +60,6 @@ public final class HomeFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        greetingLabel = view.findViewById(R.id.greetingLabel);
-        timeNames = getResources().getStringArray(R.array.timesOfDay);
         int[] customBtnIds = {R.id.customButton1, R.id.customButton2, R.id.customButton3,
             R.id.customButton4, R.id.customButton5};
         for (int i = 0; i < 5; ++i) {
@@ -79,23 +72,6 @@ public final class HomeFragment extends Fragment {
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
         confettiView = view.findViewById(R.id.confettiView);
         createWorkoutsList();
-    }
-
-    public void onResume() {
-        super.onResume();
-
-        long now = Instant.now().getEpochSecond();
-        LocalDateTime localInfo = LocalDateTime.ofInstant(Instant.ofEpochSecond(now),
-                                                          ZoneId.systemDefault());
-        int hour = localInfo.getHour();
-        int timeOfDay = 0;
-
-        if (hour >= 12 && hour < 17) {
-            timeOfDay = 1;
-        } else if (hour < 5 || hour >= 17) {
-            timeOfDay = 2;
-        }
-        greetingLabel.setText(timeNames[timeOfDay]);
     }
 
     private static int getTag(View v) {

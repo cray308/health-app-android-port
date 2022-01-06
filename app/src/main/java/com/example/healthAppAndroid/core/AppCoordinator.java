@@ -53,14 +53,14 @@ public final class AppCoordinator {
         active = children[0];
     }
 
-    public void updateUserInfo(byte plan, short[] lifts) {
+    void updateUserInfo(byte plan, short[] lifts) {
         boolean updateHome = plan != AppUserData.shared.currentPlan;
         AppUserData.shared.updateSettings(plan, lifts);
         if (updateHome)
             ((HomeFragment) children[0]).createWorkoutsList();
     }
 
-    public void deleteAppData() {
+    void deleteAppData() {
         boolean updateHome = AppUserData.shared.completedWorkouts != 0;
         AppUserData.shared.deleteSavedData();
         PersistenceService.deleteAppData();

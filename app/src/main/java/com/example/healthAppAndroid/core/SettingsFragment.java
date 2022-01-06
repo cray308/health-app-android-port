@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import com.example.healthAppAndroid.R;
 
+import java.util.Locale;
+
 public final class SettingsFragment extends Fragment {
     private SegmentedControl picker;
     private TextValidator validator;
@@ -62,12 +64,22 @@ public final class SettingsFragment extends Fragment {
     }
 
     public void updateWeightFields() {
-        validator.reset(AppUserData.shared.liftArray);
+        for (int i = 0; i < 4; ++i) {
+            short value = AppUserData.shared.liftArray[i];
+            validator.children[i].result = value;
+            validator.children[i].valid = true;
+            validator.children[i].field.setError(null);
+            validator.children[i].textField.setText(String.format(Locale.US, "%d", value));
+        }
         validator.enableButton();
     }
 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) validator.clearFocus();
+        if (hidden) {
+            for (int i = 0; i < 4; ++i) {
+                validator.children[i].textField.clearFocus();
+            }
+        }
     }
 }

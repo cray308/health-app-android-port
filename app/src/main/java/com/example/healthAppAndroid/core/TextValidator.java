@@ -15,19 +15,18 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 public final class TextValidator {
     public static final class InputView extends LinearLayout implements TextWatcher {
         public TextInputLayout field;
-        private TextInputEditText textField;
+        TextInputEditText textField;
         private short min = 1;
         private short max = 999;
         private TextValidator delegate;
-        private boolean valid = false;
+        boolean valid = false;
         private boolean isInputNumeric = false;
-        private short result = 0;
+        short result = 0;
 
         public InputView(Context context) {
             super(context);
@@ -118,7 +117,7 @@ public final class TextValidator {
 
     private final Set<Character> validChars = new HashSet<>(
         Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
-    private final InputView[] children = {null, null, null, null};
+    final InputView[] children = {null, null, null, null};
     private int count = 0;
     private final Button button;
 
@@ -127,10 +126,6 @@ public final class TextValidator {
     public void enableButton() {
         button.setEnabled(true);
         button.setTextColor(AppColors.blue);
-    }
-
-    public void clearFocus() {
-        for (int i = 0; i < count; ++i) children[i].textField.clearFocus();
     }
 
     private void disableButton() {
@@ -151,15 +146,6 @@ public final class TextValidator {
     public void addChild(short max, InputView view) {
         view.setup(max, this);
         children[count++] = view;
-    }
-
-    public void reset(short[] values) {
-        for (int i = 0; i < count; ++i) {
-            children[i].result = values[i];
-            children[i].valid = true;
-            children[i].field.setError(null);
-            children[i].textField.setText(String.format(Locale.US, "%d", values[i]));
-        }
     }
 
     public short[] getResults() {

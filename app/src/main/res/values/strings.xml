@@ -4,11 +4,6 @@
         <item>Finished exercise!</item>
         <item>Finished AMRAP circuit!</item>
     </string-array>
-    <string-array name="timesOfDay">
-        <item>Good morning!</item>
-        <item>Good afternoon!</item>
-        <item>Good evening!</item>
-    </string-array>
     <string-array name="workoutTypes">
         <item>Strength</item>
         <item>HIC</item>
