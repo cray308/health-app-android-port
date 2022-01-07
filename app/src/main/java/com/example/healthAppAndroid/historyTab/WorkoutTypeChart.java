@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppColors;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -109,7 +108,7 @@ public final class WorkoutTypeChart extends ChartContainer {
                IndexAxisValueFormatter xAxisFormatter) {
         viewModel = model;
 
-        int[] colors = AppColors.getChartColors(getContext());
+        int[] colors = getChartColors(getContext());
         dataSets[0] = createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {
             dataSets[i] = createDataSet(colors[i - 1]);

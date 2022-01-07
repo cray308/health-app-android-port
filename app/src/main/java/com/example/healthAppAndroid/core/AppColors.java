@@ -28,13 +28,4 @@ public abstract class AppColors {
         labelDisabled = ContextCompat.getColor(context, R.color.secondaryLabel);
         labelNormal = ContextCompat.getColor(context, R.color.label);
     }
-
-    public static int[] getChartColors(Context context) {
-        int[] arr = {0, 0, 0, 0};
-        arr[0] = ContextCompat.getColor(context, R.color.chartBlue);
-        arr[1] = ContextCompat.getColor(context, R.color.chartGreen);
-        arr[2] = ContextCompat.getColor(context, R.color.chartOrange);
-        arr[3] = ContextCompat.getColor(context, R.color.chartPink);
-        return arr;
-    }
 }

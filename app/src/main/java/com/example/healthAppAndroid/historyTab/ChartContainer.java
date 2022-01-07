@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
 import com.github.mikephil.charting.charts.LineChart;
@@ -44,6 +46,15 @@ public abstract class ChartContainer extends LinearLayout {
         chartView = findViewById(R.id.chartView);
         legendContainer = findViewById(R.id.legendContainer);
         legendEntries[0] = findViewById(R.id.firstEntry);
+    }
+
+    static int[] getChartColors(Context context) {
+        int[] arr = {0, 0, 0, 0};
+        arr[0] = ContextCompat.getColor(context, R.color.chartBlue);
+        arr[1] = ContextCompat.getColor(context, R.color.chartGreen);
+        arr[2] = ContextCompat.getColor(context, R.color.chartOrange);
+        arr[3] = ContextCompat.getColor(context, R.color.chartPink);
+        return arr;
     }
 
     static LineDataSet createEmptyDataSet() {

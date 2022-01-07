@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppColors;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 public final class LiftingChart extends ChartContainer {
@@ -29,7 +28,7 @@ public final class LiftingChart extends ChartContainer {
     void setup(HistoryViewModel.LiftChartViewModel model, IndexAxisValueFormatter xAxisFormatter) {
         viewModel = model;
 
-        int[] colors = AppColors.getChartColors(getContext());
+        int[] colors = getChartColors(getContext());
         for (int i = 0; i < 4; ++i) {
             dataSets[i] = createDataSet(colors[i]);
             dataSets[i].setLineWidth(2);

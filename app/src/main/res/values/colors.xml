@@ -19,8 +19,9 @@
     <color name="systemRed">#FFD50000</color>
 
     <color name="chartRed">#FFFF3B30</color>
-    <color name="chartBlue">#FF329BA8</color>
-    <color name="chartGreen">#FF1A632B</color>
-    <color name="chartOrange">#FFDB8514</color>
-    <color name="chartPink">#FFEF5675</color>
+    <color name="chartBlue">#0074B4</color>
+    <color name="chartGreen">#0A8E20</color>
+    <color name="chartOrange">#DA1516</color>
+    <color name="chartPink">#AD1FEE</color>
+    <color name="chartLimit">#115D20</color>
 </resources>
