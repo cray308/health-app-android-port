@@ -9,7 +9,8 @@
         <item name="colorSurface">#FF1C1C1E</item>
         <item name="android:colorBackground">@null</item>
         <item name="android:windowBackground">#FF000000</item>
-        <item name="android:statusBarColor" tools:targetApi="l">#FF1C1C1E</item>
+        <item name="android:statusBarColor" tools:targetApi="l">#131313</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">#FF1C1C1E</item>
     </style>
 </resources>

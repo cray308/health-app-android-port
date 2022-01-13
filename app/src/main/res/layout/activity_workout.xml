@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/secondarySystemGroupedBackground"
+        android:background="@color/navBarColor"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
