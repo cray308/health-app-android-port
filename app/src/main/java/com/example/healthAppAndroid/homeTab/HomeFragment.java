@@ -205,7 +205,8 @@ public final class HomeFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
               .setTitle(getString(R.string.homeAlertTitle))
               .setMessage(getString(R.string.homeAlertMessage))
-              .setPositiveButton(getString(R.string.ok), null);
+              .setPositiveButton(
+                getString(com.google.android.material.R.string.mtrl_picker_confirm), null);
             builder.create().show();
         }, 5500);
     }

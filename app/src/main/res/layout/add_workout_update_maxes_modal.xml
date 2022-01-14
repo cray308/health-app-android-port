@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -32,30 +31,46 @@
     </LinearLayout>
 
     <view
-        android:id="@+id/firstInput"
+        android:id="@+id/input"
         class="com.example.healthAppAndroid.core.TextValidator$InputView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:fieldHint="@string/maxWeightSquat" />
+        android:layout_height="wrap_content" />
 
-    <view
-        android:id="@+id/secondInput"
-        class="com.example.healthAppAndroid.core.TextValidator$InputView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:fieldHint="@string/maxWeightPullUp" />
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <view
-        android:id="@+id/thirdInput"
-        class="com.example.healthAppAndroid.core.TextValidator$InputView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:fieldHint="@string/maxWeightBench" />
+        <TextView
+            android:id="@+id/stepperLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@color/label"
+            android:textSize="17sp" />
 
-    <view
-        android:id="@+id/fourthInput"
-        class="com.example.healthAppAndroid.core.TextValidator$InputView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:fieldHint="@string/maxWeightDeadLift" />
+        <View
+            android:layout_width="8dp"
+            android:layout_height="1dp" />
+
+        <android.widget.Button
+            android:id="@+id/minusButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_round_horizontal_rule"
+            android:contentDescription="@string/minusBtnLabel" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="1dp" />
+
+        <android.widget.Button
+            android:id="@+id/plusButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_round_add"
+            android:contentDescription="@string/plusBtnLabel" />
+    </LinearLayout>
 </LinearLayout>

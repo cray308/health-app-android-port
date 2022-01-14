@@ -25,27 +25,13 @@ import java.time.Instant;
 import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
-    private final static class UpdateHandler implements PersistenceService.Block {
-        private final short[] lifts;
-
-        private UpdateHandler(short[] lifts) { this.lifts = lifts; }
-
-        private static UpdateHandler init(short[] lifts) {
-            if (lifts == null) return null;
-            return new UpdateHandler(lifts);
-        }
-
-        public void completion() {
-            AppCoordinator.shared.updateMaxWeights(lifts);
-        }
-    }
-
     private final static String bundleKey = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
     public static final String userInfo = "totalWorkouts";
     private Workout workout;
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
+    private final short[] weights = {0, 0, 0, 0};
 
     public static void start(FragmentActivity parent, WorkoutParams params) {
         Intent intent = new Intent(parent, WorkoutActivity.class);
@@ -78,10 +64,10 @@ public final class WorkoutActivity extends AppCompatActivity {
             } else {
                 workout.setDuration();
                 if (workout.checkEnduranceDuration()) {
-                    handleFinishedWorkout(null, null, true);
+                    handleFinishedWorkout(true);
                 } else {
                     if (workout.longEnough())
-                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null, null);
+                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
                     sendBroadcast(0);
                     finish();
                 }
@@ -111,10 +97,10 @@ public final class WorkoutActivity extends AppCompatActivity {
             if (workout.startTime != 0) {
                 workout.setDuration();
                 if (workout.checkEnduranceDuration()) {
-                    handleFinishedWorkout(null, null, false);
+                    handleFinishedWorkout(false);
                 } else {
                     if (workout.longEnough())
-                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null, null);
+                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
                     sendBroadcast(0);
                 }
             } else {
@@ -132,7 +118,7 @@ public final class WorkoutActivity extends AppCompatActivity {
     };
 
     private void handleTap(int groupIdx, int exerciseIdx, byte option) {
-        boolean finishedWorkout = false;
+        boolean finishedWorkout = false, showModal = false;
         if (groupIdx != workout.index || exerciseIdx != workout.group.index) {
             if (option != Workout.EventOption.finishGroup || groupIdx != workout.index) return;
         }
@@ -163,17 +149,20 @@ public final class WorkoutActivity extends AppCompatActivity {
 
             case Workout.Transition.finishedExercise:
                 firstContainer.viewsArr[workout.group.index].configure();
+                break;
+
             default:
+                if (workout.testMax)
+                    showModal = true;
+                break;
         }
 
         if (finishedWorkout) {
             workout.setDuration();
-            if (workout.title.equalsIgnoreCase(getString(R.string.workoutTitleTestDay))) {
-                AddWorkoutUpdateMaxesDialog modal = new AddWorkoutUpdateMaxesDialog();
-                modal.show(getSupportFragmentManager(), "AddWorkoutUpdateMaxesDialog");
-            } else {
-                handleFinishedWorkout(null, null, true);
-            }
+            handleFinishedWorkout(true);
+        } else if (showModal) {
+            AddWorkoutUpdateMaxesDialog modal = AddWorkoutUpdateMaxesDialog.newInstance(exerciseIdx);
+            modal.show(getSupportFragmentManager(), "AddWorkoutUpdateMaxesDialog");
         }
     }
 
@@ -191,19 +180,30 @@ public final class WorkoutActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    void handleFinishedWorkout(BottomSheetDialogFragment dialog, short[] lifts, boolean close) {
+    private void handleFinishedWorkout(boolean close) {
         int totalCompleted = 0;
-        boolean longEnough = workout.longEnough();
-        if (longEnough && workout.day >= 0)
-            totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
 
-        if (longEnough)
-            PersistenceService.updateCurrentWeek(workout.type, workout.duration, lifts, UpdateHandler.init(lifts));
+        if (workout.testMax) {
+            AppCoordinator.shared.updateMaxWeights(weights);
+            if (workout.duration < 15)
+                workout.duration = 15;
+        }
 
-        if (dialog != null)
-            dialog.dismiss();
+        if (workout.longEnough()) {
+            if (workout.day >= 0)
+                totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
+            PersistenceService.updateCurrentWeek(
+              workout.type, workout.duration, workout.testMax ? weights : null);
+        }
+
         sendBroadcast(totalCompleted);
         if (close)
             finish();
+    }
+
+    void finishedBottomSheet(BottomSheetDialogFragment dialog, int index, short weight) {
+        dialog.dismiss();
+        weights[index] = weight;
+        handleTap(0, index, (byte) 0);
     }
 }

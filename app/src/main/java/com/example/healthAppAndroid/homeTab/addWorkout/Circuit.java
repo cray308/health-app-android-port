@@ -41,7 +41,9 @@ final class Circuit {
             if (params.index <= 1) {
                 weights[1] = (int) (multiplier * lifts[LiftType.bench]);
                 if (params.index == 0) {
-                    weights[2] = (int) (multiplier * lifts[LiftType.pullUp]);
+                    weights[2] = (int) ((lifts[LiftType.pullUp] + 145) * multiplier) - 145;
+                    if (weights[2] < 0)
+                        weights[2] = 0;
                 } else {
                     weights[2] = (int) (multiplier * lifts[LiftType.deadlift]);
                 }

@@ -190,13 +190,11 @@ public abstract class PersistenceService extends RoomDatabase {
         private final byte type;
         private final long duration;
         private final short[] lifts;
-        private final Block block;
 
-        private UpdateCurrentWeekTask(byte type, long duration, short[] lifts, Block block) {
+        private UpdateCurrentWeekTask(byte type, long duration, short[] lifts) {
             this.type = type;
             this.duration = duration;
             this.lifts = lifts;
-            this.block = block;
         }
 
         public void run() {
@@ -226,13 +224,11 @@ public abstract class PersistenceService extends RoomDatabase {
             }
 
             saveChanges(dao, new WeeklyData[]{curr});
-            if (block != null)
-                new Handler(Looper.getMainLooper()).post(block::completion);
         }
     }
 
-    public static void updateCurrentWeek(byte type, long duration, short[] lifts, Block block) {
-        new Thread(new UpdateCurrentWeekTask(type, duration, lifts, block)).start();
+    public static void updateCurrentWeek(byte type, long duration, short[] lifts) {
+        new Thread(new UpdateCurrentWeekTask(type, duration, lifts)).start();
     }
 
     private static final class HistoryFetchTask implements Runnable {

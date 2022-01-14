@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.BuildConfig;
+import com.example.healthAppAndroid.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ final class Workout {
 
     final byte type;
     final byte day;
+    final boolean testMax;
     int index;
     long startTime;
     long duration;
@@ -55,6 +57,7 @@ final class Workout {
         }
 
         title = workoutName;
+        testMax = workoutName.contentEquals(context.getString(R.string.workoutTitleTestDay));
         group = activities[0];
         entry = group.exercises[0];
     }

@@ -22,7 +22,6 @@
 
     <string name="cancel">Cancel</string>
     <string name="go">Go</string>
-    <string name="ok">OK</string>
 
     <string name="tab_home">Home</string>
     <string name="tab_history">History</string>
@@ -61,6 +60,9 @@
         <item quantity="one">Input must be between %1$d and %2$d</item>
         <item quantity="other">Input must be between %1$d and %2$d</item>
     </plurals>
+    <string name="stepperLabelFormat">Reps: %d</string>
+    <string name="plusBtnLabel">Increment reps</string>
+    <string name="minusBtnLabel">Decrement reps</string>
     <string name="settingsSaveButtonTitle">Save Settings</string>
     <string name="settingsDeleteButtonTitle">Delete Data</string>
     <string name="settingsAlertTitle">Are you sure\?</string>
@@ -76,7 +78,7 @@
     <string name="start">Start</string>
     <string name="end">End</string>
     <string name="updates_maxes_finish_text">Finish</string>
-    <string name="workoutTitleTestDay">test day</string>
+    <string name="workoutTitleTestDay">Test Day</string>
     <string name="exerciseHeader">Set %1$d of %2$d</string>
     <string name="exerciseTitleRest">Rest: %1$d s</string>
     <string name="exerciseTitleReps">%1$s x %2$d</string>
