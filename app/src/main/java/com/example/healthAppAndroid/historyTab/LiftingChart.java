@@ -9,20 +9,10 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 public final class LiftingChart extends ChartContainer {
     private HistoryViewModel.LiftChartViewModel viewModel;
 
-    public LiftingChart(Context context) {
-        super(context, R.layout.lift_chart);
-        setup();
-    }
-
     public LiftingChart(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.lift_chart);
-        setup();
-    }
-
-    private void setup() {
-        legendEntries[1] = findViewById(R.id.secondEntry);
-        legendEntries[2] = findViewById(R.id.thirdEntry);
-        legendEntries[3] = findViewById(R.id.fourthEntry);
+        super(context, attrs, R.layout.lift_chart, new int[]{
+          R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
+        });
     }
 
     void setup(HistoryViewModel.LiftChartViewModel model, IndexAxisValueFormatter xAxisFormatter) {
@@ -39,7 +29,7 @@ public final class LiftingChart extends ChartContainer {
 
     void updateChart(boolean isSmall, byte index) {
         for (int i = 0; i < 4; ++i) {
-            updateData(i, isSmall, viewModel.dynamicEntries[i], i, viewModel.legendLabels[i]);
+            updateData(i, isSmall, viewModel.entryRefs.get(index).get(i), i, viewModel.legendLabels[i]);
         }
         update(isSmall, viewModel.maxes[index]);
     }

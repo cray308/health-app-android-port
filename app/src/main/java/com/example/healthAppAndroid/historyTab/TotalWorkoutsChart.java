@@ -15,13 +15,8 @@ public final class TotalWorkoutsChart extends ChartContainer {
     private HistoryViewModel.TotalWorkoutsChartViewModel viewModel;
     private final int lineColor;
 
-    public TotalWorkoutsChart(Context context) {
-        super(context, R.layout.total_workouts_chart);
-        lineColor = ContextCompat.getColor(context, R.color.chartLimit);
-    }
-
     public TotalWorkoutsChart(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.total_workouts_chart);
+        super(context, attrs, R.layout.total_workouts_chart, null);
         lineColor = ContextCompat.getColor(context, R.color.chartLimit);
     }
 
@@ -45,7 +40,7 @@ public final class TotalWorkoutsChart extends ChartContainer {
         limitLine.setLineWidth(2);
         limitLine.setLineColor(lineColor);
         chartView.getAxisLeft().addLimitLine(limitLine);
-        updateData(0, isSmall, viewModel.dynamicEntries, 0, viewModel.legendLabel);
+        updateData(0, isSmall, viewModel.entryRefs.get(index), 0, viewModel.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));
         update(isSmall, viewModel.maxes[index]);
     }

@@ -23,6 +23,7 @@ import com.example.healthAppAndroid.core.AppColors;
 import com.example.healthAppAndroid.core.AppUserData;
 import com.example.healthAppAndroid.core.StatusButton;
 import com.example.healthAppAndroid.homeTab.addWorkout.ExerciseManager;
+import com.example.healthAppAndroid.homeTab.addWorkout.HeaderView;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutActivity;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutParams;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
@@ -45,6 +46,7 @@ public final class HomeFragment extends Fragment {
     private int numWorkouts = 0;
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
+    private HeaderView customWorkoutsHeader;
     private KonfettiView confettiView;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -61,7 +63,7 @@ public final class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         int[] customBtnIds = {R.id.customButton1, R.id.customButton2, R.id.customButton3,
-            R.id.customButton4, R.id.customButton5};
+                              R.id.customButton4, R.id.customButton5};
         for (int i = 0; i < 5; ++i) {
             StatusButton currBtn = view.findViewById(customBtnIds[i]);
             setTag(currBtn.button, i);
@@ -70,6 +72,7 @@ public final class HomeFragment extends Fragment {
         weeklyWkContainer = view.findViewById(R.id.weeklyWorkoutsContainer);
         weeklyWkContainer.setVisibility(View.GONE);
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
+        customWorkoutsHeader = view.findViewById(R.id.customWorkoutsHeader);
         confettiView = view.findViewById(R.id.confettiView);
         createWorkoutsList();
     }
@@ -92,11 +95,11 @@ public final class HomeFragment extends Fragment {
         if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()
             || context == null) {
             weeklyWkContainer.setVisibility(View.GONE);
+            customWorkoutsHeader.divider.setVisibility(View.GONE);
             return;
         }
 
-        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(
-          context, plan, AppUserData.shared.getWeekInPlan());
+        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(context);
         DayOfWeek[] days = DayOfWeek.values();
 
         for (int i = 0; i < 7; ++i) {
@@ -110,6 +113,7 @@ public final class HomeFragment extends Fragment {
             numWorkouts += 1;
         }
         weeklyWkContainer.setVisibility(View.VISIBLE);
+        customWorkoutsHeader.divider.setVisibility(View.VISIBLE);
         updateWorkoutsList();
     }
 
@@ -147,20 +151,13 @@ public final class HomeFragment extends Fragment {
         }
 
         String[] names = ExerciseManager.getWorkoutNamesForType(context, type);
-        if (names == null || names.length == 0) return;
-
         HomeSetupWorkoutDialog.Params params = new HomeSetupWorkoutDialog.Params(type, names);
         HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(params);
         modal.show(getParentFragmentManager(), "HomeSetupWorkoutDialog");
     };
 
-    private final View.OnClickListener dayWorkoutListener = view -> {
-        byte plan = AppUserData.shared.currentPlan;
-        WorkoutParams params = ExerciseManager.getWeeklyWorkout(
-          getContext(), plan, AppUserData.shared.getWeekInPlan(), getTag(view));
-        if (params != null)
-            navigateToAddWorkout(null, params);
-    };
+    private final View.OnClickListener dayWorkoutListener = view ->
+      navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(getContext(), getTag(view)));
 
     void navigateToAddWorkout(BottomSheetDialogFragment dialog, WorkoutParams params) {
         if (dialog != null)
@@ -191,15 +188,15 @@ public final class HomeFragment extends Fragment {
     private void showConfetti() {
         confettiView.setVisibility(View.VISIBLE);
         confettiView.build()
-            .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
-            .setDirection(0.0, 359.0)
-            .setSpeed(1f, 5f)
-            .setFadeOutEnabled(true)
-            .setTimeToLive(5000)
-            .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
-            .addSizes(new Size(12, 5f))
-            .setPosition(150f, null, -50f, null)
-            .streamFor(128, 4500);
+                    .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
+                    .setDirection(0.0, 359.0)
+                    .setSpeed(1f, 5f)
+                    .setFadeOutEnabled(true)
+                    .setTimeToLive(5000)
+                    .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                    .addSizes(new Size(12, 5f))
+                    .setPosition(150f, null, -50f, null)
+                    .streamFor(128, 4500);
         new Handler().postDelayed(() -> {
             confettiView.setVisibility(View.GONE);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())

@@ -17,7 +17,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.Transformer;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class WorkoutTypeChart extends ChartContainer {
@@ -88,20 +87,10 @@ public final class WorkoutTypeChart extends ChartContainer {
 
     private HistoryViewModel.WorkoutTypeChartViewModel viewModel;
 
-    public WorkoutTypeChart(Context context) {
-        super(context, R.layout.workout_type_chart);
-        setup();
-    }
-
     public WorkoutTypeChart(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.workout_type_chart);
-        setup();
-    }
-
-    private void setup() {
-        legendEntries[1] = findViewById(R.id.secondEntry);
-        legendEntries[2] = findViewById(R.id.thirdEntry);
-        legendEntries[3] = findViewById(R.id.fourthEntry);
+        super(context, attrs, R.layout.workout_type_chart, new int[]{
+          R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
+        });
     }
 
     void setup(HistoryViewModel.WorkoutTypeChartViewModel model,
@@ -126,10 +115,10 @@ public final class WorkoutTypeChart extends ChartContainer {
     }
 
     void updateChart(boolean isSmall, byte index) {
-        dataSets[0].setValues(Arrays.asList(viewModel.dynamicEntries[0]));
+        dataSets[0].setValues(viewModel.entryRefs.get(index).get(0));
         for (int i = 1; i < 5; ++i) {
             updateData(i, isSmall,
-                       viewModel.dynamicEntries[i], i - 1, viewModel.legendLabels[i - 1]);
+                       viewModel.entryRefs.get(index).get(i), i - 1, viewModel.legendLabels[i - 1]);
         }
         update(isSmall, viewModel.maxes[index]);
     }

@@ -17,35 +17,28 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public abstract class ChartContainer extends LinearLayout {
     LineChart chartView;
-    private LinearLayout legendContainer;
-    final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
+    private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
     final LineData data = new LineData();
 
-    public ChartContainer(Context context) { super(context); }
-
-    ChartContainer(Context context, int id) {
-        super(context);
-        init(id);
-    }
-
     public ChartContainer(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    ChartContainer(Context context, AttributeSet attrs, int id) {
+    ChartContainer(Context context, AttributeSet attrs, int id, int[] legendIds) {
         super(context, attrs);
-        init(id);
-    }
-
-    private void init(int id) {
         inflate(getContext(), id, this);
         chartView = findViewById(R.id.chartView);
-        legendContainer = findViewById(R.id.legendContainer);
         legendEntries[0] = findViewById(R.id.firstEntry);
+        if (legendIds != null) {
+            int count = legendIds.length;
+            for (int i = 0; i < count; ++i) {
+                legendEntries[i + 1] = findViewById(legendIds[i]);
+            }
+        }
     }
 
     static int[] getChartColors(Context context) {
@@ -99,7 +92,7 @@ public abstract class ChartContainer extends LinearLayout {
     }
 
     void disable() {
-        legendContainer.setVisibility(View.GONE);
+        findViewById(R.id.legendContainer).setVisibility(View.GONE);
         for (int i = 0; i < 5; ++i) {
             if (dataSets[i] != null)
                 dataSets[i].setValues(null);
@@ -108,16 +101,15 @@ public abstract class ChartContainer extends LinearLayout {
         chartView.notifyDataSetChanged();
     }
 
-    void updateData(int index, boolean isSmall, Entry[] entries, int iLegend, String text) {
+    void updateData(int index, boolean isSmall, List<Entry> entries, int iLegend, String text) {
         dataSets[index].setDrawCircles(isSmall);
-        dataSets[index].setValues(Arrays.asList(entries));
+        dataSets[index].setValues(entries);
         legendEntries[iLegend].label.setText(text);
     }
 
     void update(boolean isSmall, float axisMax) {
         chartView.zoom(0.01f, 0.01f, 0, 0);
         chartView.getAxisLeft().setAxisMaximum(axisMax);
-        legendContainer.setVisibility(View.VISIBLE);
         data.setDrawValues(isSmall);
         chartView.setData(data);
         data.notifyDataChanged();

@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.healthAppAndroid.core.AppColors;
@@ -12,8 +11,6 @@ public final class ExerciseView extends StatusButton {
     private ExerciseEntry entry;
 
     public ExerciseView(Context context) { super(context); }
-
-    public ExerciseView(Context context, AttributeSet attrs) { super(context, attrs); }
 
     void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
         entry = e;

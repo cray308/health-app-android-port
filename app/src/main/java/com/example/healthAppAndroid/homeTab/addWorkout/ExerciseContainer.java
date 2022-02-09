@@ -1,27 +1,17 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.healthAppAndroid.R;
 
 public final class ExerciseContainer extends LinearLayout {
-    HeaderView headerView;
+    final HeaderView headerView;
     ExerciseView[] viewsArr;
 
     public ExerciseContainer(Context context) {
         super(context);
-        setup();
-    }
-
-    public ExerciseContainer(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setup();
-    }
-
-    private void setup() {
         inflate(getContext(), R.layout.exercise_container, this);
         headerView = findViewById(R.id.headerView);
     }

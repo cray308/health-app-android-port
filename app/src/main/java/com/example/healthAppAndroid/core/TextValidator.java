@@ -13,10 +13,6 @@ import com.example.healthAppAndroid.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 public final class TextValidator {
     public static final class InputView extends LinearLayout implements TextWatcher {
         public TextInputLayout field;
@@ -26,6 +22,7 @@ public final class TextValidator {
         private TextValidator delegate;
         boolean valid = false;
         private boolean isInputNumeric = false;
+        private boolean emptyInputAllowed = false;
         short result = 0;
 
         public InputView(Context context) {
@@ -47,10 +44,11 @@ public final class TextValidator {
 
             if (attrs != null) {
                 TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                    attrs, R.styleable.InputView, 0, 0);
+                  attrs, R.styleable.InputView, 0, 0);
                 try {
                     hintText = a.getString(R.styleable.InputView_fieldHint);
                     zeroMin = a.getBoolean(R.styleable.InputView_zeroMin, false);
+                    emptyInputAllowed = a.getBoolean(R.styleable.InputView_emptyInputAllowed, false);
                 } finally {
                     a.recycle();
                 }
@@ -74,7 +72,8 @@ public final class TextValidator {
                 return;
             }
             for (int i = start; i < start + count; ++i) {
-                if (!delegate.validChars.contains(s.charAt(i))) {
+                char c = s.charAt(i);
+                if (c < 48 || c > 57) {
                     isInputNumeric = false;
                     return;
                 }
@@ -84,20 +83,22 @@ public final class TextValidator {
 
         public void afterTextChanged(Editable s) {
             int len = s.length();
-            if (!isInputNumeric || len == 0) {
+            if (!isInputNumeric || (len == 0 && !emptyInputAllowed)) {
                 showErrorMsg();
                 return;
             }
 
             short res = -1;
-            try {
-                res = (short) Integer.parseInt(s.toString());
-            } catch (NumberFormatException e) {
-                Log.e("checkInput", "Error while validating input", e);
-            } finally {
-                if (res < min || res > max) {
-                    showErrorMsg();
-                    return;
+            if (len != 0) {
+                try {
+                    res = (short) Integer.parseInt(s.toString());
+                } catch (NumberFormatException e) {
+                    Log.e("checkInput", "Error while validating input", e);
+                } finally {
+                    if (res < min || res > max) {
+                        showErrorMsg();
+                        return;
+                    }
                 }
             }
 
@@ -110,14 +111,12 @@ public final class TextValidator {
         private void showErrorMsg() {
             valid = false;
             field.setError(getContext().getResources().getQuantityString(
-                R.plurals.inputFieldError, 1, min, max));
+              R.plurals.inputFieldError, 1, min, max));
             delegate.disableButton();
         }
     }
 
-    private final Set<Character> validChars = new HashSet<>(
-        Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
-    final InputView[] children = {null, null, null, null};
+    final InputView[] children = {null, null, null, null, null};
     private int count = 0;
     private final Button button;
 
@@ -149,7 +148,7 @@ public final class TextValidator {
     }
 
     public short[] getResults() {
-        short[] results = {0, 0, 0, 0};
+        short[] results = {0, 0, 0, 0, 0};
         for (int i = 0; i < count; ++i)
             results[i] = children[i].result;
         return results;

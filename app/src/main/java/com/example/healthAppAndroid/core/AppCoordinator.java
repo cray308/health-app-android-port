@@ -53,9 +53,9 @@ public final class AppCoordinator {
         active = children[0];
     }
 
-    void updateUserInfo(byte plan, short[] lifts) {
+    void updateUserInfo(byte plan, short[] lifts, short weight) {
         boolean updateHome = plan != AppUserData.shared.currentPlan;
-        AppUserData.shared.updateSettings(plan, lifts);
+        AppUserData.shared.updateSettings(plan, lifts, weight);
         if (updateHome)
             ((HomeFragment) children[0]).createWorkoutsList();
     }

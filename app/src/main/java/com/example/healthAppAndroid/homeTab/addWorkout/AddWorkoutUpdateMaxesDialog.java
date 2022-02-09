@@ -86,7 +86,8 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
 
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(view1 -> {
-            short extra = (short) (index == LiftType.pullUp ? 145 : 0);
+            short extra = (short) (index == LiftType.pullUp
+                                   ? ExerciseManager.getBodyWeightToUse() : 0);
             int initWeight = (validator.getResults()[0] + extra) * 36;
             float reps = 37f - value;
             short weight = (short) (((initWeight / reps) + 0.5f) - extra);

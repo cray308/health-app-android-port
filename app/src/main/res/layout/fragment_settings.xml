@@ -34,6 +34,14 @@
             app:rightTitle="@string/settingsSegment3" />
 
         <view
+            android:id="@+id/inputWeight"
+            class="com.example.healthAppAndroid.core.TextValidator$InputView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:emptyInputAllowed="true"
+            app:fieldHint="@string/bodyWeightHint" />
+
+        <view
             android:id="@+id/inputFirst"
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"

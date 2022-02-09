@@ -27,7 +27,9 @@ public final class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
+        int[] ids = {
+          R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth, R.id.inputWeight
+        };
         picker = view.findViewById(R.id.planPicker);
         picker.setSelectedIndex((byte) (AppUserData.shared.currentPlan + 1));
 
@@ -38,9 +40,11 @@ public final class SettingsFragment extends Fragment {
               .setTitle(getString(R.string.settingsAlertTitle))
               .setMessage(getString(R.string.settingsAlertMessageSave))
               .setNegativeButton(getString(R.string.cancel), null)
-              .setPositiveButton(neutral, (dialogInterface, i)
-                -> AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1),
-                                                        validator.getResults()));
+              .setPositiveButton(neutral, (dialogInterface, i) -> {
+                  short[] results = validator.getResults();
+                  AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1),
+                                                       results, results[4]);
+              });
             builder.create().show();
         });
 
@@ -58,8 +62,15 @@ public final class SettingsFragment extends Fragment {
         });
 
         validator = new TextValidator(saveButton);
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 5; ++i) {
             validator.addChild((short) 999, view.findViewById(ids[i]));
+        }
+        short weight = AppUserData.shared.weight;
+        validator.children[4].result = weight;
+        validator.children[4].valid = true;
+        validator.children[4].field.setError(null);
+        if (weight > 0)
+            validator.children[4].textField.setText(String.format(Locale.US, "%d", weight));
         updateWeightFields();
     }
 
@@ -71,13 +82,14 @@ public final class SettingsFragment extends Fragment {
             validator.children[i].field.setError(null);
             validator.children[i].textField.setText(String.format(Locale.US, "%d", value));
         }
-        validator.enableButton();
+        if (validator.children[4].valid)
+            validator.enableButton();
     }
 
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden) {
-            for (int i = 0; i < 4; ++i) {
+            for (int i = 0; i < 5; ++i) {
                 validator.children[i].textField.clearFocus();
             }
         }

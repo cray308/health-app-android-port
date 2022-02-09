@@ -1,6 +1,6 @@
 package com.example.healthAppAndroid.historyTab;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +20,7 @@ public final class HistoryFragment extends Fragment {
         private final HistoryFragment fragment;
         private final WeekDataModel data;
 
-        private FetchHandler(HistoryFragment fragment,
-                             WeekDataModel data) {
+        private FetchHandler(HistoryFragment fragment, WeekDataModel data) {
             this.fragment = fragment;
             this.data = data;
         }
@@ -68,8 +67,7 @@ public final class HistoryFragment extends Fragment {
         totalWorkoutsChart = view.findViewById(R.id.totalWorkoutsContainer);
         workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
         liftingChart = view.findViewById(R.id.liftContainer);
-        Resources res = getResources();
-        viewModel.setup(res);
+        viewModel.setup(getResources());
 
         totalWorkoutsChart.setup(viewModel.totalWorkouts, viewModel);
         workoutTypeChart.setup(viewModel.workoutTypes, viewModel);
@@ -78,15 +76,20 @@ public final class HistoryFragment extends Fragment {
     }
 
     public void didSelectSegment(byte index) {
-        if (viewModel.nEntries[2] == 0) {
+        int count = viewModel.nEntries[index];
+        if (count == 0) {
             totalWorkoutsChart.disable();
             workoutTypeChart.disable();
             liftingChart.disable();
+            rangePicker.delegate = null;
             return;
         }
 
-        viewModel.formatDataForTimeRange(getContext(), index);
-        boolean isSmall = viewModel.nEntries[index] < 7;
+        Context context = getContext();
+        if (context == null) return;
+
+        viewModel.formatDataForTimeRange(context, index);
+        boolean isSmall = count < 7;
         totalWorkoutsChart.updateChart(isSmall, index);
         workoutTypeChart.updateChart(isSmall, index);
         liftingChart.updateChart(isSmall, index);

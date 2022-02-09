@@ -16,14 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
             android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:formColor="@color/chartBlue" />
+            app:formColor="@color/chartLimit" />
 
     </LinearLayout>
 

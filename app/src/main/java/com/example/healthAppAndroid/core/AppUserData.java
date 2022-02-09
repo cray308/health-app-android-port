@@ -13,7 +13,6 @@ import java.time.ZoneId;
 
 public final class AppUserData {
     private static abstract class Plans {
-        private static final byte noPlan = -1;
         private static final byte baseBuilding = 0;
         private static final byte continuation = 1;
     }
@@ -23,6 +22,7 @@ public final class AppUserData {
         private static final String tzOffset = "tzOffset";
         private static final String currentPlan = "currentPlan";
         private static final String completedWorkouts = "completedWorkouts";
+        private static final String bodyWeight = "weight";
         private static final String squatMax = "squatMax";
         private static final String pullUpMax = "pullUpMax";
         private static final String benchMax = "benchMax";
@@ -59,7 +59,9 @@ public final class AppUserData {
     public long planStart;
     long weekStart;
     private int tzOffset;
-    public byte currentPlan = Plans.noPlan;
+    public short week;
+    public short weight = -1;
+    public byte currentPlan = -1;
     public byte completedWorkouts;
     public final short[] liftArray = {0, 0, 0, 0};
 
@@ -88,20 +90,21 @@ public final class AppUserData {
         if (tzDiff != 0) {
             madeChange = true;
             shared.weekStart += tzDiff;
+            shared.planStart += tzDiff;
             shared.tzOffset = newOffset;
         }
 
+        shared.week = (short) ((weekStart - shared.planStart) / weekSeconds);
         if (weekStart != shared.weekStart) {
             madeChange = true;
             shared.completedWorkouts = 0;
             shared.weekStart = weekStart;
 
-            if (shared.currentPlan >= 0) {
-                if (shared.getWeekInPlan() >= planLengths[shared.currentPlan]) {
-                    if (shared.currentPlan == Plans.baseBuilding)
-                        shared.currentPlan = Plans.continuation;
-                    shared.planStart = weekStart;
-                }
+            if (shared.currentPlan >= 0 && shared.week >= planLengths[shared.currentPlan]) {
+                if (shared.currentPlan == Plans.baseBuilding)
+                    shared.currentPlan = Plans.continuation;
+                shared.planStart = weekStart;
+                shared.week = 0;
             }
         }
 
@@ -114,16 +117,18 @@ public final class AppUserData {
         prefs = getDict(context);
         ZoneId zoneId = ZoneId.systemDefault();
         weekStart = calcStartOfWeek(now, zoneId);
+        planStart = weekStart;
         tzOffset = getOffsetFromGMT(now, zoneId);
     }
 
     private AppUserData(Context context) {
         prefs = getDict(context);
-        planStart = prefs.getLong(Keys.planStart, -1);
+        planStart = prefs.getLong(Keys.planStart, 0);
         weekStart = prefs.getLong(Keys.weekStart, 0);
         tzOffset = prefs.getInt(Keys.tzOffset, 0);
-        currentPlan = (byte) prefs.getInt(Keys.currentPlan, Plans.noPlan);
+        currentPlan = (byte) prefs.getInt(Keys.currentPlan, -1);
         completedWorkouts = (byte) prefs.getInt(Keys.completedWorkouts, 0);
+        weight = (short) prefs.getInt(Keys.bodyWeight, -1);
         liftArray[LiftType.squat] = (short) prefs.getInt(Keys.squatMax, 0);
         liftArray[LiftType.pullUp] = (short) prefs.getInt(Keys.pullUpMax, 0);
         liftArray[LiftType.bench] = (short) prefs.getInt(Keys.benchMax, 0);
@@ -137,6 +142,7 @@ public final class AppUserData {
         editor.putInt(Keys.tzOffset, tzOffset);
         editor.putInt(Keys.currentPlan, currentPlan);
         editor.putInt(Keys.completedWorkouts, completedWorkouts);
+        editor.putInt(Keys.bodyWeight, weight);
         editor.putInt(Keys.squatMax, liftArray[LiftType.squat]);
         editor.putInt(Keys.pullUpMax, liftArray[LiftType.pullUp]);
         editor.putInt(Keys.benchMax, liftArray[LiftType.bench]);
@@ -162,8 +168,6 @@ public final class AppUserData {
         return total;
     }
 
-    public int getWeekInPlan() { return (int) ((weekStart - planStart) / weekSeconds); }
-
     boolean updateWeightMaxes(short[] newLifts) {
         boolean madeChange = false;
         for (int i = 0; i < 4; ++i) {
@@ -177,16 +181,22 @@ public final class AppUserData {
         return madeChange;
     }
 
-    void updateSettings(byte plan, short[] newLifts) {
+    void updateSettings(byte plan, short[] newLifts, short newWeight) {
         boolean madeChange = plan != currentPlan;
         if (plan != -1 && madeChange) {
             if (BuildConfig.DEBUG) {
                 planStart = weekStart;
+                week = 0;
             } else {
                 planStart = weekStart + weekSeconds;
             }
         }
         currentPlan = plan;
+
+        if (newWeight != weight) {
+            madeChange = true;
+            weight = newWeight;
+        }
 
         if (!updateWeightMaxes(newLifts) && madeChange)
             saveData();

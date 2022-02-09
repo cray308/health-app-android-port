@@ -25,8 +25,7 @@ final class Circuit {
     public int index = 0;
     ExerciseEntry[] exercises;
     final StringRange numberRange = new StringRange();
-    @SuppressWarnings("StringBufferField")
-    final StringBuilder headerStr = new StringBuilder(16);
+    @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
 
     Circuit(Context context, JSONObject dict, WorkoutParams params) {
         int localReps = 0;
@@ -41,7 +40,8 @@ final class Circuit {
             if (params.index <= 1) {
                 weights[1] = (int) (multiplier * lifts[LiftType.bench]);
                 if (params.index == 0) {
-                    weights[2] = (int) ((lifts[LiftType.pullUp] + 145) * multiplier) - 145;
+                    int weight = ExerciseManager.getBodyWeightToUse();
+                    weights[2] = (int) ((lifts[LiftType.pullUp] + weight) * multiplier) - weight;
                     if (weights[2] < 0)
                         weights[2] = 0;
                 } else {

@@ -56,6 +56,7 @@
     <string name="maxWeightPullUp">Max Pull-up Weight</string>
     <string name="maxWeightBench">Max Bench Weight</string>
     <string name="maxWeightDeadLift">Max Deadlift Weight</string>
+    <string name="bodyWeightHint">Body weight (to calculate weight for calisthenics)</string>
     <plurals name="inputFieldError">
         <item quantity="one">Input must be between %1$d and %2$d</item>
         <item quantity="other">Input must be between %1$d and %2$d</item>
