@@ -40,18 +40,18 @@ import nl.dionsegijn.konfetti.models.Size;
 
 public final class HomeFragment extends Fragment {
     private static abstract class CustomWorkoutIndex {
-        private static final int TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
+        private static final byte TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
     }
 
-    private int numWorkouts = 0;
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
     private HeaderView customWorkoutsHeader;
     private KonfettiView confettiView;
+    private byte numWorkouts = 0;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            handleFinishedWorkout(intent.getIntExtra(WorkoutActivity.userInfo, 0));
+            handleFinishedWorkout(intent.getByteExtra(WorkoutActivity.userInfo, (byte) 0));
         }
     };
 
@@ -77,9 +77,9 @@ public final class HomeFragment extends Fragment {
         createWorkoutsList();
     }
 
-    private static int getTag(View v) {
+    private static byte getTag(View v) {
         int tag = v.getId();
-        return --tag;
+        return (byte) --tag;
     }
 
     private static void setTag(View v, int tag) {
@@ -132,7 +132,7 @@ public final class HomeFragment extends Fragment {
 
     private final View.OnClickListener customBtnListener = view -> {
         Context context = getContext();
-        int index = getTag(view);
+        byte index = getTag(view);
         byte type = WorkoutType.strength;
         if (index == CustomWorkoutIndex.SE) {
             type = WorkoutType.SE;
@@ -144,7 +144,7 @@ public final class HomeFragment extends Fragment {
             WorkoutParams params = new WorkoutParams((byte) -1);
             params.type = WorkoutType.strength;
             params.index = 2;
-            params.sets = params.reps = 1;
+            params.reps = params.sets = 1;
             params.weight = 100;
             navigateToAddWorkout(null, params);
             return;
@@ -172,7 +172,7 @@ public final class HomeFragment extends Fragment {
         WorkoutActivity.start(activity, params);
     }
 
-    private void handleFinishedWorkout(int totalCompleted) {
+    private void handleFinishedWorkout(byte totalCompleted) {
         Context context = getContext();
         if (context != null)
             LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);

@@ -19,55 +19,53 @@ final class Circuit {
         static final byte decrement = 2;
     }
 
-    public final byte type;
-    public final int reps;
-    int completedReps = 0;
-    public int index = 0;
     ExerciseEntry[] exercises;
     final StringRange numberRange = new StringRange();
     @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
+    final byte type;
+    final byte reps;
+    byte completedReps = 0;
+    byte index = 0;
 
     Circuit(Context context, JSONObject dict, WorkoutParams params) {
-        int localReps = 0;
-        byte localType = 0;
+        byte _reps = 0;
+        byte _type = 0;
         ExerciseEntry.Params exerciseParams = new ExerciseEntry.Params();
-        int[] weights = {0, 0, 0, 0};
+        short[] weights = {0, 0, 0, 0};
 
         if (params.type == WorkoutType.strength) {
             short[] lifts = AppUserData.shared.liftArray;
             float multiplier = params.weight / 100f;
-            weights[0] = (int) (multiplier * lifts[0]);
+            weights[0] = (short) (multiplier * lifts[0]);
             if (params.index <= 1) {
-                weights[1] = (int) (multiplier * lifts[LiftType.bench]);
+                weights[1] = (short) (multiplier * lifts[LiftType.bench]);
                 if (params.index == 0) {
-                    int weight = ExerciseManager.getBodyWeightToUse();
-                    weights[2] = (int) ((lifts[LiftType.pullUp] + weight) * multiplier) - weight;
+                    short weight = ExerciseManager.getBodyWeightToUse();
+                    weights[2] = (short) ((int)((lifts[LiftType.pullUp] + weight) * multiplier) - weight);
                     if (weights[2] < 0)
                         weights[2] = 0;
                 } else {
-                    weights[2] = (int) (multiplier * lifts[LiftType.deadlift]);
+                    weights[2] = (short) (multiplier * lifts[LiftType.deadlift]);
                 }
             } else if (params.index == 2) {
-                for (int i = 1; i < 4; ++i) {
-                    weights[i] = lifts[i];
-                }
+                System.arraycopy(lifts, 1, weights, 1, 3);
             }
         }
         try {
-            localType = (byte) dict.getInt(ExerciseManager.Keys.type);
-            localReps = dict.getInt(ExerciseManager.Keys.reps);
+            _type = (byte) dict.getInt(ExerciseManager.Keys.type);
+            _reps = (byte) dict.getInt(ExerciseManager.Keys.reps);
 
             if (params.type == WorkoutType.SE) {
-                localReps = params.sets;
+                _reps = params.sets;
                 exerciseParams.customReps = params.reps;
             } else if (params.type == WorkoutType.endurance) {
-                exerciseParams.customReps = params.reps * 60;
+                exerciseParams.customReps = (short) (params.reps * 60);
             } else if (params.type == WorkoutType.strength) {
                 exerciseParams.customReps = params.reps;
                 exerciseParams.customSets = params.sets;
             }
 
-            exerciseParams.circuitType = localType;
+            exerciseParams.circuitType = _type;
             JSONArray foundExercises = dict.getJSONArray("exercises");
             int nExercises = foundExercises.length();
             exercises = new ExerciseEntry[nExercises];
@@ -79,14 +77,14 @@ final class Circuit {
             }
 
             String localHeader = null;
-            if (localType == Type.decrement) {
-                completedReps = exercises[0].reps;
-            } else if (localType == Type.AMRAP) {
-                localHeader = context.getString(R.string.circuitHeaderAMRAP, localReps);
-            } else if (localReps > 1) {
-                localHeader = context.getString(R.string.circuitHeaderRounds, 1, localReps);
-                numberRange.index = localHeader.indexOf('1');
-                numberRange.end = numberRange.index + 1;
+            if (_type == Type.decrement) {
+                completedReps = (byte) exercises[0].reps;
+            } else if (_type == Type.AMRAP) {
+                localHeader = context.getString(R.string.circuitHeaderAMRAP, _reps);
+            } else if (_reps > 1) {
+                localHeader = context.getString(R.string.circuitHeaderRounds, 1, _reps);
+                numberRange.index = (short) localHeader.indexOf('1');
+                numberRange.end = (short) (numberRange.index + 1);
             }
 
             if (localHeader != null)
@@ -94,8 +92,8 @@ final class Circuit {
         } catch (JSONException e) {
             Log.e("Circuit init", "Error while parsing JSON", e);
         }
-        type = localType;
-        reps = localReps;
+        type = _type;
+        reps = _reps;
     }
 
     boolean didFinish() {

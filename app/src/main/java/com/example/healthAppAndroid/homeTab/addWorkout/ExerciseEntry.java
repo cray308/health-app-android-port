@@ -24,98 +24,96 @@ final class ExerciseEntry {
     }
 
     static final class Params {
-        int customSets = 0;
-        int customReps = 0;
-        int weight = -1;
+        short customReps = 0;
+        short weight = -1;
         byte circuitType;
+        byte customSets = 0;
     }
 
-    public final byte type;
-    byte state = 0;
-    public int reps = 0;
-    private final int sets;
-    int completedSets = 0;
     private final StringRange headerRange = new StringRange();
     final StringRange titleRange = new StringRange();
     final String restStr;
-    @SuppressWarnings("StringBufferField")
-    final StringBuilder headerStr = new StringBuilder(16);
-    @SuppressWarnings("StringBufferField")
-    final StringBuilder titleStr = new StringBuilder(16);
+    @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
+    @SuppressWarnings("StringBufferField") final StringBuilder titleStr = new StringBuilder(16);
+    final short reps;
+    private final byte sets;
+    byte completedSets = 0;
+    final byte type;
+    byte state = 0;
 
     ExerciseEntry(Context context, JSONObject dict, Params params) {
-        int localSets = 1;
-        byte localType = 0;
-        String localRest = null;
+        short _reps = 0;
+        byte _sets = 1;
+        byte _type = 0;
+        String _rest = null;
         try {
-            localType = (byte) dict.getInt(ExerciseManager.Keys.type);
-            reps = dict.getInt(ExerciseManager.Keys.reps);
+            _type = (byte) dict.getInt(ExerciseManager.Keys.type);
+            _reps = (short) dict.getInt(ExerciseManager.Keys.reps);
             int rest = dict.getInt("rest");
             String name = dict.getString("name");
 
             if (params.customReps != 0)
-                reps = params.customReps;
+                _reps = params.customReps;
             if (params.customSets != 0)
-                localSets = params.customSets;
+                _sets = params.customSets;
             if (rest != 0)
-                localRest = context.getString(R.string.exerciseTitleRest, rest);
+                _rest = context.getString(R.string.exerciseTitleRest, rest);
 
-            if (localSets > 1) {
-                String numberStr = context.getString(R.string.exerciseHeader, 1, localSets);
-                headerRange.index = numberStr.indexOf('1');
-                headerRange.end = headerRange.index + 1;
+            if (_sets > 1) {
+                String numberStr = context.getString(R.string.exerciseHeader, 1, _sets);
+                headerRange.index = (short) numberStr.indexOf('1');
+                headerRange.end = (short) (headerRange.index + 1);
                 headerStr.append(numberStr);
             }
 
             String title;
-            switch (localType) {
+            switch (_type) {
                 case Type.reps:
                     if (params.weight >= 0) {
                         title = context.getString(R.string.exerciseTitleRepsWithWeight,
-                                                  name, reps, params.weight);
+                                                  name, _reps, params.weight);
                     } else {
-                        title = context.getString(R.string.exerciseTitleReps, name, reps);
+                        title = context.getString(R.string.exerciseTitleReps, name, _reps);
                     }
                     break;
 
                 case Type.duration:
-                    if (reps > 120) {
+                    if (_reps > 120) {
                         title = context.getString(R.string.exerciseTitleDurationMinutes,
-                                                  name, reps / 60f);
+                                                  name, _reps / 60f);
                     } else {
                         title = context.getString(R.string.exerciseTitleDurationSeconds,
-                                                  name, reps);
+                                                  name, _reps);
                     }
                     break;
 
                 default:
                     title = context.getString(R.string.exerciseTitleDistance,
-                                              reps, ((5 * reps) >> 2));
+                                              _reps, ((5 * _reps) >> 2));
             }
 
             titleStr.append(title);
-            if (params.circuitType == Circuit.Type.decrement
-                && localType == ExerciseEntry.Type.reps) {
-                titleRange.index = titleStr.indexOf("10");
-                titleRange.end = titleRange.index + 2;
+            if (params.circuitType == Circuit.Type.decrement && _type == Type.reps) {
+                titleRange.index = (short) titleStr.indexOf("10");
+                titleRange.end = (short) (titleRange.index + 2);
             }
 
         } catch (JSONException ex) {
             Log.e("ExerciseEntry init", "Error while parsing JSON", ex);
         }
-        sets = localSets;
-        type = localType;
-        restStr = localRest;
+        reps = _reps;
+        sets = _sets;
+        type = _type;
+        restStr = _rest;
     }
 
-    boolean cycle(Context context) {
-        boolean completed = false;
+    boolean cycle(Context context, byte group, byte index) {
         switch (state) {
             case State.disabled:
                 state = State.active;
                 if (type == Type.duration)
-                    NotificationService.scheduleAlarm(context, reps,
-                                                      NotificationService.Type.Exercise);
+                    NotificationService.scheduleAlarm(
+                      context, reps, NotificationService.Type.Exercise, group, index);
                 break;
 
             case State.active:
@@ -127,7 +125,7 @@ final class ExerciseEntry {
             case State.resting:
                 if (++completedSets == sets) {
                     state = State.finished;
-                    completed = true;
+                    return true;
                 } else {
                     state = State.active;
                     String newSets = String.format(Locale.US, "%d", completedSets + 1);
@@ -135,6 +133,6 @@ final class ExerciseEntry {
                 }
             default:
         }
-        return completed;
+        return false;
     }
 }

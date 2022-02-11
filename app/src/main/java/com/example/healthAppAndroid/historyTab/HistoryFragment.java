@@ -76,7 +76,7 @@ public final class HistoryFragment extends Fragment {
     }
 
     public void didSelectSegment(byte index) {
-        int count = viewModel.nEntries[index];
+        short count = viewModel.nEntries[index];
         if (count == 0) {
             totalWorkoutsChart.disable();
             workoutTypeChart.disable();

@@ -27,21 +27,24 @@ public abstract class NotificationService {
     private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
-    private static int color;
-    private static int filterId = 1;
     private static final String[] baseFilters = {
         "com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"
     };
     private static final String[] filters = {null, null};
+    private static NotificationManager notificationMgr;
+    private static AlarmManager alarmMgr;
+    private static final BroadcastReceiver[] receivers = {null, null};
 
     private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT |
                                      PendingIntent.FLAG_IMMUTABLE;
     private static final int defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
-    private static int identifier = 1;
-    private static NotificationManager notificationMgr;
-    private static AlarmManager alarmMgr;
-    private static final BroadcastReceiver[] receivers = {null, null};
+    private static int color;
+    private static short identifier = 1;
+    private static short filterId = 1;
+    private static byte groupId = 0;
+    private static byte exerciseGroup = 0;
+    private static byte exerciseIndex = 0;
 
     public static void setupAppNotifications(Context context) {
         NotificationManager manager = (NotificationManager) context.getSystemService(
@@ -68,16 +71,16 @@ public abstract class NotificationService {
         receivers[Type.Exercise] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 notificationMgr.notify(identifier++, createNotification(context, Type.Exercise));
-                ((WorkoutActivity) context).finishedExercise();
+                ((WorkoutActivity) context).finishedExercise(exerciseGroup, exerciseIndex);
             }
         };
         receivers[Type.Circuit] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 notificationMgr.notify(identifier++, createNotification(context, Type.Circuit));
-                ((WorkoutActivity) context).finishedGroup();
+                ((WorkoutActivity) context).finishedGroup(groupId);
             }
         };
-        int id = filterId++;
+        short id = filterId++;
         for (int i = 0; i < 2; ++i) {
             filters[i] = String.format(Locale.US, "%s.%d", baseFilters[i], id);
             outerContext.registerReceiver(receivers[i], new IntentFilter(filters[i]));
@@ -94,10 +97,16 @@ public abstract class NotificationService {
         alarmMgr = null;
     }
 
-    static void scheduleAlarm(Context context, long secondsFromNow, byte type) {
+    static void scheduleAlarm(Context context,
+                              long secondsFromNow, byte type, byte group, byte index) {
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
-        if (type == Type.Circuit)
+        if (type == Type.Circuit) {
             secondsFromNow += 1000;
+            groupId = group;
+        } else {
+            exerciseGroup = group;
+            exerciseIndex = index;
+        }
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, new Intent(filters[type]),
                                                            PendingIntent.FLAG_IMMUTABLE);
         alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);

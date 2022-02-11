@@ -31,8 +31,8 @@ public final class HomeSetupWorkoutDialog
     private static final String paramsKey = "HomeSetupWorkoutDialogParams";
 
     static final class Params implements Parcelable {
-        private final byte type;
         private final String[] names;
+        private final byte type;
 
         Params(byte type, String[] names) {
             this.type = type;
@@ -96,7 +96,7 @@ public final class HomeSetupWorkoutDialog
                 case WorkoutType.strength:
                     output.weight = results[2];
                 case WorkoutType.SE:
-                    output.sets = results[0];
+                    output.sets = (byte) results[0];
                     output.reps = results[1];
                     break;
 
@@ -167,7 +167,7 @@ public final class HomeSetupWorkoutDialog
     }
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        output.index = i;
+        output.index = (byte) i;
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}

@@ -21,15 +21,15 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
     private static final String paramsKey = "AddWorkoutUpdateMaxesDialogParams";
 
     static final class Params implements Parcelable {
-        private final int index;
+        private final byte index;
 
-        private Params(int index) { this.index = index; }
+        private Params(byte index) { this.index = index; }
 
-        private Params(Parcel src) { index = src.readInt(); }
+        private Params(Parcel src) { index = src.readByte(); }
 
         public int describeContents() { return 0; }
 
-        public void writeToParcel(Parcel parcel, int i) { parcel.writeInt(index); }
+        public void writeToParcel(Parcel parcel, int i) { parcel.writeByte(index); }
 
         public static final Creator<Params> CREATOR = new Creator<Params>() {
             public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
@@ -39,11 +39,11 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
     }
 
     private TextValidator validator;
-    private int index;
-    private int value = 1;
     private TextView stepperLabel;
+    private byte index;
+    private byte value = 1;
 
-    static AddWorkoutUpdateMaxesDialog newInstance(int index) {
+    static AddWorkoutUpdateMaxesDialog newInstance(byte index) {
         AddWorkoutUpdateMaxesDialog dialog = new AddWorkoutUpdateMaxesDialog();
         Bundle args = new Bundle();
         args.putParcelable(paramsKey, new Params(index));
@@ -68,10 +68,8 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int[] keys = {
-          R.string.maxWeightSquat, R.string.maxWeightPullUp,
-          R.string.maxWeightBench, R.string.maxWeightDeadLift
-        };
+        int[] keys = {R.string.maxWeightSquat, R.string.maxWeightPullUp,
+                      R.string.maxWeightBench, R.string.maxWeightDeadLift};
         stepperLabel = view.findViewById(R.id.stepperLabel);
         view.findViewById(R.id.minusButton).setOnClickListener(btn -> {
             if (value > 1)
@@ -86,8 +84,7 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
 
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(view1 -> {
-            short extra = (short) (index == LiftType.pullUp
-                                   ? ExerciseManager.getBodyWeightToUse() : 0);
+            short extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
             int initWeight = (validator.getResults()[0] + extra) * 36;
             float reps = 37f - value;
             short weight = (short) (((initWeight / reps) + 0.5f) - extra);

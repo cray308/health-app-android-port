@@ -17,13 +17,13 @@ public final class TextValidator {
     public static final class InputView extends LinearLayout implements TextWatcher {
         public TextInputLayout field;
         TextInputEditText textField;
+        private TextValidator delegate;
         private short min = 1;
         private short max = 999;
-        private TextValidator delegate;
+        short result = 0;
         boolean valid = false;
         private boolean isInputNumeric = false;
         private boolean emptyInputAllowed = false;
-        short result = 0;
 
         public InputView(Context context) {
             super(context);
@@ -82,14 +82,14 @@ public final class TextValidator {
         }
 
         public void afterTextChanged(Editable s) {
-            int len = s.length();
-            if (!isInputNumeric || (len == 0 && !emptyInputAllowed)) {
+            boolean isEmpty = s.length() == 0;
+            if (!isInputNumeric || (isEmpty && !emptyInputAllowed)) {
                 showErrorMsg();
                 return;
             }
 
             short res = -1;
-            if (len != 0) {
+            if (!isEmpty) {
                 try {
                     res = (short) Integer.parseInt(s.toString());
                 } catch (NumberFormatException e) {
@@ -117,8 +117,8 @@ public final class TextValidator {
     }
 
     final InputView[] children = {null, null, null, null, null};
-    private int count = 0;
     private final Button button;
+    private byte count = 0;
 
     public TextValidator(Button button) { this.button = button; }
 
@@ -133,7 +133,7 @@ public final class TextValidator {
     }
 
     private void checkFields() {
-        for (int i = 0; i < count; ++i) {
+        for (byte i = 0; i < count; ++i) {
             if (!children[i].valid) {
                 disableButton();
                 return;
@@ -149,7 +149,7 @@ public final class TextValidator {
 
     public short[] getResults() {
         short[] results = {0, 0, 0, 0, 0};
-        for (int i = 0; i < count; ++i)
+        for (byte i = 0; i < count; ++i)
             results[i] = children[i].result;
         return results;
     }

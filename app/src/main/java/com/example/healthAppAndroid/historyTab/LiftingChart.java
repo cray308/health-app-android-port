@@ -29,7 +29,8 @@ public final class LiftingChart extends ChartContainer {
 
     void updateChart(boolean isSmall, byte index) {
         for (int i = 0; i < 4; ++i) {
-            updateData(i, isSmall, viewModel.entryRefs.get(index).get(i), i, viewModel.legendLabels[i]);
+            updateData(i, isSmall,
+                       viewModel.entryRefs.get(index).get(i), i, viewModel.legendLabels[i]);
         }
         update(isSmall, viewModel.maxes[index]);
     }

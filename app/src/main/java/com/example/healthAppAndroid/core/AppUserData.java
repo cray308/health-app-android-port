@@ -59,11 +59,11 @@ public final class AppUserData {
     public long planStart;
     long weekStart;
     private int tzOffset;
-    public short week;
+    public final short[] liftArray = {0, 0, 0, 0};
     public short weight = -1;
     public byte currentPlan = -1;
+    public byte week;
     public byte completedWorkouts;
-    public final short[] liftArray = {0, 0, 0, 0};
 
     final static long weekSeconds = 604800;
     public static AppUserData shared;
@@ -78,7 +78,7 @@ public final class AppUserData {
     }
 
     static int setupFromStorage(Context context) {
-        int[] planLengths = {8, 13};
+        byte[] planLengths = {8, 13};
         boolean madeChange = false;
         shared = new AppUserData(context);
         ZoneId zoneId = ZoneId.systemDefault();
@@ -94,7 +94,7 @@ public final class AppUserData {
             shared.tzOffset = newOffset;
         }
 
-        shared.week = (short) ((weekStart - shared.planStart) / weekSeconds);
+        shared.week = (byte) ((weekStart - shared.planStart) / weekSeconds);
         if (weekStart != shared.weekStart) {
             madeChange = true;
             shared.completedWorkouts = 0;
@@ -157,8 +157,8 @@ public final class AppUserData {
         }
     }
 
-    public int addCompletedWorkout(byte day) {
-        int total = 0;
+    public byte addCompletedWorkout(byte day) {
+        byte total = 0;
         completedWorkouts |= (1 << day);
         saveData();
         for (short i = 0; i < 7; ++i) {

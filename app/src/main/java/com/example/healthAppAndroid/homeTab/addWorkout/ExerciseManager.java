@@ -65,8 +65,9 @@ public abstract class ExerciseManager {
               context.getAssets().open("workoutData.json"), StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(input);
             StringBuilder contents = new StringBuilder(20000);
-            for (String line = reader.readLine(); line != null; line = reader.readLine())
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 contents.append(line);
+            }
             JSONObject root = new JSONObject(contents.toString());
             JSONObject lib = root.getJSONObject("library");
             container = new DictWrapper(root, lib);
@@ -83,12 +84,11 @@ public abstract class ExerciseManager {
         String[] names = {null, null, null, null, null, null, null};
         DictWrapper data = createRootAndLibDict(context);
         JSONArray currWeek = data.getCurrentWeekForPlan();
-        int temp;
 
         for (int i = 0; i < 7; ++i) {
             try {
                 JSONObject day = currWeek.getJSONObject(i);
-                temp = day.getInt(Keys.type);
+                int temp = day.getInt(Keys.type);
                 if (temp > 3) continue;
 
                 JSONArray libArr = data.getLibraryArrayForType((byte) temp);
@@ -102,18 +102,18 @@ public abstract class ExerciseManager {
         return names;
     }
 
-    public static WorkoutParams getWeeklyWorkout(Context context, int index) {
-        WorkoutParams params = new WorkoutParams((byte) index);
+    public static WorkoutParams getWeeklyWorkout(Context context, byte index) {
+        WorkoutParams params = new WorkoutParams(index);
         DictWrapper data = createRootAndLibDict(context);
         JSONArray currWeek = data.getCurrentWeekForPlan();
 
         try {
             JSONObject day = currWeek.getJSONObject(index);
             params.type = (byte) day.getInt(Keys.type);
-            params.index = day.getInt(Keys.index);
-            params.sets = day.getInt("sets");
-            params.reps = day.getInt(Keys.reps);
-            params.weight = day.getInt("weight");
+            params.index = (byte) day.getInt(Keys.index);
+            params.sets = (byte) day.getInt("sets");
+            params.reps = (short) day.getInt(Keys.reps);
+            params.weight = (short) day.getInt("weight");
         } catch (JSONException e) {
             Log.e("getWeeklyWorkoutParams", "Error while parsing JSON", e);
         }
@@ -155,7 +155,7 @@ public abstract class ExerciseManager {
         return w;
     }
 
-    static int getBodyWeightToUse() {
+    static short getBodyWeightToUse() {
         return AppUserData.shared.weight < 0 ? 145 : AppUserData.shared.weight;
     }
 }

@@ -188,10 +188,10 @@ public abstract class PersistenceService extends RoomDatabase {
 
     private static final class UpdateCurrentWeekTask implements Runnable {
         private final byte type;
-        private final long duration;
+        private final short duration;
         private final short[] lifts;
 
-        private UpdateCurrentWeekTask(byte type, long duration, short[] lifts) {
+        private UpdateCurrentWeekTask(byte type, short duration, short[] lifts) {
             this.type = type;
             this.duration = duration;
             this.lifts = lifts;
@@ -227,7 +227,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    public static void updateCurrentWeek(byte type, long duration, short[] lifts) {
+    public static void updateCurrentWeek(byte type, short duration, short[] lifts) {
         new Thread(new UpdateCurrentWeekTask(type, duration, lifts)).start();
     }
 
@@ -245,8 +245,8 @@ public abstract class PersistenceService extends RoomDatabase {
             PersistenceService service = shared;
             WeeklyData[] data = service.dao().getDataInInterval(twoYearsAgo(),
                                                                 AppUserData.shared.weekStart);
-            model.size = data.length;
-            for (int i = 0; i < model.size; ++i) {
+            model.size = (short) data.length;
+            for (short i = 0; i < model.size; ++i) {
                 model.arr[i] = new WeekDataModel.Week(data[i], zoneId);
             }
             new Handler(Looper.getMainLooper()).post(block::completion);

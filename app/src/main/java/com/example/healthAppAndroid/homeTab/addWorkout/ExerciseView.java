@@ -7,12 +7,13 @@ import com.example.healthAppAndroid.core.AppColors;
 import com.example.healthAppAndroid.core.StatusButton;
 
 public final class ExerciseView extends StatusButton {
-    public boolean userInteractionEnabled = true;
-    private ExerciseEntry entry;
+    boolean userInteractionEnabled = true;
+    ExerciseEntry entry;
 
     public ExerciseView(Context context) { super(context); }
 
-    void setup(ExerciseEntry e, int tag, View.OnClickListener action) {
+    ExerciseView(Context context, ExerciseEntry e, int tag, View.OnClickListener action) {
+        super(context);
         entry = e;
         button.setId(tag);
         button.setOnClickListener(action);
@@ -21,7 +22,7 @@ public final class ExerciseView extends StatusButton {
         configure();
     }
 
-    public void configure() {
+    void configure() {
         headerLabel.setText(entry.headerStr);
         if (entry.state == ExerciseEntry.State.resting) {
             button.setText(entry.restStr);

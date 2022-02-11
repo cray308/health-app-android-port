@@ -11,9 +11,9 @@ import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
 
 public final class SegmentedControl extends LinearLayout {
-    public byte selectedIndex = 0;
     private final Button[] buttons = {null, null, null};
     public HistoryFragment delegate;
+    public byte selectedIndex = 0;
 
     public SegmentedControl(Context context, AttributeSet attrs) {
         super(context, attrs);

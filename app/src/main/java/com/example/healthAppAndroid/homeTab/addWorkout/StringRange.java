@@ -1,6 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 final class StringRange {
-    int index = 0;
-    int end = 1;
+    short index = 0;
+    short end = 1;
 }

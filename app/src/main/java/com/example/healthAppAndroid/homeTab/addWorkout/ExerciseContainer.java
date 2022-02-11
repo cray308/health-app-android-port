@@ -16,7 +16,8 @@ public final class ExerciseContainer extends LinearLayout {
         headerView = findViewById(R.id.headerView);
     }
 
-    void setup(Circuit g, int idx, View.OnClickListener action) {
+    ExerciseContainer(Context context, Circuit g, int idx, View.OnClickListener action) {
+        this(context);
         int size = g.exercises.length;
         viewsArr = new ExerciseView[size];
         String headerStr = g.headerStr.toString();
@@ -27,8 +28,7 @@ public final class ExerciseContainer extends LinearLayout {
 
         for (int i = 0; i < size; ++i) {
             int tag = (idx << 8) | (i + 1);
-            ExerciseView v = new ExerciseView(getContext());
-            v.setup(g.exercises[i], tag, action);
+            ExerciseView v = new ExerciseView(getContext(), g.exercises[i], tag, action);
             vStack.addView(v);
             viewsArr[i] = v;
         }

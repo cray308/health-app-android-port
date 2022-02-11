@@ -45,10 +45,8 @@ public final class AppCoordinator {
             return true;
         });
 
-        for (int i = children.length - 1; i > 0; --i) {
-            String tag = Integer.toString(i + 1);
-            fm.beginTransaction().add(R.id.container, children[i], tag).hide(children[i]).commit();
-        }
+        fm.beginTransaction().add(R.id.container, children[2], "3").hide(children[2]).commit();
+        fm.beginTransaction().add(R.id.container, children[1], "2").hide(children[1]).commit();
         fm.beginTransaction().add(R.id.container, children[0], "1").commit();
         active = children[0];
     }

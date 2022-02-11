@@ -18,24 +18,24 @@ final class Workout {
         static final byte finishedCircuitDeleteFirst = 1;
         static final byte finishedCircuit = 2;
         static final byte finishedExercise = 3;
-        private static final byte noChange = 4;
+        static final byte noChange = 4;
     }
 
     static abstract class EventOption {
         static final byte startGroup = 1;
         static final byte finishGroup = 2;
+        static final byte finishExercise = 3;
     }
 
+    final String title;
+    Circuit group;
+    Circuit[] activities;
+    long startTime;
+    short duration;
+    byte index;
     final byte type;
     final byte day;
     final boolean testMax;
-    int index;
-    long startTime;
-    long duration;
-    final String title;
-    Circuit group;
-    private ExerciseEntry entry;
-    Circuit[] activities;
 
     Workout(Context context, JSONObject dict, WorkoutParams params) {
         day = params.day;
@@ -59,47 +59,24 @@ final class Workout {
         title = workoutName;
         testMax = workoutName.contentEquals(context.getString(R.string.workoutTitleTestDay));
         group = activities[0];
-        entry = group.exercises[0];
     }
 
-    private void startGroup(Context context, boolean startTimer) {
+    void startGroup(Context context, boolean startTimer) {
         group.index = 0;
-        entry = group.exercises[0];
         for (ExerciseEntry e : group.exercises) {
             e.state = ExerciseEntry.State.disabled;
             e.completedSets = 0;
         }
 
         if (group.type == Circuit.Type.AMRAP && startTimer) {
-            int minutes = 60 * group.reps;
-            NotificationService.scheduleAlarm(context, minutes, NotificationService.Type.Circuit);
+            NotificationService.scheduleAlarm(context, 60 * group.reps,
+                                              NotificationService.Type.Circuit, index, (byte) 0);
         }
+        group.exercises[0].cycle(context, index, (byte) 0);
     }
 
-    byte findTransitionForEvent(Context context, ExerciseView view, byte option) {
+    byte findTransitionForEvent(Context context, boolean exerciseDone) {
         byte t = Transition.noChange;
-        if (option != 0) {
-            t = Transition.finishedCircuit;
-            if (option == EventOption.finishGroup) {
-                if (++index == activities.length) return Transition.completedWorkout;
-                group = activities[index];
-                t = Transition.finishedCircuitDeleteFirst;
-            }
-            startGroup(context, true);
-            entry.cycle(context);
-            return t;
-        }
-
-        if (entry.type == ExerciseEntry.Type.duration &&
-            entry.state == ExerciseEntry.State.active && !view.userInteractionEnabled) {
-            view.userInteractionEnabled = true;
-            view.button.setEnabled(true);
-            if (type == WorkoutType.endurance) return Transition.noChange;
-        }
-
-        boolean exerciseDone = entry.cycle(context);
-        view.configure();
-
         if (exerciseDone) {
             t = Transition.finishedExercise;
             if (++group.index == group.exercises.length) {
@@ -111,29 +88,26 @@ final class Workout {
                         t = Transition.finishedCircuitDeleteFirst;
                         group = activities[index];
                         startGroup(context, true);
-                        entry.cycle(context);
                     }
                 } else {
                     startGroup(context, false);
-                    entry.cycle(context);
                 }
             } else {
-                entry = group.exercises[group.index];
-                entry.cycle(context);
+                group.exercises[group.index].cycle(context, index, group.index);
             }
         }
         return t;
     }
 
     void setDuration() {
-        duration = ((long) ((Instant.now().getEpochSecond() - startTime) / 60f)) + 1;
+        duration = (short) (((int) ((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
         if (BuildConfig.DEBUG)
             duration *= 10;
     }
 
     boolean checkEnduranceDuration() {
         if (type != WorkoutType.endurance) return false;
-        int planDuration = activities[0].exercises[0].reps / 60;
+        short planDuration = (short) (activities[0].exercises[0].reps / 60);
         return duration >= planDuration;
     }
 
