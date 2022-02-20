@@ -26,7 +26,7 @@ public abstract class ExerciseManager {
             this.lib = lib;
         }
 
-        private JSONArray getLibraryArrayForType(byte type) {
+        private JSONArray getLibraryArrayForType(int type) {
             JSONArray res;
             try {
                 res = lib.getJSONArray(libraryKeys[type]);
@@ -37,12 +37,12 @@ public abstract class ExerciseManager {
             return res;
         }
 
-        private JSONArray getCurrentWeekForPlan() {
+        private JSONArray getCurrentWeekForPlan(int plan) {
             JSONArray res;
             try {
                 JSONObject plans = root.getJSONObject("plans");
-                JSONArray weeks = plans.getJSONArray(planKeys[AppUserData.shared.currentPlan]);
-                res = weeks.getJSONArray(AppUserData.shared.week);
+                JSONArray weeks = plans.getJSONArray(planKeys[plan]);
+                res = weeks.getJSONArray(weekInPlan);
             } catch (JSONException e) {
                 Log.e("getCurrentWeekForPlan", "Error while parsing JSON", e);
                 res = new JSONArray();
@@ -57,6 +57,10 @@ public abstract class ExerciseManager {
         private static final String index = "index";
         public static final String title = "title";
     }
+
+    private static int weekInPlan;
+
+    public static void setWeekStart(int week) { weekInPlan = week; }
 
     private static DictWrapper createRootAndLibDict(Context context) {
         DictWrapper container = null;
@@ -80,10 +84,10 @@ public abstract class ExerciseManager {
         return container;
     }
 
-    public static String[] getWeeklyWorkoutNames(Context context) {
+    public static String[] getWeeklyWorkoutNames(Context context, byte plan) {
         String[] names = {null, null, null, null, null, null, null};
         DictWrapper data = createRootAndLibDict(context);
-        JSONArray currWeek = data.getCurrentWeekForPlan();
+        JSONArray currWeek = data.getCurrentWeekForPlan(plan);
 
         for (int i = 0; i < 7; ++i) {
             try {
@@ -91,7 +95,7 @@ public abstract class ExerciseManager {
                 int temp = day.getInt(Keys.type);
                 if (temp > 3) continue;
 
-                JSONArray libArr = data.getLibraryArrayForType((byte) temp);
+                JSONArray libArr = data.getLibraryArrayForType(temp);
                 temp = day.getInt(Keys.index);
                 JSONObject foundWorkout = libArr.getJSONObject(temp);
                 names[i] = foundWorkout.getString(Keys.title);
@@ -102,16 +106,16 @@ public abstract class ExerciseManager {
         return names;
     }
 
-    public static WorkoutParams getWeeklyWorkout(Context context, byte index) {
-        WorkoutParams params = new WorkoutParams(index);
+    public static WorkoutParams getWeeklyWorkout(Context context, int index, byte plan) {
+        WorkoutParams params = new WorkoutParams((byte) index);
         DictWrapper data = createRootAndLibDict(context);
-        JSONArray currWeek = data.getCurrentWeekForPlan();
+        JSONArray currWeek = data.getCurrentWeekForPlan(plan);
 
         try {
             JSONObject day = currWeek.getJSONObject(index);
             params.type = (byte) day.getInt(Keys.type);
-            params.index = (byte) day.getInt(Keys.index);
-            params.sets = (byte) day.getInt("sets");
+            params.index = day.getInt(Keys.index);
+            params.sets = (short) day.getInt("sets");
             params.reps = (short) day.getInt(Keys.reps);
             params.weight = (short) day.getInt("weight");
         } catch (JSONException e) {
@@ -120,7 +124,7 @@ public abstract class ExerciseManager {
         return params;
     }
 
-    public static String[] getWorkoutNamesForType(Context context, byte type) {
+    public static String[] getWorkoutNamesForType(Context context, int type) {
         DictWrapper data = createRootAndLibDict(context);
         JSONArray libArr = data.getLibraryArrayForType(type);
         int len = libArr.length();
@@ -155,7 +159,8 @@ public abstract class ExerciseManager {
         return w;
     }
 
-    static short getBodyWeightToUse() {
-        return AppUserData.shared.weight < 0 ? 145 : AppUserData.shared.weight;
+    static int getBodyWeightToUse() {
+        int weight = AppUserData.shared.weight;
+        return weight < 0 ? 145 : weight;
     }
 }

@@ -33,7 +33,7 @@ public final class TotalWorkoutsChart extends ChartContainer {
         setupChartView(xAxisFormatter);
     }
 
-    void updateChart(boolean isSmall, byte index) {
+    void updateChart(boolean isSmall, int index) {
         chartView.getAxisLeft().removeAllLimitLines();
         LimitLine limitLine = new LimitLine(viewModel.avgs[index]);
         limitLine.enableDashedLine(10, 10, 0);

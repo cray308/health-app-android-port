@@ -58,7 +58,7 @@ public final class WorkoutActivity extends AppCompatActivity {
                 btn.setText(getString(R.string.end));
                 btn.setTextColor(AppColors.red);
                 workout.startTime = Instant.now().getEpochSecond();
-                handleTap((byte) 0, (byte) 0, Workout.EventOption.startGroup);
+                handleTap(0, 0, Workout.EventOption.startGroup);
             } else {
                 workout.setDuration();
                 if (workout.checkEnduranceDuration()) {
@@ -110,18 +110,18 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     private final View.OnClickListener tapHandler = view -> {
         int tag = view.getId();
-        byte groupIdx = (byte)((tag & 0xff00) >> 8), exerciseIdx = (byte)((tag & 0xff) - 1);
-        handleTap(groupIdx, exerciseIdx, (byte) 0);
+        int groupIdx = ((tag & 0xff00) >> 8), exerciseIdx = ((tag & 0xff) - 1);
+        handleTap(groupIdx, exerciseIdx, 0);
     };
 
-    private void handleTap(byte groupIdx, byte exerciseIdx, byte option) {
+    private void handleTap(int groupIdx, int exerciseIdx, int option) {
         if (groupIdx != workout.index ||
             (exerciseIdx != workout.group.index && option != Workout.EventOption.finishGroup)) {
             return;
         }
 
         ExerciseView v = firstContainer.viewsArr[exerciseIdx];
-        byte transition = Workout.Transition.noChange;
+        int transition = Workout.Transition.noChange;
         switch (option) {
             case Workout.EventOption.startGroup:
                 transition = Workout.Transition.finishedCircuit;
@@ -190,22 +190,22 @@ public final class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    public void finishedGroup(byte group) {
-        handleTap(group, (byte) 0, Workout.EventOption.finishGroup);
+    public void finishedGroup(int group) {
+        handleTap(group, 0, Workout.EventOption.finishGroup);
     }
 
-    public void finishedExercise(byte exerciseGroup, byte exerciseIndex) {
+    public void finishedExercise(int exerciseGroup, int exerciseIndex) {
         handleTap(exerciseGroup, exerciseIndex, Workout.EventOption.finishExercise);
     }
 
-    private void sendBroadcast(byte totalCompleted) {
+    private void sendBroadcast(byte completed) {
         Intent intent = new Intent(notification);
-        intent.putExtra(userInfo, totalCompleted);
+        intent.putExtra(userInfo, completed);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void handleFinishedWorkout(boolean close) {
-        byte totalCompleted = 0;
+        byte completed = 0;
 
         if (workout.testMax) {
             AppCoordinator.shared.updateMaxWeights(weights);
@@ -215,19 +215,19 @@ public final class WorkoutActivity extends AppCompatActivity {
 
         if (workout.longEnough()) {
             if (workout.day >= 0)
-                totalCompleted = AppUserData.shared.addCompletedWorkout(workout.day);
+                completed = AppUserData.shared.addCompletedWorkout(workout.day);
             PersistenceService.updateCurrentWeek(
               workout.type, workout.duration, workout.testMax ? weights : null);
         }
 
-        sendBroadcast(totalCompleted);
+        sendBroadcast(completed);
         if (close)
             finish();
     }
 
-    void finishedBottomSheet(BottomSheetDialogFragment dialog, byte index, short weight) {
+    void finishedBottomSheet(BottomSheetDialogFragment dialog, int index, short weight) {
         dialog.dismiss();
         weights[index] = weight;
-        handleTap((byte) 0, index, (byte) 0);
+        handleTap(0, index, 0);
     }
 }

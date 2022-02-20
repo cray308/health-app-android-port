@@ -18,8 +18,8 @@ public final class TextValidator {
         public TextInputLayout field;
         TextInputEditText textField;
         private TextValidator delegate;
-        private short min = 1;
-        private short max = 999;
+        private int min = 1;
+        private int max = 999;
         short result = 0;
         boolean valid = false;
         private boolean isInputNumeric = false;
@@ -88,10 +88,10 @@ public final class TextValidator {
                 return;
             }
 
-            short res = -1;
+            int res = -1;
             if (!isEmpty) {
                 try {
-                    res = (short) Integer.parseInt(s.toString());
+                    res = Integer.parseInt(s.toString());
                 } catch (NumberFormatException e) {
                     Log.e("checkInput", "Error while validating input", e);
                 } finally {
@@ -104,7 +104,7 @@ public final class TextValidator {
 
             field.setError(null);
             valid = true;
-            result = res;
+            result = (short) res;
             delegate.checkFields();
         }
 
@@ -118,7 +118,7 @@ public final class TextValidator {
 
     final InputView[] children = {null, null, null, null, null};
     private final Button button;
-    private byte count = 0;
+    private int count = 0;
 
     public TextValidator(Button button) { this.button = button; }
 
@@ -133,7 +133,7 @@ public final class TextValidator {
     }
 
     private void checkFields() {
-        for (byte i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i) {
             if (!children[i].valid) {
                 disableButton();
                 return;
@@ -149,7 +149,7 @@ public final class TextValidator {
 
     public short[] getResults() {
         short[] results = {0, 0, 0, 0, 0};
-        for (byte i = 0; i < count; ++i)
+        for (int i = 0; i < count; ++i)
             results[i] = children[i].result;
         return results;
     }

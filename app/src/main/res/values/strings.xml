@@ -79,7 +79,6 @@
     <string name="start">Start</string>
     <string name="end">End</string>
     <string name="updates_maxes_finish_text">Finish</string>
-    <string name="workoutTitleTestDay">Test Day</string>
     <string name="exerciseHeader">Set %1$d of %2$d</string>
     <string name="exerciseTitleRest">Rest: %1$d s</string>
     <string name="exerciseTitleReps">%1$s x %2$d</string>

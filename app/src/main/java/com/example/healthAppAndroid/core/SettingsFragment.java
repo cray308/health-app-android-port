@@ -71,12 +71,12 @@ public final class SettingsFragment extends Fragment {
         validator.children[4].field.setError(null);
         if (weight > 0)
             validator.children[4].textField.setText(String.format(Locale.US, "%d", weight));
-        updateWeightFields();
+        updateWeightFields(AppUserData.shared.liftArray);
     }
 
-    public void updateWeightFields() {
+    public void updateWeightFields(short[] lifts) {
         for (int i = 0; i < 4; ++i) {
-            short value = AppUserData.shared.liftArray[i];
+            short value = lifts[i];
             validator.children[i].result = value;
             validator.children[i].valid = true;
             validator.children[i].field.setError(null);

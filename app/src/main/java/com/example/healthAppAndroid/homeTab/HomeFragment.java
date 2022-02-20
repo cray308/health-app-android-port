@@ -47,7 +47,7 @@ public final class HomeFragment extends Fragment {
     private LinearLayout weeklyWorkoutStack;
     private HeaderView customWorkoutsHeader;
     private KonfettiView confettiView;
-    private byte numWorkouts = 0;
+    private int numWorkouts = 0;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -74,24 +74,23 @@ public final class HomeFragment extends Fragment {
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
         customWorkoutsHeader = view.findViewById(R.id.customWorkoutsHeader);
         confettiView = view.findViewById(R.id.confettiView);
-        createWorkoutsList();
+        createWorkoutsList(AppUserData.shared.currentPlan);
     }
 
-    private static byte getTag(View v) {
+    private static int getTag(View v) {
         int tag = v.getId();
-        return (byte) --tag;
+        return --tag;
     }
 
     private static void setTag(View v, int tag) {
         v.setId(tag + 1);
     }
 
-    public void createWorkoutsList() {
+    public void createWorkoutsList(byte plan) {
         weeklyWorkoutStack.removeAllViews();
         numWorkouts = 0;
         Context context = getContext();
 
-        byte plan = AppUserData.shared.currentPlan;
         if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()
             || context == null) {
             weeklyWkContainer.setVisibility(View.GONE);
@@ -99,7 +98,7 @@ public final class HomeFragment extends Fragment {
             return;
         }
 
-        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(context);
+        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(context, plan);
         DayOfWeek[] days = DayOfWeek.values();
 
         for (int i = 0; i < 7; ++i) {
@@ -114,13 +113,12 @@ public final class HomeFragment extends Fragment {
         }
         weeklyWkContainer.setVisibility(View.VISIBLE);
         customWorkoutsHeader.divider.setVisibility(View.VISIBLE);
-        updateWorkoutsList();
+        updateWorkoutsList(AppUserData.shared.completedWorkouts);
     }
 
-    public void updateWorkoutsList() {
+    public void updateWorkoutsList(byte completed) {
         if (numWorkouts == 0) return;
 
-        byte completed = AppUserData.shared.completedWorkouts;
         for (int i = 0; i < numWorkouts; ++i) {
             StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << getTag(v.button))) == 0;
@@ -132,7 +130,7 @@ public final class HomeFragment extends Fragment {
 
     private final View.OnClickListener customBtnListener = view -> {
         Context context = getContext();
-        byte index = getTag(view);
+        int index = getTag(view);
         byte type = WorkoutType.strength;
         if (index == CustomWorkoutIndex.SE) {
             type = WorkoutType.SE;
@@ -151,13 +149,13 @@ public final class HomeFragment extends Fragment {
         }
 
         String[] names = ExerciseManager.getWorkoutNamesForType(context, type);
-        HomeSetupWorkoutDialog.Params params = new HomeSetupWorkoutDialog.Params(type, names);
-        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(params);
+        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(names, type);
         modal.show(getParentFragmentManager(), "HomeSetupWorkoutDialog");
     };
 
     private final View.OnClickListener dayWorkoutListener = view ->
-      navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(getContext(), getTag(view)));
+      navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(
+        getContext(), getTag(view), AppUserData.shared.currentPlan));
 
     void navigateToAddWorkout(BottomSheetDialogFragment dialog, WorkoutParams params) {
         if (dialog != null)
@@ -172,16 +170,21 @@ public final class HomeFragment extends Fragment {
         WorkoutActivity.start(activity, params);
     }
 
-    private void handleFinishedWorkout(byte totalCompleted) {
+    private void handleFinishedWorkout(byte completed) {
         Context context = getContext();
         if (context != null)
             LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
 
-        boolean update = totalCompleted != 0;
-        if (update)
-            updateWorkoutsList();
+        if (completed == 0) return;
 
-        if (update && numWorkouts == totalCompleted)
+        int totalCompleted = 0;
+        for (int i = 0; i < 7; ++i) {
+            if (((1 << i) & completed) != 0)
+                ++totalCompleted;
+        }
+
+        updateWorkoutsList(completed);
+        if (numWorkouts == totalCompleted)
             new Handler().postDelayed(this::showConfetti, 2500);
     }
 

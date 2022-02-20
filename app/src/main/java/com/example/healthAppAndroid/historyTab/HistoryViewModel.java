@@ -55,8 +55,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     final WorkoutTypeChartViewModel workoutTypes = new WorkoutTypeChartViewModel();
     final LiftChartViewModel lifts = new LiftChartViewModel();
     private String[] axisStrings;
-    final short[] nEntries = {0, 0, 0};
-    private final short[] refIndices = {0, 0, 0};
+    final int[] nEntries = {0, 0, 0};
+    private final int[] refIndices = {0, 0, 0};
 
     void setup(Resources res) {
         workoutNames = res.getStringArray(R.array.workoutTypes);
@@ -64,15 +64,15 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     }
 
     void populateData(WeekDataModel results) {
-        refIndices[0] = (short) (results.size - 26);
-        refIndices[1] = (short) (results.size - 52);
+        refIndices[0] = results.size - 26;
+        refIndices[1] = results.size - 52;
         if (refIndices[1] < 0)
             refIndices[1] = 0;
         if (refIndices[0] < 0)
             refIndices[0] = 0;
 
-        nEntries[0] = (short) (results.size - refIndices[0]);
-        nEntries[1] = (short) (results.size - refIndices[1]);
+        nEntries[0] = results.size - refIndices[0];
+        nEntries[1] = results.size - refIndices[1];
         nEntries[2] = results.size;
 
         axisStrings = new String[results.size];
@@ -85,15 +85,15 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
             lifts.entries.add(new ArrayList<>(results.size));
         }
 
-        short[] sectionIndices = {results.size, refIndices[0], refIndices[1], 0};
+        int[] sectionIndices = {results.size, refIndices[0], refIndices[1], 0};
         int[] totalWorkoutsArr = {0, 0, 0}, maxWorkouts = {0, 0, 0}, innerLimits = {-1, 0, 1};
         int[] maxTime = {0, 0, 0}, maxWeight = {0, 0, 0};
         int[][] totalByType = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
         int[][] totalByExercise = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
 
-        for (byte section = 3; section > 0; --section) {
+        for (int section = 3; section > 0; --section) {
             int jEnd = innerLimits[section - 1];
-            for (short i = sectionIndices[section]; i < sectionIndices[section - 1]; ++i) {
+            for (int i = sectionIndices[section]; i < sectionIndices[section - 1]; ++i) {
                 WeekDataModel.Week e = results.arr[i];
                 axisStrings[i] = e.axisString;
 
@@ -151,7 +151,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         }
     }
 
-    void formatDataForTimeRange(Context context, byte index) {
+    void formatDataForTimeRange(Context context, int index) {
         totalWorkouts.legendLabel = context.getString(R.string.totalWorkoutsLegend,
                                                       totalWorkouts.avgs[index]);
 
@@ -177,7 +177,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     }
 
     void clearData() {
-        Arrays.fill(nEntries, (short) 0);
+        Arrays.fill(nEntries, 0);
         axisStrings = null;
         totalWorkouts.entryRefs = null;
         totalWorkouts.entries = null;

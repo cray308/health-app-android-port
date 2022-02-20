@@ -114,7 +114,7 @@ public final class WorkoutTypeChart extends ChartContainer {
         chartView.setRenderer(new Renderer(chartView));
     }
 
-    void updateChart(boolean isSmall, byte index) {
+    void updateChart(boolean isSmall, int index) {
         dataSets[0].setValues(viewModel.entryRefs.get(index).get(0));
         for (int i = 1; i < 5; ++i) {
             updateData(i, isSmall,

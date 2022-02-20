@@ -38,5 +38,5 @@ public final class WeekDataModel {
     }
 
     public final Week[] arr = new Week[128];
-    public short size;
+    public int size;
 }

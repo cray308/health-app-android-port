@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.BuildConfig;
-import com.example.healthAppAndroid.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,8 +30,8 @@ final class Workout {
     Circuit group;
     Circuit[] activities;
     long startTime;
+    int index;
     short duration;
-    byte index;
     final byte type;
     final byte day;
     final boolean testMax;
@@ -41,6 +40,7 @@ final class Workout {
         day = params.day;
         type = params.type;
         String workoutName = null;
+        boolean[] isTestDay = {false};
         try {
             JSONArray foundActivities = dict.getJSONArray("activities");
             int nActivities = foundActivities.length();
@@ -50,14 +50,14 @@ final class Workout {
 
             for (int i = 0; i < nActivities; ++i) {
                 JSONObject act = foundActivities.getJSONObject(i);
-                activities[i] = new Circuit(context, act, params);
+                activities[i] = new Circuit(context, act, params, isTestDay);
             }
         } catch (JSONException e) {
             Log.e("Workout init", "Error while parsing JSON", e);
         }
 
         title = workoutName;
-        testMax = workoutName.contentEquals(context.getString(R.string.workoutTitleTestDay));
+        testMax = isTestDay[0];
         group = activities[0];
     }
 
@@ -68,15 +68,13 @@ final class Workout {
             e.completedSets = 0;
         }
 
-        if (group.type == Circuit.Type.AMRAP && startTimer) {
-            NotificationService.scheduleAlarm(context, 60 * group.reps,
-                                              NotificationService.Type.Circuit, index, (byte) 0);
-        }
-        group.exercises[0].cycle(context, index, (byte) 0);
+        if (group.type == Circuit.Type.AMRAP && startTimer)
+            NotificationService.scheduleAlarm(context, 60L * group.reps, (byte) 1, index, 0);
+        group.exercises[0].cycle(context, index, 0);
     }
 
-    byte findTransitionForEvent(Context context, boolean exerciseDone) {
-        byte t = Transition.noChange;
+    int findTransitionForEvent(Context context, boolean exerciseDone) {
+        int t = Transition.noChange;
         if (exerciseDone) {
             t = Transition.finishedExercise;
             if (++group.index == group.exercises.length) {

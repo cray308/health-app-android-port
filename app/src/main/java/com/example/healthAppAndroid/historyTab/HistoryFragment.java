@@ -12,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.PersistenceService;
 import com.example.healthAppAndroid.core.SegmentedControl;
 
 public final class HistoryFragment extends Fragment {
-    private static final class FetchHandler implements PersistenceService.Block {
+    public static final class FetchHandler {
         private final HistoryFragment fragment;
         private final WeekDataModel data;
 
@@ -32,26 +31,17 @@ public final class HistoryFragment extends Fragment {
         }
     }
 
-    private static final class StartupHandler implements PersistenceService.Block {
-        private final HistoryFragment fragment;
-
-        private StartupHandler(HistoryFragment fragment) { this.fragment = fragment; }
-
-        public void completion() {
-            WeekDataModel model = new WeekDataModel();
-            PersistenceService.fetchHistoryData(model, new FetchHandler(fragment, model));
-        }
-    }
-
     private final HistoryViewModel viewModel = new HistoryViewModel();
     private SegmentedControl rangePicker;
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
 
-    public static HistoryFragment init(Object[] blockArray) {
+    public static HistoryFragment init(Object[] results) {
         HistoryFragment fragment = new HistoryFragment();
-        blockArray[0] = new StartupHandler(fragment);
+        WeekDataModel model = new WeekDataModel();
+        results[0] = model;
+        results[1] = new FetchHandler(fragment, model);
         return fragment;
     }
 
@@ -75,8 +65,8 @@ public final class HistoryFragment extends Fragment {
         rangePicker.delegate = this;
     }
 
-    public void didSelectSegment(byte index) {
-        short count = viewModel.nEntries[index];
+    public void didSelectSegment(int index) {
+        int count = viewModel.nEntries[index];
         if (count == 0) {
             totalWorkoutsChart.disable();
             workoutTypeChart.disable();
@@ -96,7 +86,7 @@ public final class HistoryFragment extends Fragment {
     }
 
     private void refresh() {
-        rangePicker.setSelectedIndex((byte) 0);
+        rangePicker.setSelectedIndex(0);
     }
 
     public void handleDataDeletion() {

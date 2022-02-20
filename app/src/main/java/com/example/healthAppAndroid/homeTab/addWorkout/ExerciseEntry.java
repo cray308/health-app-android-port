@@ -25,9 +25,9 @@ final class ExerciseEntry {
 
     static final class Params {
         short customReps = 0;
+        short customSets = 0;
         short weight = -1;
         byte circuitType;
-        byte customSets = 0;
     }
 
     private final StringRange headerRange = new StringRange();
@@ -35,20 +35,20 @@ final class ExerciseEntry {
     final String restStr;
     @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
     @SuppressWarnings("StringBufferField") final StringBuilder titleStr = new StringBuilder(16);
-    final short reps;
-    private final byte sets;
-    byte completedSets = 0;
+    final int reps;
+    private final int sets;
+    int completedSets = 0;
     final byte type;
     byte state = 0;
 
     ExerciseEntry(Context context, JSONObject dict, Params params) {
-        short _reps = 0;
-        byte _sets = 1;
-        byte _type = 0;
+        int _reps = 0;
+        int _sets = 1;
+        int _type = 0;
         String _rest = null;
         try {
-            _type = (byte) dict.getInt(ExerciseManager.Keys.type);
-            _reps = (short) dict.getInt(ExerciseManager.Keys.reps);
+            _type = dict.getInt(ExerciseManager.Keys.type);
+            _reps = dict.getInt(ExerciseManager.Keys.reps);
             int rest = dict.getInt("rest");
             String name = dict.getString("name");
 
@@ -103,17 +103,16 @@ final class ExerciseEntry {
         }
         reps = _reps;
         sets = _sets;
-        type = _type;
+        type = (byte) _type;
         restStr = _rest;
     }
 
-    boolean cycle(Context context, byte group, byte index) {
+    boolean cycle(Context context, int group, int index) {
         switch (state) {
             case State.disabled:
                 state = State.active;
                 if (type == Type.duration)
-                    NotificationService.scheduleAlarm(
-                      context, reps, NotificationService.Type.Exercise, group, index);
+                    NotificationService.scheduleAlarm(context, reps, (byte) 0, group, index);
                 break;
 
             case State.active:

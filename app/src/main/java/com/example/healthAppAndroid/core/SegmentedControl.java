@@ -13,7 +13,7 @@ import com.example.healthAppAndroid.historyTab.HistoryFragment;
 public final class SegmentedControl extends LinearLayout {
     private final Button[] buttons = {null, null, null};
     public HistoryFragment delegate;
-    public byte selectedIndex = 0;
+    int selectedIndex = 0;
 
     public SegmentedControl(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,7 +33,7 @@ public final class SegmentedControl extends LinearLayout {
         }
 
         View.OnClickListener listener = view -> {
-            byte selected = 0;
+            int selected = 0;
             int id = view.getId();
             if (id == R.id.buttonMid) {
                 selected = 1;
@@ -50,7 +50,7 @@ public final class SegmentedControl extends LinearLayout {
         }
     }
 
-    public void setSelectedIndex(byte newIndex) {
+    public void setSelectedIndex(int newIndex) {
         buttons[selectedIndex].setBackgroundColor(AppColors.gray5);
         buttons[newIndex].setBackgroundColor(AppColors.gray2);
         selectedIndex = newIndex;

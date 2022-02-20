@@ -18,20 +18,12 @@ public final class AppCoordinator {
 
     public static AppCoordinator shared;
 
-    static Object create(FragmentActivity activity) {
-        Object[] blockArray = {null};
-        shared = new AppCoordinator(activity, blockArray);
-        shared.setupTabs(activity.findViewById(R.id.bottom_nav));
-        return blockArray[0];
-    }
-
-    private AppCoordinator(FragmentActivity activity, Object[] blockArray) {
+    AppCoordinator(FragmentActivity activity, Object[] results) {
         fm = activity.getSupportFragmentManager();
-        children[1] = HistoryFragment.init(blockArray);
-    }
+        children[1] = HistoryFragment.init(results);
 
-    private void setupTabs(BottomNavigationView tabBar) {
-        tabBar.setOnItemSelectedListener(item -> {
+        ((BottomNavigationView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(
+          item -> {
             int index = 0;
             int id = item.getItemId();
             if (id == R.id.history) {
@@ -52,10 +44,8 @@ public final class AppCoordinator {
     }
 
     void updateUserInfo(byte plan, short[] lifts, short weight) {
-        boolean updateHome = plan != AppUserData.shared.currentPlan;
-        AppUserData.shared.updateSettings(plan, lifts, weight);
-        if (updateHome)
-            ((HomeFragment) children[0]).createWorkoutsList();
+        if (AppUserData.shared.updateSettings(plan, lifts, weight))
+            ((HomeFragment) children[0]).createWorkoutsList(plan);
     }
 
     void deleteAppData() {
@@ -63,12 +53,13 @@ public final class AppCoordinator {
         AppUserData.shared.deleteSavedData();
         PersistenceService.deleteAppData();
         if (updateHome)
-            ((HomeFragment) children[0]).updateWorkoutsList();
+            ((HomeFragment) children[0]).updateWorkoutsList((byte) 0);
         ((HistoryFragment) children[1]).handleDataDeletion();
     }
 
     public void updateMaxWeights(short[] lifts) {
-        if (AppUserData.shared.updateWeightMaxes(lifts))
-            ((SettingsFragment) children[2]).updateWeightFields();
+        short[] output = {0, 0, 0, 0};
+        if (AppUserData.shared.updateWeightMaxes(lifts, output))
+            ((SettingsFragment) children[2]).updateWeightFields(output);
     }
 }

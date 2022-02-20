@@ -19,11 +19,6 @@ import com.example.healthAppAndroid.R;
 import java.util.Locale;
 
 public abstract class NotificationService {
-    static abstract class Type {
-        static final byte Exercise = 0;
-        static final byte Circuit = 1;
-    }
-
     private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
@@ -40,11 +35,11 @@ public abstract class NotificationService {
     private static final int defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 
     private static int color;
+    private static int groupId = 0;
+    private static int exerciseGroup = 0;
+    private static int exerciseIndex = 0;
     private static short identifier = 1;
     private static short filterId = 1;
-    private static byte groupId = 0;
-    private static byte exerciseGroup = 0;
-    private static byte exerciseIndex = 0;
 
     public static void setupAppNotifications(Context context) {
         NotificationManager manager = (NotificationManager) context.getSystemService(
@@ -68,15 +63,15 @@ public abstract class NotificationService {
             Context.NOTIFICATION_SERVICE);
         alarmMgr = (AlarmManager) outerContext.getSystemService(Context.ALARM_SERVICE);
 
-        receivers[Type.Exercise] = new BroadcastReceiver() {
+        receivers[0] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                notificationMgr.notify(identifier++, createNotification(context, Type.Exercise));
+                notificationMgr.notify(identifier++, createNotification(context, (byte) 0));
                 ((WorkoutActivity) context).finishedExercise(exerciseGroup, exerciseIndex);
             }
         };
-        receivers[Type.Circuit] = new BroadcastReceiver() {
+        receivers[1] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                notificationMgr.notify(identifier++, createNotification(context, Type.Circuit));
+                notificationMgr.notify(identifier++, createNotification(context, (byte) 1));
                 ((WorkoutActivity) context).finishedGroup(groupId);
             }
         };
@@ -98,9 +93,9 @@ public abstract class NotificationService {
     }
 
     static void scheduleAlarm(Context context,
-                              long secondsFromNow, byte type, byte group, byte index) {
+                              long secondsFromNow, byte type, int group, int index) {
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
-        if (type == Type.Circuit) {
+        if (type == 1) {
             secondsFromNow += 1000;
             groupId = group;
         } else {

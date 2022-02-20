@@ -1,8 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,33 +18,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment {
     private static final String paramsKey = "AddWorkoutUpdateMaxesDialogParams";
 
-    static final class Params implements Parcelable {
-        private final byte index;
-
-        private Params(byte index) { this.index = index; }
-
-        private Params(Parcel src) { index = src.readByte(); }
-
-        public int describeContents() { return 0; }
-
-        public void writeToParcel(Parcel parcel, int i) { parcel.writeByte(index); }
-
-        public static final Creator<Params> CREATOR = new Creator<Params>() {
-            public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
-
-            public Params[] newArray(int i) { return new Params[i]; }
-        };
-    }
-
     private TextValidator validator;
     private TextView stepperLabel;
-    private byte index;
+    private int index;
     private byte value = 1;
 
-    static AddWorkoutUpdateMaxesDialog newInstance(byte index) {
+    static AddWorkoutUpdateMaxesDialog newInstance(int index) {
         AddWorkoutUpdateMaxesDialog dialog = new AddWorkoutUpdateMaxesDialog();
         Bundle args = new Bundle();
-        args.putParcelable(paramsKey, new Params(index));
+        args.putInt(paramsKey, index);
         dialog.setArguments(args);
         return dialog;
     }
@@ -55,8 +35,7 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            Params params = args.getParcelable(paramsKey);
-            index = params.index;
+            index = args.getInt(paramsKey, 0);
         }
     }
 
@@ -84,7 +63,7 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
 
         Button finishButton = view.findViewById(R.id.updateMaxSubmitBtn);
         finishButton.setOnClickListener(view1 -> {
-            short extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
+            int extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
             int initWeight = (validator.getResults()[0] + extra) * 36;
             float reps = 37f - value;
             short weight = (short) (((initWeight / reps) + 0.5f) - extra);

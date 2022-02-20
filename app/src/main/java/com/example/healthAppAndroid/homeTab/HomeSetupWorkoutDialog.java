@@ -2,8 +2,6 @@ package com.example.healthAppAndroid.homeTab;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,44 +26,19 @@ import java.util.List;
 
 public final class HomeSetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
-    private static final String paramsKey = "HomeSetupWorkoutDialogParams";
+    private static final String namesKey = "HomeSetupWorkoutDialogNames";
+    private static final String typeKey = "HomeSetupWorkoutDialogType";
 
-    static final class Params implements Parcelable {
-        private final String[] names;
-        private final byte type;
-
-        Params(byte type, String[] names) {
-            this.type = type;
-            this.names = names;
-        }
-
-        private Params(Parcel src) {
-            names = src.createStringArray();
-            type = src.readByte();
-        }
-
-        public int describeContents() { return 0; }
-
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeStringArray(names);
-            parcel.writeByte(type);
-        }
-
-        public static final Creator<Params> CREATOR = new Creator<Params>() {
-            public Params createFromParcel(Parcel parcel) { return new Params(parcel); }
-
-            public Params[] newArray(int i) { return new Params[i]; }
-        };
-    }
-
-    private Params params;
     private final WorkoutParams output = new WorkoutParams((byte) -1);
     private TextValidator validator;
+    private String[] names;
+    private byte type;
 
-    static HomeSetupWorkoutDialog newInstance(Params params) {
+    static HomeSetupWorkoutDialog newInstance(String[] names, byte type) {
         HomeSetupWorkoutDialog fragment = new HomeSetupWorkoutDialog();
         Bundle args = new Bundle();
-        args.putParcelable(paramsKey, params);
+        args.putStringArray(namesKey, names);
+        args.putByte(typeKey, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,8 +47,9 @@ public final class HomeSetupWorkoutDialog
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            params = args.getParcelable(paramsKey);
-            output.type = params.type;
+            names = args.getStringArray(namesKey);
+            type = args.getByte(typeKey);
+            output.type = type;
         }
     }
 
@@ -96,7 +70,7 @@ public final class HomeSetupWorkoutDialog
                 case WorkoutType.strength:
                     output.weight = results[2];
                 case WorkoutType.SE:
-                    output.sets = (byte) results[0];
+                    output.sets = results[0];
                     output.reps = results[1];
                     break;
 
@@ -123,7 +97,7 @@ public final class HomeSetupWorkoutDialog
 
         picker.setOnItemSelectedListener(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item,
-                                                          params.names);
+                                                          names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         picker.setAdapter(adapter);
         picker.setSelection(0);
@@ -133,7 +107,7 @@ public final class HomeSetupWorkoutDialog
             getString(R.string.setupWorkoutSets), getString(R.string.setupWorkoutReps), null
         };
 
-        switch (params.type) {
+        switch (type) {
             case WorkoutType.strength:
                 titles[2] = getString(R.string.setupWorkoutMaxWeight);
                 break;
@@ -167,7 +141,7 @@ public final class HomeSetupWorkoutDialog
     }
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        output.index = (byte) i;
+        output.index = i;
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}

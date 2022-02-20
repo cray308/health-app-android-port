@@ -22,13 +22,13 @@ final class Circuit {
     ExerciseEntry[] exercises;
     final StringRange numberRange = new StringRange();
     @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
+    final int reps;
+    int completedReps = 0;
+    int index = 0;
     final byte type;
-    final byte reps;
-    byte completedReps = 0;
-    byte index = 0;
 
-    Circuit(Context context, JSONObject dict, WorkoutParams params) {
-        byte _reps = 0;
+    Circuit(Context context, JSONObject dict, WorkoutParams params, boolean[] isTestDay) {
+        int _reps = 0;
         byte _type = 0;
         ExerciseEntry.Params exerciseParams = new ExerciseEntry.Params();
         short[] weights = {0, 0, 0, 0};
@@ -40,20 +40,21 @@ final class Circuit {
             if (params.index <= 1) {
                 weights[1] = (short) (multiplier * lifts[LiftType.bench]);
                 if (params.index == 0) {
-                    short weight = ExerciseManager.getBodyWeightToUse();
+                    int weight = ExerciseManager.getBodyWeightToUse();
                     weights[2] = (short) ((int)((lifts[LiftType.pullUp] + weight) * multiplier) - weight);
                     if (weights[2] < 0)
                         weights[2] = 0;
                 } else {
                     weights[2] = (short) (multiplier * lifts[LiftType.deadlift]);
                 }
-            } else if (params.index == 2) {
+            } else {
                 System.arraycopy(lifts, 1, weights, 1, 3);
+                isTestDay[0] = true;
             }
         }
         try {
             _type = (byte) dict.getInt(ExerciseManager.Keys.type);
-            _reps = (byte) dict.getInt(ExerciseManager.Keys.reps);
+            _reps = dict.getInt(ExerciseManager.Keys.reps);
 
             if (params.type == WorkoutType.SE) {
                 _reps = params.sets;
@@ -78,7 +79,7 @@ final class Circuit {
 
             String localHeader = null;
             if (_type == Type.decrement) {
-                completedReps = (byte) exercises[0].reps;
+                completedReps = exercises[0].reps;
             } else if (_type == Type.AMRAP) {
                 localHeader = context.getString(R.string.circuitHeaderAMRAP, _reps);
             } else if (_reps > 1) {
