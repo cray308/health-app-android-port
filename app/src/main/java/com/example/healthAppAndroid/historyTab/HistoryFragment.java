@@ -37,12 +37,10 @@ public final class HistoryFragment extends Fragment {
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
 
-    public static HistoryFragment init(Object[] results) {
-        HistoryFragment fragment = new HistoryFragment();
+    public HistoryFragment(Object[] results) {
         WeekDataModel model = new WeekDataModel();
         results[0] = model;
-        results[1] = new FetchHandler(fragment, model);
-        return fragment;
+        results[1] = new FetchHandler(this, model);
     }
 
     public View onCreateView(LayoutInflater inflater,

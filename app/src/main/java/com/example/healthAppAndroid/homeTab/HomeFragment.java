@@ -26,7 +26,6 @@ import com.example.healthAppAndroid.homeTab.addWorkout.ExerciseManager;
 import com.example.healthAppAndroid.homeTab.addWorkout.HeaderView;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutActivity;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutParams;
-import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.DayOfWeek;
@@ -39,10 +38,6 @@ import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
 public final class HomeFragment extends Fragment {
-    private static abstract class CustomWorkoutIndex {
-        private static final byte TestMax = 0, Endurance = 1, SE = 3, HIC = 4;
-    }
-
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
     private HeaderView customWorkoutsHeader;
@@ -130,17 +125,11 @@ public final class HomeFragment extends Fragment {
 
     private final View.OnClickListener customBtnListener = view -> {
         Context context = getContext();
-        int index = getTag(view);
-        byte type = WorkoutType.strength;
-        if (index == CustomWorkoutIndex.SE) {
-            type = WorkoutType.SE;
-        } else if (index == CustomWorkoutIndex.HIC) {
-            type = WorkoutType.HIC;
-        } else if (index == CustomWorkoutIndex.Endurance) {
-            type = WorkoutType.endurance;
-        } else if (index == CustomWorkoutIndex.TestMax) {
+        byte index = (byte) getTag(view);
+
+        if (index == 0) {
             WorkoutParams params = new WorkoutParams((byte) -1);
-            params.type = WorkoutType.strength;
+            params.type = 0;
             params.index = 2;
             params.reps = params.sets = 1;
             params.weight = 100;
@@ -148,8 +137,8 @@ public final class HomeFragment extends Fragment {
             return;
         }
 
-        String[] names = ExerciseManager.getWorkoutNamesForType(context, type);
-        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(names, type);
+        String[] names = ExerciseManager.getWorkoutNamesForType(context, --index);
+        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(names, index);
         modal.show(getParentFragmentManager(), "HomeSetupWorkoutDialog");
     };
 

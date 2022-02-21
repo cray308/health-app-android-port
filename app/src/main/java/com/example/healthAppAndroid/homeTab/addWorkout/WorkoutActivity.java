@@ -25,6 +25,10 @@ import java.time.Instant;
 import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
+    private static abstract class Event {
+        private static final byte finishGroup = 1;
+        private static final byte finishExercise = 2;
+    }
     private final static String bundleKey = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
     public static final String userInfo = "totalWorkouts";
@@ -58,13 +62,18 @@ public final class WorkoutActivity extends AppCompatActivity {
                 btn.setText(getString(R.string.end));
                 btn.setTextColor(AppColors.red);
                 workout.startTime = Instant.now().getEpochSecond();
-                handleTap(0, 0, Workout.EventOption.startGroup);
+                workout.startGroup(this, true);
+                int nExercises = workout.group.exercises.length;
+                for (int i = 0; i < nExercises; ++i) {
+                    firstContainer.viewsArr[i].configure();
+                }
             } else {
-                workout.setDuration();
-                if (workout.checkEnduranceDuration()) {
-                    handleFinishedWorkout(true);
+                NotificationService.cleanup(this);
+                boolean longEnough = workout.setDuration();
+                if (workout.isCompleted()) {
+                    handleFinishedWorkout(true, longEnough);
                 } else {
-                    if (workout.longEnough())
+                    if (longEnough)
                         PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
                     sendBroadcast((byte) 0);
                     finish();
@@ -83,29 +92,24 @@ public final class WorkoutActivity extends AppCompatActivity {
         firstContainer.headerView.divider.setVisibility(View.GONE);
     }
 
-    protected void onDestroy() {
-        NotificationService.cleanup(this);
-        super.onDestroy();
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            if (workout.startTime != 0) {
-                workout.setDuration();
-                if (workout.checkEnduranceDuration()) {
-                    handleFinishedWorkout(false);
-                } else {
-                    if (workout.longEnough())
-                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
-                    sendBroadcast((byte) 0);
-                }
+        if (item.getItemId() != android.R.id.home) return super.onOptionsItemSelected(item);
+
+        NotificationService.cleanup(this);
+        if (workout.startTime != 0) {
+            boolean longEnough = workout.setDuration();
+            if (workout.isCompleted()) {
+                handleFinishedWorkout(false, longEnough);
             } else {
+                if (longEnough)
+                    PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
                 sendBroadcast((byte) 0);
             }
-            onBackPressed();
-            return true;
+        } else {
+            sendBroadcast((byte) 0);
         }
-        return super.onOptionsItemSelected(item);
+        onBackPressed();
+        return true;
     }
 
     private final View.OnClickListener tapHandler = view -> {
@@ -116,19 +120,14 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     private void handleTap(int groupIdx, int exerciseIdx, int option) {
         if (groupIdx != workout.index ||
-            (exerciseIdx != workout.group.index && option != Workout.EventOption.finishGroup)) {
+            (exerciseIdx != workout.group.index && option != Event.finishGroup)) {
             return;
         }
 
         ExerciseView v = firstContainer.viewsArr[exerciseIdx];
         int transition = Workout.Transition.noChange;
         switch (option) {
-            case Workout.EventOption.startGroup:
-                transition = Workout.Transition.finishedCircuit;
-                workout.startGroup(this, true);
-                break;
-
-            case Workout.EventOption.finishGroup:
+            case Event.finishGroup:
                 transition = Workout.Transition.finishedCircuitDeleteFirst;
                 if (++workout.index == workout.activities.length) {
                     transition = Workout.Transition.completedWorkout;
@@ -138,7 +137,7 @@ public final class WorkoutActivity extends AppCompatActivity {
                 workout.startGroup(this, true);
                 break;
 
-            case Workout.EventOption.finishExercise:
+            case Event.finishExercise:
                 v.userInteractionEnabled = true;
                 v.button.setEnabled(true);
                 if (workout.type == WorkoutType.endurance) {
@@ -148,14 +147,14 @@ public final class WorkoutActivity extends AppCompatActivity {
             default:
                 boolean exerciseDone = v.entry.cycle(this, groupIdx, exerciseIdx);
                 v.configure();
-                transition = workout.findTransitionForEvent(this, exerciseDone);
+                transition = workout.findTransition(this, exerciseDone);
                 break;
         }
 
         switch (transition) {
             case Workout.Transition.completedWorkout:
-                workout.setDuration();
-                handleFinishedWorkout(true);
+                NotificationService.cleanup(this);
+                handleFinishedWorkout(true, workout.setDuration());
                 return;
 
             case Workout.Transition.finishedCircuitDeleteFirst:
@@ -166,9 +165,8 @@ public final class WorkoutActivity extends AppCompatActivity {
                 if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
                     String newNumber = String.format(Locale.US, "%d",
                                                      workout.group.completedReps + 1);
-                    workout.group.headerStr.replace(
-                      workout.group.numberRange.index, workout.group.numberRange.end, newNumber);
-                    firstContainer.headerView.headerLabel.setText(workout.group.headerStr);
+                    workout.group.headerStr.replace(newNumber);
+                    firstContainer.headerView.headerLabel.setText(workout.group.headerStr.str);
                 }
                 int nExercises = workout.group.exercises.length;
                 for (int i = 0; i < nExercises; ++i) {
@@ -190,13 +188,9 @@ public final class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    public void finishedGroup(int group) {
-        handleTap(group, 0, Workout.EventOption.finishGroup);
-    }
+    void finishedGroup(int group) { handleTap(group, 0, Event.finishGroup); }
 
-    public void finishedExercise(int exerciseGroup, int exerciseIndex) {
-        handleTap(exerciseGroup, exerciseIndex, Workout.EventOption.finishExercise);
-    }
+    void finishedExercise(int group, int index) { handleTap(group, index, Event.finishExercise); }
 
     private void sendBroadcast(byte completed) {
         Intent intent = new Intent(notification);
@@ -204,20 +198,21 @@ public final class WorkoutActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void handleFinishedWorkout(boolean close) {
+    private void handleFinishedWorkout(boolean close, boolean longEnough) {
         byte completed = 0;
+        short[] newLifts = null;
 
         if (workout.testMax) {
             AppCoordinator.shared.updateMaxWeights(weights);
+            newLifts = weights;
             if (workout.duration < 15)
                 workout.duration = 15;
         }
 
-        if (workout.longEnough()) {
+        if (longEnough) {
             if (workout.day >= 0)
                 completed = AppUserData.shared.addCompletedWorkout(workout.day);
-            PersistenceService.updateCurrentWeek(
-              workout.type, workout.duration, workout.testMax ? weights : null);
+            PersistenceService.updateCurrentWeek(workout.type, workout.duration, newLifts);
         }
 
         sendBroadcast(completed);

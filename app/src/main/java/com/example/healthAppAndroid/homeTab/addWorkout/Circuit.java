@@ -20,15 +20,14 @@ final class Circuit {
     }
 
     ExerciseEntry[] exercises;
-    final StringRange numberRange = new StringRange();
-    @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
-    final int reps;
-    int completedReps = 0;
+    final MutableString headerStr = new MutableString();
     int index = 0;
+    final short reps;
+    short completedReps = 0;
     final byte type;
 
     Circuit(Context context, JSONObject dict, WorkoutParams params, boolean[] isTestDay) {
-        int _reps = 0;
+        short _reps = 0;
         byte _type = 0;
         ExerciseEntry.Params exerciseParams = new ExerciseEntry.Params();
         short[] weights = {0, 0, 0, 0};
@@ -54,7 +53,7 @@ final class Circuit {
         }
         try {
             _type = (byte) dict.getInt(ExerciseManager.Keys.type);
-            _reps = dict.getInt(ExerciseManager.Keys.reps);
+            _reps = (short) dict.getInt(ExerciseManager.Keys.reps);
 
             if (params.type == WorkoutType.SE) {
                 _reps = params.sets;
@@ -84,12 +83,12 @@ final class Circuit {
                 localHeader = context.getString(R.string.circuitHeaderAMRAP, _reps);
             } else if (_reps > 1) {
                 localHeader = context.getString(R.string.circuitHeaderRounds, 1, _reps);
-                numberRange.index = (short) localHeader.indexOf('1');
-                numberRange.end = (short) (numberRange.index + 1);
+                headerStr.index = (short) localHeader.indexOf('1');
+                headerStr.end = (short) (headerStr.index + 1);
             }
 
             if (localHeader != null)
-                headerStr.append(localHeader);
+                headerStr.str.append(localHeader);
         } catch (JSONException e) {
             Log.e("Circuit init", "Error while parsing JSON", e);
         }
@@ -98,29 +97,21 @@ final class Circuit {
     }
 
     boolean didFinish() {
-        boolean isDone = false, changeRange;
-        switch (type) {
-            case Type.rounds:
-                if (++completedReps == reps)
-                    isDone = true;
-                break;
+        if (type == Type.rounds) {
+            return ++completedReps == reps;
+        } else if (type == Type.decrement) {
+            boolean changeRange = completedReps-- == 10;
+            if (completedReps == 0) return true;
 
-            case Type.decrement:
-                changeRange = completedReps == 10;
-                if (--completedReps == 0) {
-                    isDone = true;
-                } else {
-                    String newReps = String.format(Locale.US, "%d", completedReps);
-                    for (ExerciseEntry e : exercises) {
-                        if (e.type == ExerciseEntry.Type.reps) {
-                            e.titleStr.replace(e.titleRange.index, e.titleRange.end, newReps);
-                            if (changeRange)
-                                e.titleRange.end -= 1;
-                        }
-                    }
+            String newReps = String.format(Locale.US, "%d", completedReps);
+            for (ExerciseEntry e : exercises) {
+                if (e.type == ExerciseEntry.Type.reps) {
+                    e.titleStr.replace(newReps);
+                    if (changeRange)
+                        e.titleStr.end -= 1;
                 }
-            default:
+            }
         }
-        return isDone;
+        return false;
     }
 }

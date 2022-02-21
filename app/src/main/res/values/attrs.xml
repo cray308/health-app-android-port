@@ -6,8 +6,8 @@
     </declare-styleable>
     <declare-styleable name="InputView">
         <attr name="fieldHint" format="string"/>
-        <attr name="zeroMin" format="boolean"/>
         <attr name="emptyInputAllowed" format="boolean"/>
+        <attr name="extraError" format="string"/>
     </declare-styleable>
     <declare-styleable name="SegmentedControl">
         <attr name="leftTitle" format="string"/>

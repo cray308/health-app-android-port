@@ -16,19 +16,19 @@ public final class WeekDataModel {
         final short[] weightArray = {0, 0, 0, 0};
 
         public Week(PersistenceService.WeeklyData d, ZoneId zoneId) {
-            short timeStrength = (short) d.timeStrength;
+            short timeStrength = d.timeStrength;
             LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochSecond(d.start), zoneId);
             axisString = String.format(Locale.US, "%d/%d/%d", time.getMonthValue(),
                                        time.getDayOfMonth(), time.getYear() % 100);
-            totalWorkouts = (short) d.totalWorkouts;
-            weightArray[0] = (short) d.bestSquat;
-            weightArray[1] = (short) d.bestPullup;
-            weightArray[2] = (short) d.bestBench;
-            weightArray[3] = (short) d.bestDeadlift;
+            totalWorkouts = d.totalWorkouts;
+            weightArray[0] = d.bestSquat;
+            weightArray[1] = d.bestPullup;
+            weightArray[2] = d.bestBench;
+            weightArray[3] = d.bestDeadlift;
             durationByType[0] = timeStrength;
-            durationByType[1] = (short) d.timeHIC;
-            durationByType[2] = (short) d.timeSE;
-            durationByType[3] = (short) d.timeEndurance;
+            durationByType[1] = d.timeHIC;
+            durationByType[2] = d.timeSE;
+            durationByType[3] = d.timeEndurance;
             cumulativeDuration[0] = timeStrength;
 
             for (int i = 1; i < 4; ++i) {

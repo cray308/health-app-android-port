@@ -20,7 +20,7 @@ public final class ExerciseContainer extends LinearLayout {
         this(context);
         int size = g.exercises.length;
         viewsArr = new ExerciseView[size];
-        String headerStr = g.headerStr.toString();
+        String headerStr = g.headerStr.str.toString();
         headerView.headerLabel.setText(headerStr);
         if (headerStr.isEmpty())
             headerView.headerLabel.setVisibility(GONE);

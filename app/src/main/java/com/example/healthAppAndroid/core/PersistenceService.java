@@ -19,7 +19,6 @@ import androidx.room.Update;
 import com.example.healthAppAndroid.BuildConfig;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
 import com.example.healthAppAndroid.historyTab.WeekDataModel;
-import com.example.healthAppAndroid.homeTab.addWorkout.LiftType;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
 
 import java.time.ZoneId;
@@ -76,12 +75,6 @@ public abstract class PersistenceService extends RoomDatabase {
     public abstract DAO dao();
     private static PersistenceService shared;
 
-    static void start(Context context, long weekStart, long tzDifference, Object[] args) {
-        init(context);
-        shared.performStartupUpdate(weekStart, tzDifference);
-        new Thread(new HistoryFetchTask(args)).start();
-    }
-
     static void create(Context context) {
         if (BuildConfig.DEBUG) {
             shared = Room.databaseBuilder(
@@ -91,13 +84,29 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    private static void init(Context context) {
+    static void init(Context context) {
         shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
     }
 
-    private void performStartupUpdate(long weekStart, long tzOffset) {
+    private static void fetchHistory(Object[] args, DAO dao) {
+        WeekDataModel model = (WeekDataModel) args[0];
+        HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler) args[1];
+        ZoneId zoneId = ZoneId.systemDefault();
+        WeeklyData[] data = dao.getAllSorted();
+        int count = data.length;
+        if (count > 1) {
+            model.size = count - 1;
+            for (int i = 0; i < model.size; ++i) {
+                model.arr[i] = new WeekDataModel.Week(data[i], zoneId);
+            }
+        }
+        new Handler(Looper.getMainLooper()).post(block::completion);
+    }
+
+    static void start(long weekStart, int tzOffset, Object[] args) {
+        final long weekSeconds = 604800;
         long endPt = weekStart - 63244800;
-        DAO dao = dao();
+        DAO dao = shared.dao();
         WeeklyData[] data = dao.getAllSorted();
         int count = data.length;
 
@@ -105,6 +114,7 @@ public abstract class PersistenceService extends RoomDatabase {
             WeeklyData first = new WeeklyData();
             first.start = weekStart;
             dao.insertWeeks(new WeeklyData[]{first});
+            fetchHistory(args, dao);
             return;
         }
 
@@ -132,8 +142,7 @@ public abstract class PersistenceService extends RoomDatabase {
                 oldEntries[oldCount++] = d;
         }
 
-        start = last.start + AppUserData.weekSeconds;
-        for (; start < weekStart; start += AppUserData.weekSeconds) {
+        for (start = last.start + weekSeconds; start < weekStart; start += weekSeconds) {
             WeeklyData curr = new WeeklyData();
             curr.start = start;
             curr.copyLiftMaxes(last);
@@ -150,12 +159,12 @@ public abstract class PersistenceService extends RoomDatabase {
             System.arraycopy(newEntries, 0, inserted, 0, newCount);
             dao.insertWeeks(inserted);
         }
+        fetchHistory(args, dao);
     }
 
     private static final class DeleteDataTask implements Runnable {
         public void run() {
-            PersistenceService service = shared;
-            DAO dao = service.dao();
+            DAO dao = shared.dao();
             WeeklyData[] data = dao.getAllSorted();
             int count = data.length;
             if (count == 0) return;
@@ -194,25 +203,21 @@ public abstract class PersistenceService extends RoomDatabase {
             DAO dao = service.dao();
             WeeklyData curr = dao.findCurrentWeek();
             curr.totalWorkouts += 1;
-            switch (type) {
-                case WorkoutType.SE:
-                    curr.timeSE += duration;
-                    break;
-                case WorkoutType.HIC:
-                    curr.timeHIC += duration;
-                    break;
-                case WorkoutType.strength:
-                    curr.timeStrength += duration;
-                    break;
-                default:
-                    curr.timeEndurance += duration;
+            if (type == WorkoutType.strength) {
+                curr.timeStrength += duration;
+            } else if (type == WorkoutType.SE) {
+                curr.timeSE += duration;
+            } else if (type == WorkoutType.endurance) {
+                curr.timeEndurance += duration;
+            } else {
+                curr.timeHIC += duration;
             }
 
             if (lifts != null) {
-                curr.bestSquat = lifts[LiftType.squat];
-                curr.bestPullup = lifts[LiftType.pullUp];
-                curr.bestBench = lifts[LiftType.bench];
-                curr.bestDeadlift = lifts[LiftType.deadlift];
+                curr.bestSquat = lifts[0];
+                curr.bestPullup = lifts[1];
+                curr.bestBench = lifts[2];
+                curr.bestDeadlift = lifts[3];
             }
 
             dao.updateWeeks(new WeeklyData[]{curr});
@@ -221,29 +226,5 @@ public abstract class PersistenceService extends RoomDatabase {
 
     public static void updateCurrentWeek(byte type, short duration, short[] lifts) {
         new Thread(new UpdateCurrentWeekTask(type, duration, lifts)).start();
-    }
-
-    private static final class HistoryFetchTask implements Runnable {
-        private final WeekDataModel model;
-        private final HistoryFragment.FetchHandler block;
-
-        private HistoryFetchTask(Object[] args) {
-            model = (WeekDataModel) args[0];
-            block = (HistoryFragment.FetchHandler) args[1];
-        }
-
-        public void run() {
-            ZoneId zoneId = ZoneId.systemDefault();
-            PersistenceService service = shared;
-            WeeklyData[] data = service.dao().getAllSorted();
-            int count = data.length;
-            if (count > 1) {
-                model.size = count - 1;
-                for (int i = 0; i < model.size; ++i) {
-                    model.arr[i] = new WeekDataModel.Week(data[i], zoneId);
-                }
-            }
-            new Handler(Looper.getMainLooper()).post(block::completion);
-        }
     }
 }

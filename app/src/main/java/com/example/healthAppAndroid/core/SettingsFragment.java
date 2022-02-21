@@ -42,8 +42,7 @@ public final class SettingsFragment extends Fragment {
               .setNegativeButton(getString(R.string.cancel), null)
               .setPositiveButton(neutral, (dialogInterface, i) -> {
                   short[] results = validator.getResults();
-                  AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1),
-                                                       results, results[4]);
+                  AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1), results);
               });
             builder.create().show();
         });
@@ -62,9 +61,10 @@ public final class SettingsFragment extends Fragment {
         });
 
         validator = new TextValidator(saveButton);
-        for (int i = 0; i < 5; ++i) {
-            validator.addChild((short) 999, view.findViewById(ids[i]));
+        for (int i = 0; i < 4; ++i) {
+            validator.addChild((short) 0, (short) 999, view.findViewById(ids[i]));
         }
+        validator.addChild((short) 1, (short) 999, view.findViewById(ids[4]));
         short weight = AppUserData.shared.weight;
         validator.children[4].result = weight;
         validator.children[4].valid = true;

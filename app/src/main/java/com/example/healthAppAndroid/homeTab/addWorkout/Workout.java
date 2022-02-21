@@ -20,12 +20,6 @@ final class Workout {
         static final byte noChange = 4;
     }
 
-    static abstract class EventOption {
-        static final byte startGroup = 1;
-        static final byte finishGroup = 2;
-        static final byte finishExercise = 3;
-    }
-
     final String title;
     Circuit group;
     Circuit[] activities;
@@ -68,12 +62,14 @@ final class Workout {
             e.completedSets = 0;
         }
 
-        if (group.type == Circuit.Type.AMRAP && startTimer)
-            NotificationService.scheduleAlarm(context, 60L * group.reps, (byte) 1, index, 0);
+        if (group.type == Circuit.Type.AMRAP && startTimer) {
+            NotificationService.scheduleAlarm(context, 60L * group.reps,
+                                              NotificationService.Type.Circuit, index, 0);
+        }
         group.exercises[0].cycle(context, index, 0);
     }
 
-    int findTransitionForEvent(Context context, boolean exerciseDone) {
+    int findTransition(Context context, boolean exerciseDone) {
         int t = Transition.noChange;
         if (exerciseDone) {
             t = Transition.finishedExercise;
@@ -97,17 +93,24 @@ final class Workout {
         return t;
     }
 
-    void setDuration() {
+    boolean setDuration() {
         duration = (short) (((int) ((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
         if (BuildConfig.DEBUG)
             duration *= 10;
+        return duration >= 15;
     }
 
-    boolean checkEnduranceDuration() {
-        if (type != WorkoutType.endurance) return false;
-        short planDuration = (short) (activities[0].exercises[0].reps / 60);
-        return duration >= planDuration;
-    }
+    boolean isCompleted() {
+        int groupIndex = group.index;
+        if (index != activities.length - 1 || groupIndex != group.exercises.length - 1)
+            return false;
+        if (type == WorkoutType.endurance)
+            return duration >= (short) (activities[0].exercises[0].reps / 60);
 
-    boolean longEnough() { return duration >= 15; }
+        if (group.type == Circuit.Type.rounds && group.completedReps == group.reps - 1) {
+            ExerciseEntry e = group.exercises[groupIndex];
+            return e.state == ExerciseEntry.State.resting && e.completedSets == e.sets - 1;
+        }
+        return false;
+    }
 }

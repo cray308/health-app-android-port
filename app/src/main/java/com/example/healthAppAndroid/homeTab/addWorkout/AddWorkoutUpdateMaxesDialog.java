@@ -75,7 +75,7 @@ public final class AddWorkoutUpdateMaxesDialog extends BottomSheetDialogFragment
 
         TextValidator.InputView input = view.findViewById(R.id.input);
         input.field.setHint(getString(keys[index]));
-        validator.addChild((short) 999, input);
+        validator.addChild((short) 0, (short) 999, input);
         updateStepperLabel();
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
         if (dialog != null)

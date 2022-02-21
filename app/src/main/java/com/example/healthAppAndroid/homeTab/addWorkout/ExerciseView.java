@@ -17,17 +17,17 @@ public final class ExerciseView extends StatusButton {
         entry = e;
         button.setId(tag);
         button.setOnClickListener(action);
-        if (e.headerStr.toString().isEmpty())
+        if (e.headerStr.str.toString().isEmpty())
             headerLabel.setVisibility(GONE);
         configure();
     }
 
     void configure() {
-        headerLabel.setText(entry.headerStr);
+        headerLabel.setText(entry.headerStr.str);
         if (entry.state == ExerciseEntry.State.resting) {
             button.setText(entry.restStr);
         } else {
-            button.setText(entry.titleStr);
+            button.setText(entry.titleStr.str);
         }
 
         switch (entry.state) {

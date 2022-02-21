@@ -103,36 +103,31 @@ public final class HomeSetupWorkoutDialog
         picker.setSelection(0);
 
         short[] maxes = {5, 5, 100};
+        short[] minArr = {1, 1, 1};
         String[] titles = {
             getString(R.string.setupWorkoutSets), getString(R.string.setupWorkoutReps), null
         };
 
-        switch (type) {
-            case WorkoutType.strength:
-                titles[2] = getString(R.string.setupWorkoutMaxWeight);
-                break;
-
-            case WorkoutType.SE:
-                maxes[0] = 3;
-                maxes[1] = 50;
-                break;
-
-            case WorkoutType.endurance:
-                titles[0] = null;
-                titles[1] = getString(R.string.setupWorkoutDuration);
-                maxes[1] = 180;
-                break;
-
-            default:
-                titles[0] = titles[1] = null;
-                validator.enableButton();
+        if (type == WorkoutType.strength) {
+            titles[2] = getString(R.string.setupWorkoutMaxWeight);
+        } else if (type == WorkoutType.SE) {
+            maxes[0] = 3;
+            maxes[1] = 50;
+        } else if (type == WorkoutType.endurance) {
+            titles[0] = null;
+            titles[1] = getString(R.string.setupWorkoutDuration);
+            maxes[1] = 180;
+            minArr[1] = 15;
+        } else {
+            titles[0] = titles[1] = null;
+            validator.enableButton();
         }
 
         for (int i = 0; i < 3; ++i) {
             if (titles[i] == null) continue;
             TextValidator.InputView v = new TextValidator.InputView(c);
             v.field.setHint(titles[i]);
-            validator.addChild(maxes[i], v);
+            validator.addChild(minArr[i], maxes[i], v);
             inputViewStack.addView(v);
         }
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();

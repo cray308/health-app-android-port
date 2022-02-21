@@ -32,6 +32,7 @@ public final class MainActivity extends AppCompatActivity {
             PersistenceService.create(this);
         } else {
             AppUserData.shared = new AppUserData(this, weekStartArr, tzArr, weekArr);
+            PersistenceService.init(this);
         }
 
         AppColors.setColors(this);
@@ -40,6 +41,6 @@ public final class MainActivity extends AppCompatActivity {
         ExerciseManager.setWeekStart(weekArr[0]);
 
         AppCoordinator.shared = new AppCoordinator(this, args);
-        AsyncTask.execute(() -> PersistenceService.start(this, weekStartArr[0], tzArr[0], args));
+        AsyncTask.execute(() -> PersistenceService.start(weekStartArr[0], tzArr[0], args));
     }
 }

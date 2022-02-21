@@ -60,7 +60,7 @@ public final class AppUserData {
     public byte currentPlan = -1;
     public byte completedWorkouts;
 
-    final static long weekSeconds = 604800;
+    private final static long weekSeconds = 604800;
     public static AppUserData shared;
 
     private static SharedPreferences getDict(Context context) {
@@ -203,7 +203,7 @@ public final class AppUserData {
         return madeChange;
     }
 
-    boolean updateSettings(byte plan, short[] newLifts, short newWeight) {
+    boolean updateSettings(byte plan, short[] newArr) {
         SharedPreferences.Editor editor = prefs.edit();
         byte changes = (byte) (plan == currentPlan ? 0 : 1);
         if (changes != 0) {
@@ -220,13 +220,14 @@ public final class AppUserData {
             }
         }
 
+        short newWeight = newArr[4];
         if (newWeight != weight) {
             changes |= 2;
             weight = newWeight;
             editor.putInt(Keys.bodyWeight, newWeight);
         }
 
-        if (!updateWeights(newLifts, new short[]{0, 0, 0, 0}, editor) && changes != 0)
+        if (!updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) && changes != 0)
             editor.apply();
         return (changes & 1) != 0;
     }

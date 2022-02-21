@@ -61,21 +61,21 @@
                     android:id="@+id/customButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeEndurance"
+                    app:buttonLabel="@string/workoutTypeStrength"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeStrength"
+                    app:buttonLabel="@string/workoutTypeSE"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeSE"
+                    app:buttonLabel="@string/workoutTypeEndurance"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton

@@ -20,7 +20,7 @@ public final class AppCoordinator {
 
     AppCoordinator(FragmentActivity activity, Object[] results) {
         fm = activity.getSupportFragmentManager();
-        children[1] = HistoryFragment.init(results);
+        children[1] = new HistoryFragment(results);
 
         ((BottomNavigationView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(
           item -> {
@@ -43,8 +43,8 @@ public final class AppCoordinator {
         active = children[0];
     }
 
-    void updateUserInfo(byte plan, short[] lifts, short weight) {
-        if (AppUserData.shared.updateSettings(plan, lifts, weight))
+    void updateUserInfo(byte plan, short[] newArr) {
+        if (AppUserData.shared.updateSettings(plan, newArr))
             ((HomeFragment) children[0]).createWorkoutsList(plan);
     }
 

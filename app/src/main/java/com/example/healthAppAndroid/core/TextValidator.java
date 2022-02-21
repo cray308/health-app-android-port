@@ -18,8 +18,9 @@ public final class TextValidator {
         public TextInputLayout field;
         TextInputEditText textField;
         private TextValidator delegate;
-        private int min = 1;
-        private int max = 999;
+        private String errorSuffix = "";
+        private int min;
+        private int max;
         short result = 0;
         boolean valid = false;
         private boolean isInputNumeric = false;
@@ -39,26 +40,26 @@ public final class TextValidator {
             inflate(getContext(), R.layout.input_view, this);
             field = findViewById(R.id.field);
             textField = findViewById(R.id.fieldTextView);
-            String hintText = null;
-            boolean zeroMin = false;
+            String hintText = null, suffix = null;
 
             if (attrs != null) {
                 TypedArray a = getContext().getTheme().obtainStyledAttributes(
                   attrs, R.styleable.InputView, 0, 0);
                 try {
                     hintText = a.getString(R.styleable.InputView_fieldHint);
-                    zeroMin = a.getBoolean(R.styleable.InputView_zeroMin, false);
+                    suffix = a.getString(R.styleable.InputView_extraError);
                     emptyInputAllowed = a.getBoolean(R.styleable.InputView_emptyInputAllowed, false);
                 } finally {
                     a.recycle();
                 }
             }
             field.setHint(hintText);
-            if (zeroMin)
-                min = 0;
+            if (suffix != null)
+                errorSuffix = suffix;
         }
 
-        private void setup(short maxVal, TextValidator validator) {
+        private void setup(short minVal, short maxVal, TextValidator validator) {
+            min = minVal;
             max = maxVal;
             delegate = validator;
             textField.addTextChangedListener(this);
@@ -110,8 +111,9 @@ public final class TextValidator {
 
         private void showErrorMsg() {
             valid = false;
-            field.setError(getContext().getResources().getQuantityString(
-              R.plurals.inputFieldError, 1, min, max));
+            String msg = getContext().getResources().getQuantityString(
+              R.plurals.inputFieldError, 1, min, max) + errorSuffix;
+            field.setError(msg);
             delegate.disableButton();
         }
     }
@@ -142,8 +144,8 @@ public final class TextValidator {
         enableButton();
     }
 
-    public void addChild(short max, InputView view) {
-        view.setup(max, this);
+    public void addChild(short min, short max, InputView view) {
+        view.setup(min, max, this);
         children[count++] = view;
     }
 

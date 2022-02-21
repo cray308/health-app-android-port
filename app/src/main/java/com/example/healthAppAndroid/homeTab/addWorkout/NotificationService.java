@@ -19,6 +19,10 @@ import com.example.healthAppAndroid.R;
 import java.util.Locale;
 
 public abstract class NotificationService {
+    static abstract class Type {
+        static final byte Exercise = 0;
+        static final byte Circuit = 1;
+    }
     private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
@@ -29,6 +33,8 @@ public abstract class NotificationService {
     private static NotificationManager notificationMgr;
     private static AlarmManager alarmMgr;
     private static final BroadcastReceiver[] receivers = {null, null};
+    private static PendingIntent circuitIntent;
+    private static PendingIntent exerciseIntent;
 
     private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT |
                                      PendingIntent.FLAG_IMMUTABLE;
@@ -56,22 +62,27 @@ public abstract class NotificationService {
         messages = context.getResources().getStringArray(R.array.notifications);
         contentTitle = context.getString(R.string.workoutNotificationTitle);
         color = ContextCompat.getColor(context, R.color.notification);
+        notificationMgr = (NotificationManager) context.getSystemService(
+          Context.NOTIFICATION_SERVICE);
+        alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
     static void setup(Context outerContext) {
-        notificationMgr = (NotificationManager) outerContext.getSystemService(
-            Context.NOTIFICATION_SERVICE);
-        alarmMgr = (AlarmManager) outerContext.getSystemService(Context.ALARM_SERVICE);
-
-        receivers[0] = new BroadcastReceiver() {
+        receivers[Type.Exercise] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                notificationMgr.notify(identifier++, createNotification(context, (byte) 0));
+                exerciseIntent = null;
+                notificationMgr.notify(identifier++, createNotification(context, Type.Exercise));
                 ((WorkoutActivity) context).finishedExercise(exerciseGroup, exerciseIndex);
             }
         };
-        receivers[1] = new BroadcastReceiver() {
+        receivers[Type.Circuit] = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                notificationMgr.notify(identifier++, createNotification(context, (byte) 1));
+                if (exerciseIntent != null) {
+                    alarmMgr.cancel(exerciseIntent);
+                    exerciseIntent = null;
+                }
+                circuitIntent = null;
+                notificationMgr.notify(identifier++, createNotification(context, Type.Circuit));
                 ((WorkoutActivity) context).finishedGroup(groupId);
             }
         };
@@ -83,27 +94,35 @@ public abstract class NotificationService {
     }
 
     static void cleanup(Context context) {
+        if (circuitIntent != null) {
+            alarmMgr.cancel(circuitIntent);
+            circuitIntent = null;
+        }
+        if (exerciseIntent != null) {
+            alarmMgr.cancel(exerciseIntent);
+            exerciseIntent = null;
+        }
         for (int i = 0; i < 2; ++i) {
             context.unregisterReceiver(receivers[i]);
             receivers[i] = null;
         }
         notificationMgr.cancelAll();
-        notificationMgr = null;
-        alarmMgr = null;
     }
 
     static void scheduleAlarm(Context context,
                               long secondsFromNow, byte type, int group, int index) {
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
-        if (type == 1) {
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, new Intent(filters[type]),
+                                                           PendingIntent.FLAG_IMMUTABLE);
+        if (type == Type.Circuit) {
             secondsFromNow += 1000;
             groupId = group;
+            circuitIntent = pIntent;
         } else {
             exerciseGroup = group;
             exerciseIndex = index;
+            exerciseIntent = pIntent;
         }
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, new Intent(filters[type]),
-                                                           PendingIntent.FLAG_IMMUTABLE);
         alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);
     }
 

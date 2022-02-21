@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:emptyInputAllowed="true"
+            app:extraError="@string/emptyFieldSuffix"
             app:fieldHint="@string/bodyWeightHint" />
 
         <view
@@ -46,32 +47,28 @@
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="@string/maxWeightSquat"
-            app:zeroMin="true" />
+            app:fieldHint="@string/maxWeightSquat" />
 
         <view
             android:id="@+id/inputSecond"
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="@string/maxWeightPullUp"
-            app:zeroMin="true" />
+            app:fieldHint="@string/maxWeightPullUp" />
 
         <view
             android:id="@+id/inputThird"
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="@string/maxWeightBench"
-            app:zeroMin="true" />
+            app:fieldHint="@string/maxWeightBench" />
 
         <view
             android:id="@+id/inputFourth"
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:fieldHint="@string/maxWeightDeadLift"
-            app:zeroMin="true" />
+            app:fieldHint="@string/maxWeightDeadLift" />
 
         <Button
             android:id="@+id/saveButton"

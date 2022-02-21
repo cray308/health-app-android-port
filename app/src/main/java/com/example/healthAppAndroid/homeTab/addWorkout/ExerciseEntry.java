@@ -30,25 +30,23 @@ final class ExerciseEntry {
         byte circuitType;
     }
 
-    private final StringRange headerRange = new StringRange();
-    final StringRange titleRange = new StringRange();
+    final MutableString headerStr = new MutableString();
+    final MutableString titleStr = new MutableString();
     final String restStr;
-    @SuppressWarnings("StringBufferField") final StringBuilder headerStr = new StringBuilder(16);
-    @SuppressWarnings("StringBufferField") final StringBuilder titleStr = new StringBuilder(16);
-    final int reps;
-    private final int sets;
-    int completedSets = 0;
+    final short reps;
+    final short sets;
+    short completedSets = 0;
     final byte type;
     byte state = 0;
 
     ExerciseEntry(Context context, JSONObject dict, Params params) {
-        int _reps = 0;
-        int _sets = 1;
+        short _reps = 0;
+        short _sets = 1;
         int _type = 0;
         String _rest = null;
         try {
             _type = dict.getInt(ExerciseManager.Keys.type);
-            _reps = dict.getInt(ExerciseManager.Keys.reps);
+            _reps = (short) dict.getInt(ExerciseManager.Keys.reps);
             int rest = dict.getInt("rest");
             String name = dict.getString("name");
 
@@ -61,9 +59,9 @@ final class ExerciseEntry {
 
             if (_sets > 1) {
                 String numberStr = context.getString(R.string.exerciseHeader, 1, _sets);
-                headerRange.index = (short) numberStr.indexOf('1');
-                headerRange.end = (short) (headerRange.index + 1);
-                headerStr.append(numberStr);
+                headerStr.index = (short) numberStr.indexOf('1');
+                headerStr.end = (short) (headerStr.index + 1);
+                headerStr.str.append(numberStr);
             }
 
             String title;
@@ -92,10 +90,10 @@ final class ExerciseEntry {
                                               _reps, ((5 * _reps) >> 2));
             }
 
-            titleStr.append(title);
+            titleStr.str.append(title);
             if (params.circuitType == Circuit.Type.decrement && _type == Type.reps) {
-                titleRange.index = (short) titleStr.indexOf("10");
-                titleRange.end = (short) (titleRange.index + 2);
+                titleStr.index = (short) titleStr.str.indexOf("10");
+                titleStr.end = (short) (titleStr.index + 2);
             }
 
         } catch (JSONException ex) {
@@ -110,9 +108,11 @@ final class ExerciseEntry {
     boolean cycle(Context context, int group, int index) {
         switch (state) {
             case State.disabled:
-                state = State.active;
-                if (type == Type.duration)
-                    NotificationService.scheduleAlarm(context, reps, (byte) 0, group, index);
+                ++state;
+                if (type == Type.duration) {
+                    NotificationService.scheduleAlarm(
+                      context, reps, NotificationService.Type.Exercise, group, index);
+                }
                 break;
 
             case State.active:
@@ -127,8 +127,7 @@ final class ExerciseEntry {
                     return true;
                 } else {
                     state = State.active;
-                    String newSets = String.format(Locale.US, "%d", completedSets + 1);
-                    headerStr.replace(headerRange.index, headerRange.end, newSets);
+                    headerStr.replace(String.format(Locale.US, "%d", completedSets + 1));
                 }
             default:
         }
