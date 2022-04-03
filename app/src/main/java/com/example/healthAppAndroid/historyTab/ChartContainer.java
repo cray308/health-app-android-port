@@ -21,17 +21,17 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ChartContainer extends LinearLayout {
-    LineChart chartView;
+    LineChart chart;
     private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
     final LineData data = new LineData();
 
-    public ChartContainer(Context context, AttributeSet attrs) { super(context, attrs); }
+    public ChartContainer(Context c, AttributeSet attrs) { super(c, attrs); }
 
-    ChartContainer(Context context, AttributeSet attrs, int id, int[] legendIds) {
-        super(context, attrs);
-        inflate(getContext(), id, this);
-        chartView = findViewById(R.id.chartView);
+    ChartContainer(Context c, AttributeSet attrs, int id, int[] legendIds) {
+        super(c, attrs);
+        inflate(c, id, this);
+        chart = findViewById(R.id.chartView);
         legendEntries[0] = findViewById(R.id.firstEntry);
         if (legendIds != null) {
             int count = legendIds.length;
@@ -41,13 +41,11 @@ public abstract class ChartContainer extends LinearLayout {
         }
     }
 
-    static int[] getChartColors(Context context) {
-        int[] arr = {0, 0, 0, 0};
-        arr[0] = ContextCompat.getColor(context, R.color.chartBlue);
-        arr[1] = ContextCompat.getColor(context, R.color.chartGreen);
-        arr[2] = ContextCompat.getColor(context, R.color.chartOrange);
-        arr[3] = ContextCompat.getColor(context, R.color.chartPink);
-        return arr;
+    static int[] getChartColors(Context c) {
+        return new int[]{ContextCompat.getColor(c, R.color.chartBlue),
+                         ContextCompat.getColor(c, R.color.chartGreen),
+                         ContextCompat.getColor(c, R.color.chartOrange),
+                         ContextCompat.getColor(c, R.color.chartPink)};
     }
 
     static LineDataSet createEmptyDataSet() {
@@ -72,15 +70,15 @@ public abstract class ChartContainer extends LinearLayout {
     }
 
     void setupChartView(IndexAxisValueFormatter xAxisFormatter) {
-        chartView.setNoDataText(chartView.getContext().getString(R.string.chartEmptyText));
-        chartView.getDescription().setEnabled(false);
-        YAxis leftAxis = chartView.getAxisLeft();
+        chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
+        chart.getDescription().setEnabled(false);
+        YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setAxisMinimum(0);
         leftAxis.setTextSize(10);
         leftAxis.setTextColor(AppColors.labelNormal);
-        chartView.getAxisRight().setEnabled(false);
-        chartView.getLegend().setEnabled(false);
-        XAxis xAxis = chartView.getXAxis();
+        chart.getAxisRight().setEnabled(false);
+        chart.getLegend().setEnabled(false);
+        XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGridLineWidth(0.5f);
         xAxis.setTextSize(10);
@@ -97,8 +95,8 @@ public abstract class ChartContainer extends LinearLayout {
             if (dataSets[i] != null)
                 dataSets[i].setValues(null);
         }
-        chartView.setData(null);
-        chartView.notifyDataSetChanged();
+        chart.setData(null);
+        chart.notifyDataSetChanged();
     }
 
     void updateData(int index, boolean isSmall, List<Entry> entries, int iLegend, String text) {
@@ -108,12 +106,12 @@ public abstract class ChartContainer extends LinearLayout {
     }
 
     void update(boolean isSmall, float axisMax) {
-        chartView.zoom(0.01f, 0.01f, 0, 0);
-        chartView.getAxisLeft().setAxisMaximum(axisMax);
+        chart.zoom(0.01f, 0.01f, 0, 0);
+        chart.getAxisLeft().setAxisMaximum(axisMax);
         data.setDrawValues(isSmall);
-        chartView.setData(data);
+        chart.setData(data);
         data.notifyDataChanged();
-        chartView.notifyDataSetChanged();
-        chartView.animateX(isSmall ? 1500 : 2500);
+        chart.notifyDataSetChanged();
+        chart.animateX(isSmall ? 1500 : 2500);
     }
 }

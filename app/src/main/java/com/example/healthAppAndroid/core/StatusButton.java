@@ -15,18 +15,18 @@ public class StatusButton extends LinearLayout {
     public TextView headerLabel;
     public Button button;
 
-    public StatusButton(Context context) {
-        super(context);
-        setup(null);
+    public StatusButton(Context c) {
+        super(c);
+        setup(c, null);
     }
 
-    public StatusButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setup(attrs);
+    public StatusButton(Context c, AttributeSet attrs) {
+        super(c, attrs);
+        setup(c, attrs);
     }
 
-    private void setup(AttributeSet attrs) {
-        inflate(getContext(), R.layout.status_button, this);
+    private void setup(Context c, AttributeSet attrs) {
+        inflate(c, R.layout.status_button, this);
         button = findViewById(R.id.button);
         headerLabel = findViewById(R.id.headerLabel);
         checkbox = findViewById(R.id.checkbox);
@@ -34,8 +34,7 @@ public class StatusButton extends LinearLayout {
         boolean hideBox = false;
 
         if (attrs != null) {
-            TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                attrs, R.styleable.StatusButton, 0, 0);
+            TypedArray a = c.getTheme().obtainStyledAttributes(attrs, R.styleable.StatusButton, 0, 0);
             try {
                 hideBox = a.getBoolean(R.styleable.StatusButton_hideCheckbox, false);
                 buttonText = a.getString(R.styleable.StatusButton_buttonLabel);
@@ -49,5 +48,16 @@ public class StatusButton extends LinearLayout {
             headerLabel.setVisibility(GONE);
         }
         button.setText(buttonText);
+    }
+
+    public void updateAccessibility() {
+        StringBuilder builder = new StringBuilder(64);
+        String header = headerLabel.getText().toString();
+        if (!header.isEmpty()) {
+            builder.append(header);
+            builder.append(", ");
+        }
+        builder.append(button.getText());
+        button.setContentDescription(builder.toString());
     }
 }

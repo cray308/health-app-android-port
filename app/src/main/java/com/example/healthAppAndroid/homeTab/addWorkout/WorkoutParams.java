@@ -24,8 +24,7 @@ public final class WorkoutParams implements Parcelable {
         out.writeByte(type);
     }
 
-    public static final Parcelable.Creator<WorkoutParams> CREATOR =
-      new Parcelable.Creator<WorkoutParams>() {
+    public static final Parcelable.Creator<WorkoutParams> CREATOR = new Parcelable.Creator<WorkoutParams>() {
         public WorkoutParams createFromParcel(Parcel in) { return new WorkoutParams(in); }
 
         public WorkoutParams[] newArray(int size) { return new WorkoutParams[size]; }
@@ -33,9 +32,9 @@ public final class WorkoutParams implements Parcelable {
 
     private WorkoutParams(Parcel in) {
         index = in.readInt();
-        sets = (short) in.readInt();
-        reps = (short) in.readInt();
-        weight = (short) in.readInt();
+        sets = (short)in.readInt();
+        reps = (short)in.readInt();
+        weight = (short)in.readInt();
         day = in.readByte();
         type = in.readByte();
     }

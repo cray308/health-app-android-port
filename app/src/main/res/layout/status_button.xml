@@ -3,20 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <TextView
         android:id="@+id/headerLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/label" />
+        android:layout_marginBottom="4dp"
+        android:screenReaderFocusable="false"
+        android:textColor="@color/label"
+        android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -33,13 +35,12 @@
             android:textStyle="bold"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content" />
-
         <View
             android:id="@+id/checkbox"
             android:layout_width="20dp"
-            android:layout_height="20dp" />
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="0dp"
+            android:screenReaderFocusable="false" />
     </LinearLayout>
 </LinearLayout>

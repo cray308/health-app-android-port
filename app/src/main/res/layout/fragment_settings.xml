@@ -12,22 +12,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="8dp"
-        android:paddingTop="20dp"
+        android:paddingTop="16dp"
         android:paddingRight="8dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/planPickerTitle"
             android:textColor="@color/label"
-            android:textSize="13sp" />
+            android:textSize="15sp" />
 
         <com.example.healthAppAndroid.core.SegmentedControl
             android:id="@+id/planPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="20dp"
             app:leftTitle="@string/settingsSegment1"
             app:midTitle="@string/settingsSegment2"
@@ -75,7 +75,7 @@
             style="@style/AppButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="20dp"
             android:text="@string/settingsSaveButtonTitle"
             android:textColor="@color/systemBlue"
             android:textSize="17sp" />

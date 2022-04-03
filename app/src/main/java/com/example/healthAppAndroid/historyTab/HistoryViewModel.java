@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.core.WeekDataModel;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
@@ -16,7 +17,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     private String[] workoutNames;
     private String[] liftNames;
 
-    final static class TotalWorkoutsChartViewModel {
+    final static class TotalWorkoutsModel {
         private List<Entry> entries;
         ArrayList<List<Entry>> entryRefs;
         String legendLabel;
@@ -24,7 +25,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         final float[] maxes = {0, 0, 0};
     }
 
-    final static class WorkoutTypeChartViewModel extends IndexAxisValueFormatter {
+    final static class WorkoutTypeModel extends IndexAxisValueFormatter {
         private ArrayList<List<Entry>> entries;
         ArrayList<ArrayList<List<Entry>>> entryRefs;
         final String[] legendLabels = {null, null, null, null};
@@ -32,7 +33,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         final float[] maxes = {0, 0, 0};
 
         public String getFormattedValue(float value) {
-            int minutes = (int) value;
+            int minutes = (int)value;
             if (minutes == 0) {
                 return "";
             } else if (minutes < 60) {
@@ -43,7 +44,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         }
     }
 
-    final static class LiftChartViewModel {
+    final static class LiftModel {
         private ArrayList<List<Entry>> entries;
         ArrayList<ArrayList<List<Entry>>> entryRefs;
         final String[] legendLabels = {null, null, null, null};
@@ -51,15 +52,16 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         final float[] maxes = {0, 0, 0};
     }
 
-    final TotalWorkoutsChartViewModel totalWorkouts = new TotalWorkoutsChartViewModel();
-    final WorkoutTypeChartViewModel workoutTypes = new WorkoutTypeChartViewModel();
-    final LiftChartViewModel lifts = new LiftChartViewModel();
+    final TotalWorkoutsModel totalWorkouts = new TotalWorkoutsModel();
+    final WorkoutTypeModel workoutTypes = new WorkoutTypeModel();
+    final LiftModel lifts = new LiftModel();
     private String[] axisStrings;
     final int[] nEntries = {0, 0, 0};
     private final int[] refIndices = {0, 0, 0};
 
     void setup(Resources res) {
-        workoutNames = res.getStringArray(R.array.workoutTypes);
+        workoutNames = new String[]{res.getString(R.string.workout0), res.getString(R.string.workout1),
+                                    res.getString(R.string.workout2), res.getString(R.string.workout3)};
         liftNames = res.getStringArray(R.array.liftTypes);
     }
 
@@ -132,7 +134,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         for (int i = 0; i < 3; ++i) {
             int refIdx = refIndices[i];
             int endIdx = refIdx + nEntries[i];
-            totalWorkouts.avgs[i] = (float) totalWorkoutsArr[i] / nEntries[i];
+            totalWorkouts.avgs[i] = (float)totalWorkoutsArr[i] / nEntries[i];
             totalWorkouts.maxes[i] = maxWorkouts[i] < 7 ? 7f : 1.1f * maxWorkouts[i];
             workoutTypes.maxes[i] = 1.1f * maxTime[i];
             lifts.maxes[i] = 1.1f * maxWeight[i];
@@ -142,7 +144,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
 
             for (int j = 0; j < 4; ++j) {
                 workoutTypes.avgs[i][j] = totalByType[i][j] / nEntries[i];
-                lifts.avgs[i][j] = (float) totalByExercise[i][j] / nEntries[i];
+                lifts.avgs[i][j] = (float)totalByExercise[i][j] / nEntries[i];
                 lifts.entryRefs.get(i).add(lifts.entries.get(j).subList(refIdx, endIdx));
                 workoutTypes.entryRefs.get(i).add(
                   workoutTypes.entries.get(j).subList(refIdx, endIdx));
@@ -151,9 +153,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         }
     }
 
-    void formatDataForTimeRange(Context context, int index) {
-        totalWorkouts.legendLabel = context.getString(R.string.totalWorkoutsLegend,
-                                                      totalWorkouts.avgs[index]);
+    void formatDataForTimeRange(Context c, int index) {
+        totalWorkouts.legendLabel = c.getString(R.string.legend0, totalWorkouts.avgs[index]);
 
         for (int i = 0; i < 4; ++i) {
             int typeAverage = workoutTypes.avgs[index][i];
@@ -163,16 +164,13 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
             } else {
                 buf = String.format(Locale.US, "%d m", typeAverage);
             }
-            workoutTypes.legendLabels[i] = context.getString(R.string.workoutTypeLegend,
-                                                             workoutNames[i], buf);
-
-            lifts.legendLabels[i] = context.getString(R.string.liftLegend,
-                                                      liftNames[i], lifts.avgs[index][i]);
+            workoutTypes.legendLabels[i] = c.getString(R.string.legend1, workoutNames[i], buf);
+            lifts.legendLabels[i] = c.getString(R.string.legend2, liftNames[i], lifts.avgs[index][i]);
         }
     }
 
     public String getFormattedValue(float value) {
-        int val = (int) value;
+        int val = (int)value;
         return (val >= 0) ? axisStrings[val] : "";
     }
 

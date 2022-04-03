@@ -30,9 +30,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="8dp"
-            android:paddingTop="10dp"
+            android:paddingTop="16dp"
             android:paddingRight="8dp"
-            android:paddingBottom="20dp">
+            android:paddingBottom="16dp">
 
             <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 app:headerText="@string/chartHeaderWorkoutType" />
 
             <com.example.healthAppAndroid.historyTab.WorkoutTypeChart
@@ -59,7 +59,7 @@
             <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 app:headerText="@string/chartHeaderLifts" />
 
             <com.example.healthAppAndroid.historyTab.LiftingChart

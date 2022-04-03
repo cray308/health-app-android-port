@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,18 +19,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
 import com.example.healthAppAndroid.core.AppCoordinator;
-import com.example.healthAppAndroid.core.AppUserData;
-import com.example.healthAppAndroid.core.PersistenceService;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.Instant;
-import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
     private static abstract class Event {
         private static final byte finishGroup = 1;
         private static final byte finishExercise = 2;
     }
+
     private final static String bundleKey = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
     public static final String userInfo = "totalWorkouts";
@@ -55,9 +55,9 @@ public final class WorkoutActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         if (bar != null)
             bar.setDisplayHomeAsUpEnabled(true);
-        ((TextView) toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
+        ((TextView)toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
         toolbar.findViewById(R.id.startStopButton).setOnClickListener(view -> {
-            Button btn = (Button) view;
+            Button btn = (Button)view;
             if (btn.getText().equals(getString(R.string.start))) {
                 btn.setText(getString(R.string.end));
                 btn.setTextColor(AppColors.red);
@@ -67,6 +67,13 @@ public final class WorkoutActivity extends AppCompatActivity {
                 for (int i = 0; i < nExercises; ++i) {
                     firstContainer.viewsArr[i].configure();
                 }
+                View nextView;
+                if (!workout.group.headerStr.str.toString().isEmpty()) {
+                    nextView = firstContainer.headerView.headerLabel;
+                } else {
+                    nextView = firstContainer.viewsArr[0].button;
+                }
+                nextView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
             } else {
                 NotificationService.cleanup(this);
                 boolean longEnough = workout.setDuration();
@@ -74,8 +81,9 @@ public final class WorkoutActivity extends AppCompatActivity {
                     handleFinishedWorkout(true, longEnough);
                 } else {
                     if (longEnough)
-                        PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
-                    sendBroadcast((byte) 0);
+                        AppCoordinator.shared.addWorkoutData(
+                          (byte)-1, workout.type, workout.duration, null);
+                    sendBroadcast((byte)0);
                     finish();
                 }
             }
@@ -87,8 +95,10 @@ public final class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i < count; ++i) {
             groupsStack.addView(new ExerciseContainer(this, workout.activities[i], i, tapHandler));
         }
+        groupsStack.getChildAt(count - 1).setLayoutParams(new LinearLayout.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        firstContainer = (ExerciseContainer) groupsStack.getChildAt(0);
+        firstContainer = (ExerciseContainer)groupsStack.getChildAt(0);
         firstContainer.headerView.divider.setVisibility(View.GONE);
     }
 
@@ -102,11 +112,12 @@ public final class WorkoutActivity extends AppCompatActivity {
                 handleFinishedWorkout(false, longEnough);
             } else {
                 if (longEnough)
-                    PersistenceService.updateCurrentWeek(workout.type, workout.duration, null);
-                sendBroadcast((byte) 0);
+                    AppCoordinator.shared.addWorkoutData(
+                      (byte)-1, workout.type, workout.duration, null);
+                sendBroadcast((byte)0);
             }
         } else {
-            sendBroadcast((byte) 0);
+            sendBroadcast((byte)0);
         }
         onBackPressed();
         return true;
@@ -125,6 +136,7 @@ public final class WorkoutActivity extends AppCompatActivity {
         }
 
         ExerciseView v = firstContainer.viewsArr[exerciseIdx];
+        View nextView = null;
         int transition = Workout.Transition.noChange;
         switch (option) {
             case Event.finishGroup:
@@ -141,6 +153,11 @@ public final class WorkoutActivity extends AppCompatActivity {
                 v.userInteractionEnabled = true;
                 v.button.setEnabled(true);
                 if (workout.type == WorkoutType.endurance) {
+                    v.headerLabel.setTextColor(AppColors.green);
+                    v.headerLabel.setText(getString(R.string.exerciseDurationMet));
+                    v.headerLabel.setVisibility(View.VISIBLE);
+                    v.updateAccessibility();
+                    nextView = v.button;
                     break;
                 }
 
@@ -158,20 +175,22 @@ public final class WorkoutActivity extends AppCompatActivity {
                 return;
 
             case Workout.Transition.finishedCircuitDeleteFirst:
-                firstContainer = (ExerciseContainer) groupsStack.getChildAt(1);
+                firstContainer = (ExerciseContainer)groupsStack.getChildAt(1);
                 groupsStack.removeViewAt(0);
                 firstContainer.headerView.divider.setVisibility(View.GONE);
+                nextView = firstContainer.headerView.headerLabel;
             case Workout.Transition.finishedCircuit:
                 if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
-                    String newNumber = String.format(Locale.US, "%d",
-                                                     workout.group.completedReps + 1);
-                    workout.group.headerStr.replace(newNumber);
+                    workout.group.headerStr.replace(String.valueOf(workout.group.completedReps + 1));
                     firstContainer.headerView.headerLabel.setText(workout.group.headerStr.str);
+                    nextView = firstContainer.headerView.headerLabel;
                 }
                 int nExercises = workout.group.exercises.length;
                 for (int i = 0; i < nExercises; ++i) {
                     firstContainer.viewsArr[i].configure();
                 }
+                if (nextView == null)
+                    nextView = firstContainer.viewsArr[0].button;
                 break;
 
             case Workout.Transition.finishedExercise:
@@ -180,12 +199,14 @@ public final class WorkoutActivity extends AppCompatActivity {
 
             default:
                 if (workout.testMax) {
-                    AddWorkoutUpdateMaxesDialog.newInstance(exerciseIdx).show(
-                      getSupportFragmentManager(), "AddWorkoutUpdateMaxesDialog");
+                    UpdateMaxesDialog.init(exerciseIdx).show(
+                      getSupportFragmentManager(), "UpdateMaxes");
                     return;
                 }
                 break;
         }
+        if (nextView != null)
+            nextView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
     }
 
     void finishedGroup(int group) { handleTap(group, 0, Event.finishGroup); }
@@ -200,19 +221,12 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     private void handleFinishedWorkout(boolean close, boolean longEnough) {
         byte completed = 0;
-        short[] newLifts = null;
-
-        if (workout.testMax) {
-            AppCoordinator.shared.updateMaxWeights(weights);
-            newLifts = weights;
-            if (workout.duration < 15)
-                workout.duration = 15;
-        }
+        if (workout.testMax)
+            longEnough = true;
 
         if (longEnough) {
-            if (workout.day >= 0)
-                completed = AppUserData.shared.addCompletedWorkout(workout.day);
-            PersistenceService.updateCurrentWeek(workout.type, workout.duration, newLifts);
+            completed = AppCoordinator.shared.addWorkoutData(
+              workout.day, workout.type, workout.duration, weights[0] > 0 ? weights : null);
         }
 
         sendBroadcast(completed);

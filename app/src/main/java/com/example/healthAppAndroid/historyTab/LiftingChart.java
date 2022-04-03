@@ -7,16 +7,16 @@ import com.example.healthAppAndroid.R;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 public final class LiftingChart extends ChartContainer {
-    private HistoryViewModel.LiftChartViewModel viewModel;
+    private HistoryViewModel.LiftModel model;
 
-    public LiftingChart(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.lift_chart, new int[]{
+    public LiftingChart(Context c, AttributeSet attrs) {
+        super(c, attrs, R.layout.lift_chart, new int[]{
           R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
         });
     }
 
-    void setup(HistoryViewModel.LiftChartViewModel model, IndexAxisValueFormatter xAxisFormatter) {
-        viewModel = model;
+    void setup(HistoryViewModel.LiftModel m, IndexAxisValueFormatter xAxisFormatter) {
+        model = m;
 
         int[] colors = getChartColors(getContext());
         for (int i = 0; i < 4; ++i) {
@@ -29,9 +29,8 @@ public final class LiftingChart extends ChartContainer {
 
     void updateChart(boolean isSmall, int index) {
         for (int i = 0; i < 4; ++i) {
-            updateData(i, isSmall,
-                       viewModel.entryRefs.get(index).get(i), i, viewModel.legendLabels[i]);
+            updateData(i, isSmall, model.entryRefs.get(index).get(i), i, model.legendLabels[i]);
         }
-        update(isSmall, viewModel.maxes[index]);
+        update(isSmall, model.maxes[index]);
     }
 }

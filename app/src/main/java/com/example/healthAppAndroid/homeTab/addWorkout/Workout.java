@@ -3,7 +3,7 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.healthAppAndroid.BuildConfig;
+import com.example.healthAppAndroid.core.AppCoordinator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +30,7 @@ final class Workout {
     final byte day;
     final boolean testMax;
 
-    Workout(Context context, JSONObject dict, WorkoutParams params) {
+    Workout(Context c, JSONObject dict, WorkoutParams params) {
         day = params.day;
         type = params.type;
         String workoutName = null;
@@ -38,13 +38,15 @@ final class Workout {
         try {
             JSONArray foundActivities = dict.getJSONArray("activities");
             int nActivities = foundActivities.length();
+            Circuit.Params cParams = new Circuit.Params(params, isTestDay, nActivities);
 
             workoutName = dict.getString(ExerciseManager.Keys.title);
             activities = new Circuit[nActivities];
 
             for (int i = 0; i < nActivities; ++i) {
                 JSONObject act = foundActivities.getJSONObject(i);
-                activities[i] = new Circuit(context, act, params, isTestDay);
+                cParams.location = i + 1;
+                activities[i] = new Circuit(c, act, cParams);
             }
         } catch (JSONException e) {
             Log.e("Workout init", "Error while parsing JSON", e);
@@ -55,7 +57,7 @@ final class Workout {
         group = activities[0];
     }
 
-    void startGroup(Context context, boolean startTimer) {
+    void startGroup(Context c, boolean startTimer) {
         group.index = 0;
         for (ExerciseEntry e : group.exercises) {
             e.state = ExerciseEntry.State.disabled;
@@ -63,13 +65,13 @@ final class Workout {
         }
 
         if (group.type == Circuit.Type.AMRAP && startTimer) {
-            NotificationService.scheduleAlarm(context, 60L * group.reps,
+            NotificationService.scheduleAlarm(c, 60L * group.reps,
                                               NotificationService.Type.Circuit, index, 0);
         }
-        group.exercises[0].cycle(context, index, 0);
+        group.exercises[0].cycle(c, index, 0);
     }
 
-    int findTransition(Context context, boolean exerciseDone) {
+    int findTransition(Context c, boolean exerciseDone) {
         int t = Transition.noChange;
         if (exerciseDone) {
             t = Transition.finishedExercise;
@@ -81,22 +83,21 @@ final class Workout {
                     } else {
                         t = Transition.finishedCircuitDeleteFirst;
                         group = activities[index];
-                        startGroup(context, true);
+                        startGroup(c, true);
                     }
                 } else {
-                    startGroup(context, false);
+                    startGroup(c, false);
                 }
             } else {
-                group.exercises[group.index].cycle(context, index, group.index);
+                group.exercises[group.index].cycle(c, index, group.index);
             }
         }
         return t;
     }
 
     boolean setDuration() {
-        duration = (short) (((int) ((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
-        if (BuildConfig.DEBUG)
-            duration *= 10;
+        duration = (short)(((int)((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
+        if (AppCoordinator.shared.onEmulator) duration *= 10;
         return duration >= 15;
     }
 
@@ -105,7 +106,7 @@ final class Workout {
         if (index != activities.length - 1 || groupIndex != group.exercises.length - 1)
             return false;
         if (type == WorkoutType.endurance)
-            return duration >= (short) (activities[0].exercises[0].reps / 60);
+            return duration >= (short)(activities[0].exercises[0].reps / 60);
 
         if (group.type == Circuit.Type.rounds && group.completedReps == group.reps - 1) {
             ExerciseEntry e = group.exercises[groupIndex];

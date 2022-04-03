@@ -18,20 +18,18 @@ import androidx.room.Update;
 
 import com.example.healthAppAndroid.BuildConfig;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
-import com.example.healthAppAndroid.historyTab.WeekDataModel;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
 
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
 public abstract class PersistenceService extends RoomDatabase {
-    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
-    @Dao public interface DAO {
+    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor") @Dao public interface DAO {
         @Query("SELECT * FROM weeks ORDER BY start") WeeklyData[] getAllSorted();
 
-        @Query("SELECT * FROM weeks ORDER BY start DESC LIMIT 1")
-        WeeklyData findCurrentWeek();
+        @Query("SELECT * FROM weeks ORDER BY start DESC LIMIT 1") WeeklyData findCurrentWeek();
 
         @Insert void insertWeeks(WeeklyData[] data);
 
@@ -43,25 +41,25 @@ public abstract class PersistenceService extends RoomDatabase {
     @Entity(tableName = "weeks") public static class WeeklyData {
         @PrimaryKey(autoGenerate = true) int uid;
 
-        @ColumnInfo(name = "start") public long start;
+        @ColumnInfo(name = "start") long start;
 
-        @ColumnInfo(name = "best_bench") public short bestBench;
+        @ColumnInfo(name = "best_bench") short bestBench;
 
-        @ColumnInfo(name = "best_deadlift") public short bestDeadlift;
+        @ColumnInfo(name = "best_deadlift") short bestDeadlift;
 
-        @ColumnInfo(name = "best_pullup") public short bestPullup;
+        @ColumnInfo(name = "best_pullup") short bestPullup;
 
-        @ColumnInfo(name = "best_squat") public short bestSquat;
+        @ColumnInfo(name = "best_squat") short bestSquat;
 
-        @ColumnInfo(name = "time_endurance") public short timeEndurance;
+        @ColumnInfo(name = "time_endurance") short timeEndurance;
 
-        @ColumnInfo(name = "time_hic") public short timeHIC;
+        @ColumnInfo(name = "time_hic") short timeHIC;
 
-        @ColumnInfo(name = "time_se") public short timeSE;
+        @ColumnInfo(name = "time_se") short timeSE;
 
-        @ColumnInfo(name = "time_strength") public short timeStrength;
+        @ColumnInfo(name = "time_strength") short timeStrength;
 
-        @ColumnInfo(name = "total_workouts") public short totalWorkouts;
+        @ColumnInfo(name = "total_workouts") short totalWorkouts;
 
         private void copyLiftMaxes(WeeklyData other) {
             bestBench = other.bestBench;
@@ -71,39 +69,39 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    private static final String DBName = "HealthApp-db";
     public abstract DAO dao();
+    private static final String DBName = "HealthApp-db";
     private static PersistenceService shared;
 
-    static void create(Context context) {
+    static void create(Context c) {
         if (BuildConfig.DEBUG) {
             shared = Room.databaseBuilder(
-                context, PersistenceService.class, DBName).createFromAsset("test.db").build();
+              c, PersistenceService.class, DBName).createFromAsset("test.db").build();
         } else {
-            init(context);
+            init(c);
         }
     }
 
-    static void init(Context context) {
-        shared = Room.databaseBuilder(context, PersistenceService.class, DBName).build();
+    static void init(Context c) {
+        shared = Room.databaseBuilder(c, PersistenceService.class, DBName).build();
     }
 
-    private static void fetchHistory(Object[] args, DAO dao) {
-        WeekDataModel model = (WeekDataModel) args[0];
-        HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler) args[1];
-        ZoneId zoneId = ZoneId.systemDefault();
+    private static void fetchHistory(ZoneId zoneId, Object[] args, DAO dao) {
+        WeekDataModel model = (WeekDataModel)args[0];
+        HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler)args[1];
         WeeklyData[] data = dao.getAllSorted();
         int count = data.length;
         if (count > 1) {
             model.size = count - 1;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");
             for (int i = 0; i < model.size; ++i) {
-                model.arr[i] = new WeekDataModel.Week(data[i], zoneId);
+                model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
             }
         }
         new Handler(Looper.getMainLooper()).post(block::completion);
     }
 
-    static void start(long weekStart, int tzOffset, Object[] args) {
+    static void start(ZoneId zoneId, long weekStart, int tzOffset, Object[] args) {
         final long weekSeconds = 604800;
         long endPt = weekStart - 63244800;
         DAO dao = shared.dao();
@@ -114,7 +112,7 @@ public abstract class PersistenceService extends RoomDatabase {
             WeeklyData first = new WeeklyData();
             first.start = weekStart;
             dao.insertWeeks(new WeeklyData[]{first});
-            fetchHistory(args, dao);
+            fetchHistory(zoneId, args, dao);
             return;
         }
 
@@ -159,7 +157,7 @@ public abstract class PersistenceService extends RoomDatabase {
             System.arraycopy(newEntries, 0, inserted, 0, newCount);
             dao.insertWeeks(inserted);
         }
-        fetchHistory(args, dao);
+        fetchHistory(zoneId, args, dao);
     }
 
     private static final class DeleteDataTask implements Runnable {
@@ -224,7 +222,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    public static void updateCurrentWeek(byte type, short duration, short[] lifts) {
+    static void updateCurrentWeek(byte type, short duration, short[] lifts) {
         new Thread(new UpdateCurrentWeekTask(type, duration, lifts)).start();
     }
 }

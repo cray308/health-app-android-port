@@ -45,13 +45,12 @@ public final class HomeFragment extends Fragment {
     private int numWorkouts = 0;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context c, Intent intent) {
             handleFinishedWorkout(intent.getByteExtra(WorkoutActivity.userInfo, (byte) 0));
         }
     };
 
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -63,6 +62,7 @@ public final class HomeFragment extends Fragment {
             StatusButton currBtn = view.findViewById(customBtnIds[i]);
             setTag(currBtn.button, i);
             currBtn.button.setOnClickListener(customBtnListener);
+            currBtn.updateAccessibility();
         }
         weeklyWkContainer = view.findViewById(R.id.weeklyWorkoutsContainer);
         weeklyWkContainer.setVisibility(View.GONE);
@@ -84,26 +84,26 @@ public final class HomeFragment extends Fragment {
     public void createWorkoutsList(byte plan) {
         weeklyWorkoutStack.removeAllViews();
         numWorkouts = 0;
-        Context context = getContext();
+        Context c = getContext();
 
-        if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()
-            || context == null) {
+        if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()) {
             weeklyWkContainer.setVisibility(View.GONE);
             customWorkoutsHeader.divider.setVisibility(View.GONE);
             return;
         }
 
-        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(context, plan);
+        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(c, plan);
         DayOfWeek[] days = DayOfWeek.values();
 
         for (int i = 0; i < 7; ++i) {
             if (workoutNames[i] == null) continue;
-            StatusButton btn = new StatusButton(context);
+            StatusButton btn = new StatusButton(c);
             setTag(btn.button, i);
             btn.button.setOnClickListener(dayWorkoutListener);
             btn.headerLabel.setText(days[i].getDisplayName(TextStyle.FULL, Locale.US));
             btn.button.setText(workoutNames[i]);
             weeklyWorkoutStack.addView(btn);
+            btn.updateAccessibility();
             numWorkouts += 1;
         }
         weeklyWkContainer.setVisibility(View.VISIBLE);
@@ -124,7 +124,6 @@ public final class HomeFragment extends Fragment {
     }
 
     private final View.OnClickListener customBtnListener = view -> {
-        Context context = getContext();
         byte index = (byte) getTag(view);
 
         if (index == 0) {
@@ -137,9 +136,8 @@ public final class HomeFragment extends Fragment {
             return;
         }
 
-        String[] names = ExerciseManager.getWorkoutNamesForType(context, --index);
-        HomeSetupWorkoutDialog modal = HomeSetupWorkoutDialog.newInstance(names, index);
-        modal.show(getParentFragmentManager(), "HomeSetupWorkoutDialog");
+        SetupWorkoutDialog.init(getContext(), --index).show(
+          getParentFragmentManager(), "SetupWorkout");
     };
 
     private final View.OnClickListener dayWorkoutListener = view ->
@@ -151,18 +149,18 @@ public final class HomeFragment extends Fragment {
             dialog.dismiss();
 
         FragmentActivity activity = getActivity();
-        Context context = getContext();
-        if (activity == null || context == null) return;
+        Context c = getContext();
+        if (activity == null || c == null) return;
 
         IntentFilter filter = new IntentFilter(WorkoutActivity.notification);
-        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
+        LocalBroadcastManager.getInstance(c).registerReceiver(receiver, filter);
         WorkoutActivity.start(activity, params);
     }
 
     private void handleFinishedWorkout(byte completed) {
-        Context context = getContext();
-        if (context != null)
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+        Context c = getContext();
+        if (c == null) return;
+        LocalBroadcastManager.getInstance(c).unregisterReceiver(receiver);
 
         if (completed == 0) return;
 

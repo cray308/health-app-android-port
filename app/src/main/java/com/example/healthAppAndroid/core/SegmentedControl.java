@@ -10,20 +10,23 @@ import android.widget.LinearLayout;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
 
+import java.util.Locale;
+
 public final class SegmentedControl extends LinearLayout {
+    static String selectedStr;
     private final Button[] buttons = {null, null, null};
     public HistoryFragment delegate;
+    private final String[] baseLabels = {null, null, null};
     int selectedIndex = 0;
 
-    public SegmentedControl(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        inflate(getContext(), R.layout.segmented_control, this);
+    public SegmentedControl(Context c, AttributeSet attrs) {
+        super(c, attrs);
+        inflate(c, R.layout.segmented_control, this);
         buttons[0] = findViewById(R.id.buttonLeft);
         buttons[1] = findViewById(R.id.buttonMid);
         buttons[2] = findViewById(R.id.buttonRight);
         String[] titles = {null, null, null};
-        TypedArray a = getContext().getTheme().obtainStyledAttributes(
-          attrs, R.styleable.SegmentedControl, 0, 0);
+        TypedArray a = c.getTheme().obtainStyledAttributes(attrs, R.styleable.SegmentedControl, 0, 0);
         try {
             titles[0] = a.getString(R.styleable.SegmentedControl_leftTitle);
             titles[1] = a.getString(R.styleable.SegmentedControl_midTitle);
@@ -46,13 +49,18 @@ public final class SegmentedControl extends LinearLayout {
 
         for (int i = 0; i < 3; ++i) {
             buttons[i].setText(titles[i]);
+            baseLabels[i] = c.getString(R.string.segCtrlLabel, titles[i], i + 1);
+            buttons[i].setContentDescription(baseLabels[i]);
             buttons[i].setOnClickListener(listener);
         }
     }
 
     public void setSelectedIndex(int newIndex) {
         buttons[selectedIndex].setBackgroundColor(AppColors.gray5);
+        buttons[selectedIndex].setContentDescription(baseLabels[selectedIndex]);
         buttons[newIndex].setBackgroundColor(AppColors.gray2);
+        buttons[newIndex].setContentDescription(
+          String.format(Locale.US, "%s, %s", baseLabels[newIndex], selectedStr));
         selectedIndex = newIndex;
         if (delegate != null)
             delegate.didSelectSegment(newIndex);

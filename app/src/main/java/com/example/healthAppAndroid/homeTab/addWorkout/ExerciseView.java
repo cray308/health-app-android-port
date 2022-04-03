@@ -10,10 +10,10 @@ public final class ExerciseView extends StatusButton {
     boolean userInteractionEnabled = true;
     ExerciseEntry entry;
 
-    public ExerciseView(Context context) { super(context); }
+    public ExerciseView(Context c) { super(c); }
 
-    ExerciseView(Context context, ExerciseEntry e, int tag, View.OnClickListener action) {
-        super(context);
+    ExerciseView(Context c, ExerciseEntry e, int tag, View.OnClickListener action) {
+        super(c);
         entry = e;
         button.setId(tag);
         button.setOnClickListener(action);
@@ -29,6 +29,7 @@ public final class ExerciseView extends StatusButton {
         } else {
             button.setText(entry.titleStr.str);
         }
+        updateAccessibility();
 
         switch (entry.state) {
             case ExerciseEntry.State.disabled:

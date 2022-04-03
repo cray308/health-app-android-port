@@ -13,14 +13,11 @@ import android.widget.Button;
 
 import com.example.healthAppAndroid.R;
 
-import java.util.Locale;
-
 public final class SettingsFragment extends Fragment {
     private SegmentedControl picker;
     private TextValidator validator;
 
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
@@ -35,28 +32,24 @@ public final class SettingsFragment extends Fragment {
 
         Button saveButton = view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(view1 -> {
-            String neutral = getString(com.google.android.material.R.string.mtrl_picker_save);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
               .setTitle(getString(R.string.settingsAlertTitle))
               .setMessage(getString(R.string.settingsAlertMessageSave))
               .setNegativeButton(getString(R.string.cancel), null)
-              .setPositiveButton(neutral, (dialogInterface, i) -> {
+              .setPositiveButton(getString(com.google.android.material.R.string.mtrl_picker_save), (dialog, i) -> {
                   short[] results = validator.getResults();
                   AppCoordinator.shared.updateUserInfo((byte) (picker.selectedIndex - 1), results);
               });
             builder.create().show();
         });
 
-        Button deleteButton = view.findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(view2 -> {
-            String neutral = getString(
-              androidx.appcompat.R.string.abc_menu_delete_shortcut_label);
+        view.findViewById(R.id.deleteButton).setOnClickListener(view2 -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
               .setTitle(getString(R.string.settingsAlertTitle))
               .setMessage(getString(R.string.settingsAlertMessageDelete))
               .setNegativeButton(getString(R.string.cancel), null)
-              .setNeutralButton(neutral, (dialogInterface, i)
-                -> AppCoordinator.shared.deleteAppData());
+              .setNeutralButton(getString(androidx.appcompat.R.string.abc_menu_delete_shortcut_label),
+                                (dialog, i) -> AppCoordinator.shared.deleteAppData());
             builder.create().show();
         });
 
@@ -70,7 +63,7 @@ public final class SettingsFragment extends Fragment {
         validator.children[4].valid = true;
         validator.children[4].field.setError(null);
         if (weight > 0)
-            validator.children[4].textField.setText(String.format(Locale.US, "%d", weight));
+            validator.children[4].textField.setText(String.valueOf(weight));
         updateWeightFields(AppUserData.shared.liftArray);
     }
 
@@ -80,7 +73,7 @@ public final class SettingsFragment extends Fragment {
             validator.children[i].result = value;
             validator.children[i].valid = true;
             validator.children[i].field.setError(null);
-            validator.children[i].textField.setText(String.format(Locale.US, "%d", value));
+            validator.children[i].textField.setText(String.valueOf(value));
         }
         if (validator.children[4].valid)
             validator.enableButton();

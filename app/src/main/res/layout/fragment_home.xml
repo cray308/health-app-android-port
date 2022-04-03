@@ -16,14 +16,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="8dp"
-            android:paddingTop="10dp"
+            android:paddingTop="16dp"
             android:paddingRight="8dp"
-            android:paddingBottom="20dp">
+            android:paddingBottom="16dp">
 
             <LinearLayout
                 android:id="@+id/weeklyWorkoutsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:orientation="vertical">
 
                 <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
@@ -61,28 +62,32 @@
                     android:id="@+id/customButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeStrength"
+                    android:layout_marginTop="4dp"
+                    app:buttonLabel="@string/workout0"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeSE"
+                    android:layout_marginTop="4dp"
+                    app:buttonLabel="@string/workout1"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeEndurance"
+                    android:layout_marginTop="4dp"
+                    app:buttonLabel="@string/workout2"
                     app:hideCheckbox="true" />
 
                 <com.example.healthAppAndroid.core.StatusButton
                     android:id="@+id/customButton5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeHIC"
+                    android:layout_marginTop="4dp"
+                    app:buttonLabel="@string/workout3"
                     app:hideCheckbox="true" />
             </LinearLayout>
         </LinearLayout>

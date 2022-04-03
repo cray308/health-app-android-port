@@ -26,24 +26,24 @@ public final class TextValidator {
         private boolean isInputNumeric = false;
         private boolean emptyInputAllowed = false;
 
-        public InputView(Context context) {
-            super(context);
-            setup(null);
+        public InputView(Context c) {
+            super(c);
+            setup(c, null);
         }
 
-        public InputView(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            setup(attrs);
+        public InputView(Context c, AttributeSet attrs) {
+            super(c, attrs);
+            setup(c, attrs);
         }
 
-        private void setup(AttributeSet attrs) {
-            inflate(getContext(), R.layout.input_view, this);
+        private void setup(Context c, AttributeSet attrs) {
+            inflate(c, R.layout.input_view, this);
             field = findViewById(R.id.field);
             textField = findViewById(R.id.fieldTextView);
             String hintText = null, suffix = null;
 
             if (attrs != null) {
-                TypedArray a = getContext().getTheme().obtainStyledAttributes(
+                TypedArray a = c.getTheme().obtainStyledAttributes(
                   attrs, R.styleable.InputView, 0, 0);
                 try {
                     hintText = a.getString(R.styleable.InputView_fieldHint);
@@ -105,7 +105,7 @@ public final class TextValidator {
 
             field.setError(null);
             valid = true;
-            result = (short) res;
+            result = (short)res;
             delegate.checkFields();
         }
 

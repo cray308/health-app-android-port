@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.SegmentedControl;
+import com.example.healthAppAndroid.core.WeekDataModel;
 
 public final class HistoryFragment extends Fragment {
     public static final class FetchHandler {
@@ -27,7 +28,8 @@ public final class HistoryFragment extends Fragment {
         public void completion() {
             if (data.size != 0)
                 fragment.viewModel.populateData(data);
-            new android.os.Handler(Looper.getMainLooper()).post(fragment::refresh);
+            new android.os.Handler(Looper.getMainLooper()).post(
+              () -> fragment.rangePicker.setSelectedIndex(0));
         }
     }
 
@@ -43,8 +45,7 @@ public final class HistoryFragment extends Fragment {
         results[1] = new FetchHandler(this, model);
     }
 
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
         return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
@@ -73,24 +74,20 @@ public final class HistoryFragment extends Fragment {
             return;
         }
 
-        Context context = getContext();
-        if (context == null) return;
+        Context c = getContext();
+        if (c == null) return;
 
-        viewModel.formatDataForTimeRange(context, index);
+        viewModel.formatDataForTimeRange(c, index);
         boolean isSmall = count < 7;
         totalWorkoutsChart.updateChart(isSmall, index);
         workoutTypeChart.updateChart(isSmall, index);
         liftingChart.updateChart(isSmall, index);
     }
 
-    private void refresh() {
-        rangePicker.setSelectedIndex(0);
-    }
-
     public void handleDataDeletion() {
         if (viewModel.nEntries[2] != 0) {
             viewModel.clearData();
-            refresh();
+            rangePicker.setSelectedIndex(0);
         }
     }
 }

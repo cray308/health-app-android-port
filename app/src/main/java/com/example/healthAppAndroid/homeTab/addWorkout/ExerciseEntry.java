@@ -4,11 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.core.AppCoordinator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 final class ExerciseEntry {
     static abstract class Type {
@@ -24,12 +23,23 @@ final class ExerciseEntry {
     }
 
     static final class Params {
-        short customReps = 0;
-        short customSets = 0;
+        private final short customReps;
+        short customSets;
         short weight = -1;
-        byte circuitType;
+        private final byte workoutType;
+
+        Params(Circuit.Params params) {
+            customSets = params.customSets;
+            customReps = params.customReps;
+            workoutType = params.workoutType;
+        }
     }
 
+    static void setupHeaderData(Context c) {
+        headerLoc = c.getString(R.string.exerciseHeader, 5).indexOf('1');
+    }
+
+    private static int headerLoc;
     final MutableString headerStr = new MutableString();
     final MutableString titleStr = new MutableString();
     final String restStr;
@@ -39,79 +49,60 @@ final class ExerciseEntry {
     final byte type;
     byte state = 0;
 
-    ExerciseEntry(Context context, JSONObject dict, Params params) {
-        short _reps = 0;
-        short _sets = 1;
-        int _type = 0;
+    ExerciseEntry(Context c, JSONObject dict, Params params) {
+        sets = params.customSets;
+        short _reps = params.customReps;
+        byte _type = 0;
         String _rest = null;
         try {
-            _type = dict.getInt(ExerciseManager.Keys.type);
-            _reps = (short) dict.getInt(ExerciseManager.Keys.reps);
+            _type = (byte)dict.getInt(ExerciseManager.Keys.type);
+            if (_reps == 0)
+                _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
+            if (AppCoordinator.shared.onEmulator && _type == Type.duration)
+                _reps = (short)(params.workoutType == WorkoutType.HIC ? 15 : 120);
+
             int rest = dict.getInt("rest");
-            String name = dict.getString("name");
-
-            if (params.customReps != 0)
-                _reps = params.customReps;
-            if (params.customSets != 0)
-                _sets = params.customSets;
             if (rest != 0)
-                _rest = context.getString(R.string.exerciseTitleRest, rest);
+                _rest = c.getString(R.string.exerciseRest, rest);
 
-            if (_sets > 1) {
-                String numberStr = context.getString(R.string.exerciseHeader, 1, _sets);
-                headerStr.index = (short) numberStr.indexOf('1');
-                headerStr.end = (short) (headerStr.index + 1);
-                headerStr.str.append(numberStr);
+            if (sets > 1) {
+                headerStr.index = headerLoc;
+                headerStr.end = headerStr.index + 1;
+                headerStr.str.append(c.getString(R.string.exerciseHeader, sets));
             }
 
-            String title;
-            switch (_type) {
-                case Type.reps:
-                    if (params.weight >= 0) {
-                        title = context.getString(R.string.exerciseTitleRepsWithWeight,
-                                                  name, _reps, params.weight);
-                    } else {
-                        title = context.getString(R.string.exerciseTitleReps, name, _reps);
-                    }
-                    break;
-
-                case Type.duration:
-                    if (_reps > 120) {
-                        title = context.getString(R.string.exerciseTitleDurationMinutes,
-                                                  name, _reps / 60f);
-                    } else {
-                        title = context.getString(R.string.exerciseTitleDurationSeconds,
-                                                  name, _reps);
-                    }
-                    break;
-
-                default:
-                    title = context.getString(R.string.exerciseTitleDistance,
-                                              _reps, ((5 * _reps) >> 2));
+            String title, name = dict.getString("name");
+            if (_type == Type.reps) {
+                if (params.workoutType == 0) {
+                    title = c.getString(R.string.exerciseRepsWeight, name, _reps, params.weight);
+                } else {
+                    title = c.getString(R.string.exerciseReps, name, _reps);
+                }
+            } else if (_type == Type.duration) {
+                if (_reps > 120) {
+                    title = c.getString(R.string.exerciseDurationMinutes, name, _reps / 60f);
+                } else {
+                    title = c.getString(R.string.exerciseDurationSeconds, name, _reps);
+                }
+            } else {
+                title = c.getString(R.string.exerciseDistance, _reps, ((5 * _reps) >> 2));
             }
-
             titleStr.str.append(title);
-            if (params.circuitType == Circuit.Type.decrement && _type == Type.reps) {
-                titleStr.index = (short) titleStr.str.indexOf("10");
-                titleStr.end = (short) (titleStr.index + 2);
-            }
-
         } catch (JSONException ex) {
             Log.e("ExerciseEntry init", "Error while parsing JSON", ex);
         }
         reps = _reps;
-        sets = _sets;
-        type = (byte) _type;
+        type = _type;
         restStr = _rest;
     }
 
-    boolean cycle(Context context, int group, int index) {
+    boolean cycle(Context c, int group, int index) {
         switch (state) {
             case State.disabled:
                 ++state;
                 if (type == Type.duration) {
                     NotificationService.scheduleAlarm(
-                      context, reps, NotificationService.Type.Exercise, group, index);
+                      c, reps, NotificationService.Type.Exercise, group, index);
                 }
                 break;
 
@@ -127,7 +118,11 @@ final class ExerciseEntry {
                     return true;
                 } else {
                     state = State.active;
-                    headerStr.replace(String.format(Locale.US, "%d", completedSets + 1));
+                    headerStr.replace(String.valueOf(completedSets + 1));
+                    if (type == Type.duration) {
+                        NotificationService.scheduleAlarm(
+                          c, reps, NotificationService.Type.Exercise, group, index);
+                    }
                 }
             default:
         }
