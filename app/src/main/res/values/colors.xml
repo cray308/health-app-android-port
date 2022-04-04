@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="secondarySystemGroupedBackground">#FFFFFFFF</color>
-    <color name="tertiarySystemGroupedBackground">#FFF2F2F7</color>
 
     <color name="label">#FF000000</color>
     <color name="secondaryLabel">#FF757575</color>
@@ -14,7 +13,7 @@
     <color name="systemGray5">#FFE5E5EA</color>
     <color name="navBarColor">#FDFBFB</color>
 
-    <color name="systemBlue">#FF2962FF</color>
+    <color name="systemBlue">#FF3D5AFE</color>
     <color name="systemGreen">#FF2E7D32</color>
     <color name="systemOrange">#FFFF9500</color>
     <color name="systemRed">#FFD50000</color>

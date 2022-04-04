@@ -14,24 +14,25 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="3" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/submitBtn"
-            android:layout_width="80dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:autoSizeMaxTextSize="15sp"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="17sp"
             android:autoSizeMinTextSize="8sp"
             android:autoSizeTextType="uniform"
             android:enabled="false"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:maxLines="1"
-            android:textAllCaps="false"
-            app:iconTint="@null"
-            android:backgroundTint="@color/secondarySystemGroupedBackground"
             android:text="@string/finish"
-            android:textColor="@color/systemGray" />
+            android:textAllCaps="false"
+            android:textColor="@color/systemGray"
+            app:iconTint="@null" />
     </LinearLayout>
 
     <LinearLayout

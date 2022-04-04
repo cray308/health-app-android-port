@@ -68,7 +68,10 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         input.field.setHint(getString(keys[index]));
         validator.addChild((short)0, (short)999, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
-        if (dialog != null)
+        if (dialog != null) {
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
             dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
     }
 }
