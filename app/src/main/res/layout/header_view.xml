@@ -17,6 +17,7 @@
         android:id="@+id/headerLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:accessibilityHeading="true"
         android:textColor="@color/label"
         android:textSize="20sp" />
 </LinearLayout>

@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <android.widget.Button
@@ -29,10 +30,19 @@
             android:textColor="@color/systemBlue"
             app:iconTint="@null" />
 
-        <Space
+        <TextView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:accessibilityHeading="true"
+            android:autoSizeMaxTextSize="17sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="@string/setupWorkoutTitle"
+            android:textAlignment="center"
+            android:textColor="@color/label"
+            android:textStyle="bold" />
 
         <android.widget.Button
             android:id="@+id/submitBtn"
