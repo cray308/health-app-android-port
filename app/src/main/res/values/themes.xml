@@ -10,15 +10,15 @@
     </style>
 
     <style name="Theme.HealthAppAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/systemBlue</item>
-        <item name="colorPrimaryVariant">@color/chartBlue</item>
+        <item name="colorPrimary">@color/chartOrange</item>
+        <item name="colorPrimaryVariant">@color/systemOrange</item>
         <item name="colorOnPrimary">@color/label</item>
-        <item name="colorSecondary">@color/systemOrange</item>
-        <item name="colorSecondaryVariant">@color/chartOrange</item>
+        <item name="colorSecondary">@color/systemGreen</item>
+        <item name="colorSecondaryVariant">@color/chartGreen</item>
         <item name="colorOnSecondary">@color/label</item>
         <item name="colorSurface">#FFF2F2F7</item>
         <item name="android:colorBackground">@null</item>
-        <item name="android:windowBackground">#FFF2F2F7</item>
+        <item name="android:windowBackground">@color/primaryBG</item>
         <item name="android:statusBarColor" tools:targetApi="l">#FDFBFB</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#FF1C1C1E</item>

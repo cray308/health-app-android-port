@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".historyTab.HistoryFragment">
 
-    <com.example.healthAppAndroid.core.SegmentedControl
+    <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/rangePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,9 +16,45 @@
         android:paddingTop="4dp"
         android:paddingRight="8dp"
         android:paddingBottom="4dp"
-        app:leftTitle="@string/historySegment1"
-        app:midTitle="@string/historySegment2"
-        app:rightTitle="@string/historySegment3" />
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonLeft"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="13sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="@string/historySegment1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonMid"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="13sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="@string/historySegment2" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRight"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeMaxTextSize="13sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="@string/historySegment3" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <ScrollView
         android:layout_width="match_parent"

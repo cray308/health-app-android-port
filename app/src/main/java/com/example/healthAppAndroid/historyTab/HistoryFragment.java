@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.SegmentedControl;
 import com.example.healthAppAndroid.core.WeekDataModel;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public final class HistoryFragment extends Fragment {
     public static final class FetchHandler {
@@ -27,22 +27,36 @@ public final class HistoryFragment extends Fragment {
 
         public void completion() {
             if (data.size != 0)
-                fragment.viewModel.populateData(data);
+                viewModel.populateData(data);
             new android.os.Handler(Looper.getMainLooper()).post(
-              () -> fragment.rangePicker.setSelectedIndex(0));
+              () -> fragment.rangePicker.check(R.id.buttonLeft));
         }
     }
 
-    private final HistoryViewModel viewModel = new HistoryViewModel();
-    private SegmentedControl rangePicker;
+    static final HistoryViewModel viewModel = new HistoryViewModel();
+    private MaterialButtonToggleGroup rangePicker;
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
     private LiftingChart liftingChart;
+    private final MaterialButtonToggleGroup.OnButtonCheckedListener listener = (group, checkedId, isChecked) -> {
+        if (!isChecked) return;
+        int selected = 0;
+        if (checkedId == R.id.buttonMid) {
+            selected = 1;
+        } else if (checkedId == R.id.buttonRight) {
+            selected = 2;
+        }
+        didSelectSegment(selected);
+    };
+    private final boolean setIndex;
+
+    public HistoryFragment() { setIndex = true; }
 
     public HistoryFragment(Object[] results) {
         WeekDataModel model = new WeekDataModel();
         results[0] = model;
         results[1] = new FetchHandler(this, model);
+        setIndex = false;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
@@ -50,27 +64,28 @@ public final class HistoryFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, null);
 
         rangePicker = view.findViewById(R.id.rangePicker);
+        rangePicker.addOnButtonCheckedListener(listener);
         totalWorkoutsChart = view.findViewById(R.id.totalWorkoutsContainer);
         workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
         liftingChart = view.findViewById(R.id.liftContainer);
         viewModel.setup(getResources());
 
-        totalWorkoutsChart.setup(viewModel.totalWorkouts, viewModel);
-        workoutTypeChart.setup(viewModel.workoutTypes, viewModel);
-        liftingChart.setup(viewModel.lifts, viewModel);
-        rangePicker.delegate = this;
+        totalWorkoutsChart.setup();
+        workoutTypeChart.setup();
+        liftingChart.setup();
+        if (setIndex) rangePicker.check(R.id.buttonLeft);
     }
 
-    public void didSelectSegment(int index) {
+    private void didSelectSegment(int index) {
         int count = viewModel.nEntries[index];
         if (count == 0) {
             totalWorkoutsChart.disable();
             workoutTypeChart.disable();
             liftingChart.disable();
-            rangePicker.delegate = null;
+            rangePicker.removeOnButtonCheckedListener(listener);
             return;
         }
 
@@ -87,7 +102,7 @@ public final class HistoryFragment extends Fragment {
     public void handleDataDeletion() {
         if (viewModel.nEntries[2] != 0) {
             viewModel.clearData();
-            rangePicker.setSelectedIndex(0);
+            rangePicker.check(R.id.buttonLeft);
         }
     }
 }

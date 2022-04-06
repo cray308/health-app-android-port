@@ -46,7 +46,7 @@ public final class HomeFragment extends Fragment {
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context c, Intent intent) {
-            handleFinishedWorkout(intent.getByteExtra(WorkoutActivity.userInfo, (byte) 0));
+            handleFinishedWorkout(intent.getByteExtra(WorkoutActivity.userInfo, (byte)0));
         }
     };
 
@@ -55,7 +55,7 @@ public final class HomeFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, null);
         int[] customBtnIds = {R.id.customButton1, R.id.customButton2, R.id.customButton3,
                               R.id.customButton4, R.id.customButton5};
         for (int i = 0; i < 5; ++i) {
@@ -115,7 +115,7 @@ public final class HomeFragment extends Fragment {
         if (numWorkouts == 0) return;
 
         for (int i = 0; i < numWorkouts; ++i) {
-            StatusButton v = (StatusButton) weeklyWorkoutStack.getChildAt(i);
+            StatusButton v = (StatusButton)weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << getTag(v.button))) == 0;
             v.button.setEnabled(enabled);
             v.button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
@@ -124,10 +124,10 @@ public final class HomeFragment extends Fragment {
     }
 
     private final View.OnClickListener customBtnListener = view -> {
-        byte index = (byte) getTag(view);
+        byte index = (byte)getTag(view);
 
         if (index == 0) {
-            WorkoutParams params = new WorkoutParams((byte) -1);
+            WorkoutParams params = new WorkoutParams((byte)-1);
             params.type = 0;
             params.index = 2;
             params.reps = params.sets = 1;

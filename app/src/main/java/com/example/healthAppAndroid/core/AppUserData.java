@@ -12,6 +12,7 @@ public final class AppUserData {
         private static final String tzOffset = "tzOffset";
         private static final String currentPlan = "currentPlan";
         private static final String completedWorkouts = "completedWorkouts";
+        private static final String darkMode = "darkMode";
         private static final String bodyWeight = "weight";
         private static final String[] liftKeys = {"squatMax", "pullUpMax", "benchMax", "deadLiftMax"};
     }
@@ -24,6 +25,7 @@ public final class AppUserData {
     public short weight = -1;
     public byte currentPlan = -1;
     public byte completedWorkouts;
+    byte darkMode;
 
     final static long weekSeconds = 604800;
     public static AppUserData shared;
@@ -32,10 +34,11 @@ public final class AppUserData {
         return c.getSharedPreferences("HealthAppPrefs", Context.MODE_PRIVATE);
     }
 
-    AppUserData(Context c, long start, int offset) {
+    AppUserData(Context c, long start, int offset, boolean modern) {
         prefs = getDict(c);
         weekStart = start;
         planStart = start;
+        darkMode = (byte)(modern ? -1 : 0);
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(Keys.planStart, start);
@@ -43,6 +46,7 @@ public final class AppUserData {
         editor.putInt(Keys.tzOffset, offset);
         editor.putInt(Keys.currentPlan, -1);
         editor.putInt(Keys.completedWorkouts, 0);
+        editor.putInt(Keys.darkMode, darkMode);
         editor.putInt(Keys.bodyWeight, -1);
         editor.putInt(Keys.liftKeys[0], 0);
         editor.putInt(Keys.liftKeys[1], 0);
@@ -51,7 +55,7 @@ public final class AppUserData {
         editor.apply();
     }
 
-    AppUserData(Context c, int[] tzArr, int[] weekArr, long start, int offset) {
+    AppUserData(Context c, int[] output, long start, int offset, boolean modern) {
         byte changes = 0;
         int[] planLengths = {8, 13};
         prefs = getDict(c);
@@ -61,6 +65,7 @@ public final class AppUserData {
         int savedTzOffset = prefs.getInt(Keys.tzOffset, 0);
         currentPlan = (byte)prefs.getInt(Keys.currentPlan, -1);
         completedWorkouts = (byte)prefs.getInt(Keys.completedWorkouts, 0);
+        darkMode = (byte)prefs.getInt(Keys.darkMode, -1);
 
         int tzDiff = savedTzOffset - offset;
         if (tzDiff != 0) {
@@ -90,6 +95,11 @@ public final class AppUserData {
             }
         }
 
+        if (darkMode >= 0 && modern) {
+            darkMode = -1;
+            changes |= 32;
+        }
+
         weight = (short)prefs.getInt(Keys.bodyWeight, -1);
         for (int i = 0; i < 4; ++i) {
             liftArray[i] = (short)prefs.getInt(Keys.liftKeys[i], 0);
@@ -97,26 +107,23 @@ public final class AppUserData {
 
         if (changes != 0) {
             SharedPreferences.Editor editor = prefs.edit();
-            if ((changes & 1) != 0) {
+            if ((changes & 1) != 0)
                 editor.putLong(Keys.weekStart, start);
-            }
-            if ((changes & 2) != 0) {
+            if ((changes & 2) != 0)
                 editor.putLong(Keys.planStart, planStart);
-            }
-            if ((changes & 4) != 0) {
+            if ((changes & 4) != 0)
                 editor.putInt(Keys.tzOffset, offset);
-            }
-            if ((changes & 8) != 0) {
+            if ((changes & 8) != 0)
                 editor.putInt(Keys.completedWorkouts, currentPlan);
-            }
-            if ((changes & 16) != 0) {
+            if ((changes & 16) != 0)
                 editor.putInt(Keys.completedWorkouts, completedWorkouts);
-            }
+            if ((changes & 32) != 0)
+                editor.putInt(Keys.darkMode, darkMode);
             editor.apply();
         }
 
-        tzArr[0] = tzDiff;
-        weekArr[0] = week;
+        output[0] = tzDiff;
+        output[1] = week;
     }
 
     boolean deleteSavedData() {
@@ -166,9 +173,9 @@ public final class AppUserData {
         return completed;
     }
 
-    boolean updateSettings(byte plan, short[] newArr) {
+    int updateSettings(byte plan, byte dm, short[] newArr) {
         SharedPreferences.Editor editor = prefs.edit();
-        byte changes = (byte)(plan == currentPlan ? 0 : 1);
+        int changes = plan == currentPlan ? 0 : 1;
         if (changes != 0) {
             currentPlan = plan;
             editor.putInt(Keys.currentPlan, plan);
@@ -183,15 +190,21 @@ public final class AppUserData {
             }
         }
 
+        if (dm != darkMode) {
+            changes |= 2;
+            darkMode = dm;
+            editor.putInt(Keys.darkMode, dm);
+        }
+
         short newWeight = newArr[4];
         if (newWeight != weight) {
-            changes |= 2;
+            changes |= 4;
             weight = newWeight;
             editor.putInt(Keys.bodyWeight, newWeight);
         }
 
         if (!updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) && changes != 0)
             editor.apply();
-        return (changes & 1) != 0;
+        return changes;
     }
 }

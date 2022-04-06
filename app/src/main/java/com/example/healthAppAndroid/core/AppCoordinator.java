@@ -2,9 +2,11 @@ package com.example.healthAppAndroid.core;
 
 import android.os.Build;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
@@ -15,23 +17,36 @@ public final class AppCoordinator {
     private final FragmentManager fm;
     private final Fragment[] children = {new HomeFragment(), null, new SettingsFragment()};
     private Fragment active;
-
-    public static AppCoordinator shared;
     public final boolean onEmulator;
 
-    AppCoordinator(FragmentActivity activity, Object[] results) {
-        String fp = Build.FINGERPRINT, hw = Build.HARDWARE, pr = Build.PRODUCT, m = Build.MODEL;
-        onEmulator = (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                     || fp.startsWith("generic") || fp.startsWith("unknown") || hw.contains("goldfish")
-                     || hw.contains("ranchu") || m.contains("google_sdk") || m.contains("Emulator")
-                     || m.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion")
-                     || pr.contains("sdk_google") || pr.contains("google_sdk") || pr.contains("sdk")
-                     || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64") || pr.contains("vbox86p")
-                     || pr.contains("emulator") || pr.contains("simulator");
+    public static AppCoordinator shared;
 
+    private static boolean isOnEmulator() {
+        String fp = Build.FINGERPRINT, hw = Build.HARDWARE, pr = Build.PRODUCT, m = Build.MODEL;
+        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+               || fp.startsWith("generic") || fp.startsWith("unknown") || hw.contains("goldfish")
+               || hw.contains("ranchu") || m.contains("google_sdk") || m.contains("Emulator")
+               || m.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion")
+               || pr.contains("sdk_google") || pr.contains("google_sdk") || pr.contains("sdk")
+               || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64") || pr.contains("vbox86p")
+               || pr.contains("emulator") || pr.contains("simulator");
+    }
+
+    AppCoordinator(FragmentActivity activity) {
+        onEmulator = isOnEmulator();
+        fm = activity.getSupportFragmentManager();
+        children[1] = new HistoryFragment();
+        init(activity, 2);
+    }
+
+    AppCoordinator(FragmentActivity activity, Object[] results) {
+        onEmulator = isOnEmulator();
         fm = activity.getSupportFragmentManager();
         children[1] = new HistoryFragment(results);
+        init(activity, 0);
+    }
 
+    private void init(FragmentActivity activity, int activeIndex) {
         ((BottomNavigationView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
             int index = 0;
             int id = item.getItemId();
@@ -46,14 +61,24 @@ public final class AppCoordinator {
             return true;
         });
 
-        fm.beginTransaction().add(R.id.container, children[2], "3").hide(children[2]).commit();
-        fm.beginTransaction().add(R.id.container, children[1], "2").hide(children[1]).commit();
-        fm.beginTransaction().add(R.id.container, children[0], "1").commit();
-        active = children[0];
+        for (int i = 0; i < 3; ++i) {
+            FragmentTransaction t = fm.beginTransaction().add(
+              R.id.container, children[i], String.valueOf(i + 1));
+            if (i != activeIndex) t.hide(children[i]);
+            t.commit();
+        }
+        active = children[activeIndex];
     }
 
-    void updateUserInfo(byte plan, short[] newArr) {
-        if (AppUserData.shared.updateSettings(plan, newArr))
+    void updateUserInfo(byte plan, byte darkMode, short[] newArr) {
+        int rv = AppUserData.shared.updateSettings(plan, darkMode, newArr);
+        if ((rv & 2) != 0) {
+            int mode = AppUserData.shared.darkMode == 0
+                       ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
+            AppCompatDelegate.setDefaultNightMode(mode);
+            return;
+        }
+        if ((rv & 1) != 0)
             ((HomeFragment)children[0]).createWorkoutsList(plan);
     }
 

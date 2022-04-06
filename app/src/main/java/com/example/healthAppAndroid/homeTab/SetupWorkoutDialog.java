@@ -30,7 +30,7 @@ public final class SetupWorkoutDialog
     private static final String namesKey = "SetupWorkout.Names";
     private static final String typeKey = "SetupWorkout.Type";
 
-    private final WorkoutParams output = new WorkoutParams((byte) -1);
+    private final WorkoutParams output = new WorkoutParams((byte)-1);
     private TextValidator validator;
     private String[] names;
     private byte type;
@@ -81,7 +81,7 @@ public final class SetupWorkoutDialog
             HomeFragment home = null;
             for (Fragment fragment : fragments) {
                 if ("1".equals(fragment.getTag()))
-                    home = (HomeFragment) fragment;
+                    home = (HomeFragment)fragment;
             }
 
             if (home != null)
@@ -126,7 +126,7 @@ public final class SetupWorkoutDialog
             validator.addChild(minArr[i], maxes[i], v);
             inputViewStack.addView(v);
         }
-        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
+        BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null)
             dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }

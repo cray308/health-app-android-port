@@ -9,11 +9,6 @@
         <attr name="emptyInputAllowed" format="boolean"/>
         <attr name="extraError" format="string"/>
     </declare-styleable>
-    <declare-styleable name="SegmentedControl">
-        <attr name="leftTitle" format="string"/>
-        <attr name="midTitle" format="string"/>
-        <attr name="rightTitle" format="string"/>
-    </declare-styleable>
     <declare-styleable name="HeaderView">
         <attr name="hideSeparator" format="boolean"/>
         <attr name="headerText" format="string"/>
@@ -21,5 +16,4 @@
     <declare-styleable name="HistoryChartLegendEntry">
         <attr name="formColor" format="color"/>
     </declare-styleable>
-
 </resources>

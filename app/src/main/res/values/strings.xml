@@ -70,8 +70,7 @@
     <string name="emptyFieldSuffix">, or empty</string>
     <string name="updateMaxesTitle">Set Weight &amp; Reps</string>
     <string name="stepperDescription">Reps completed</string>
-    <string name="segCtrlLabel">%1$s, %2$d of 3</string>
-    <string name="segCtrlSelected">selected</string>
+    <string name="darkMode">Dark Mode</string>
     <string name="settingsSaveButtonTitle">Save Settings</string>
     <string name="settingsDeleteButtonTitle">Delete Data</string>
     <string name="settingsAlertTitle">Are you sure\?</string>

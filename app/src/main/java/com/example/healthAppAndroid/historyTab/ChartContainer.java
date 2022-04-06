@@ -15,7 +15,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +68,7 @@ public abstract class ChartContainer extends LinearLayout {
             data.addDataSet(sets[i]);
     }
 
-    void setupChartView(IndexAxisValueFormatter xAxisFormatter) {
+    void setupChartView() {
         chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
         chart.getDescription().setEnabled(false);
         YAxis leftAxis = chart.getAxisLeft();
@@ -86,7 +85,7 @@ public abstract class ChartContainer extends LinearLayout {
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setLabelRotationAngle(45);
-        xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setValueFormatter(HistoryFragment.viewModel);
     }
 
     void disable() {

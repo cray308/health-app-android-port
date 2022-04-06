@@ -23,21 +23,89 @@
             android:textColor="@color/label"
             android:textSize="15sp" />
 
-        <com.example.healthAppAndroid.core.SegmentedControl
+        <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/planPicker"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="20dp"
-            app:leftTitle="@string/settingsSegment1"
-            app:midTitle="@string/settingsSegment2"
-            app:rightTitle="@string/settingsSegment3" />
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonLeft"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeMinTextSize="4sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/settingsSegment1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonMid"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeMinTextSize="4sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/settingsSegment2" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonRight"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeMinTextSize="4sp"
+                android:autoSizeTextType="uniform"
+                android:maxLines="1"
+                android:text="@string/settingsSegment3" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <LinearLayout
+            android:id="@+id/switchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:background="@color/secondarySystemGroupedBackground"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/darkMode"
+                android:textColor="@color/label"
+                android:textSize="17sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <view
             android:id="@+id/inputWeight"
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             app:emptyInputAllowed="true"
             app:extraError="@string/emptyFieldSuffix"
             app:fieldHint="@string/bodyWeightHint" />
@@ -75,7 +143,7 @@
             style="@style/AppButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="4dp"
             android:text="@string/settingsSaveButtonTitle"
             android:textColor="@color/systemBlue"
             android:textSize="17sp" />

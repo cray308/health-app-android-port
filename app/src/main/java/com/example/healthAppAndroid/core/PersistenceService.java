@@ -93,7 +93,7 @@ public abstract class PersistenceService extends RoomDatabase {
         int count = data.length;
         if (count > 1) {
             model.size = count - 1;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
             for (int i = 0; i < model.size; ++i) {
                 model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
             }
@@ -123,8 +123,8 @@ public abstract class PersistenceService extends RoomDatabase {
             dao.updateWeeks(data);
         }
 
-        WeeklyData[] newEntries = new WeeklyData[128];
-        WeeklyData[] oldEntries = new WeeklyData[128];
+        WeeklyData[] newEntries = new WeeklyData[count];
+        WeeklyData[] oldEntries = new WeeklyData[count];
         int oldCount = 0, newCount = 0;
         WeeklyData last = data[count - 1];
         long start = last.start;

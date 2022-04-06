@@ -11,7 +11,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
@@ -77,17 +76,13 @@ public final class WorkoutTypeChart extends ChartContainer {
         }
     }
 
-    private HistoryViewModel.WorkoutTypeModel model;
-
     public WorkoutTypeChart(Context c, AttributeSet attrs) {
         super(c, attrs, R.layout.workout_type_chart, new int[]{
           R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
         });
     }
 
-    void setup(HistoryViewModel.WorkoutTypeModel m, IndexAxisValueFormatter xAxisFormatter) {
-        model = m;
-
+    void setup() {
         int[] colors = getChartColors(getContext());
         dataSets[0] = createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {
@@ -99,18 +94,18 @@ public final class WorkoutTypeChart extends ChartContainer {
         }
         LineDataSet[] orderedSets = {dataSets[4], dataSets[3], dataSets[2], dataSets[1]};
         setupChartData(orderedSets, 4);
-        data.setValueFormatter(model);
-        setupChartView(xAxisFormatter);
-        chart.getAxisLeft().setValueFormatter(model);
+        data.setValueFormatter(HistoryFragment.viewModel.workoutTypes);
+        setupChartView();
+        chart.getAxisLeft().setValueFormatter(HistoryFragment.viewModel.workoutTypes);
         chart.setRenderer(new Renderer(chart));
     }
 
     void updateChart(boolean isSmall, int index) {
-        dataSets[0].setValues(model.entryRefs.get(index).get(0));
+        HistoryViewModel.WorkoutTypeModel m = HistoryFragment.viewModel.workoutTypes;
+        dataSets[0].setValues(m.entryRefs.get(index).get(0));
         for (int i = 1; i < 5; ++i) {
-            updateData(i, isSmall,
-                       model.entryRefs.get(index).get(i), i - 1, model.legendLabels[i - 1]);
+            updateData(i, isSmall, m.entryRefs.get(index).get(i), i - 1, m.legendLabels[i - 1]);
         }
-        update(isSmall, model.maxes[index]);
+        update(isSmall, m.maxes[index]);
     }
 }
