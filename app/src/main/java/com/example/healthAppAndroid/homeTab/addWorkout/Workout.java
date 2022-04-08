@@ -3,6 +3,7 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
 
 import org.json.JSONArray;
@@ -30,29 +31,26 @@ final class Workout {
     final byte day;
     final boolean testMax;
 
-    Workout(Context c, JSONObject dict, WorkoutParams params) {
+    Workout(Context c, JSONArray acts, WorkoutParams params) {
         day = params.day;
         type = params.type;
-        String workoutName = null;
+        String[] exNames = c.getResources().getStringArray(R.array.exNames);
         boolean[] isTestDay = {false};
         try {
-            JSONArray foundActivities = dict.getJSONArray("activities");
-            int nActivities = foundActivities.length();
+            int nActivities = acts.length();
             Circuit.Params cParams = new Circuit.Params(params, isTestDay, nActivities);
 
-            workoutName = dict.getString(ExerciseManager.Keys.title);
             activities = new Circuit[nActivities];
-
             for (int i = 0; i < nActivities; ++i) {
-                JSONObject act = foundActivities.getJSONObject(i);
+                JSONObject act = acts.getJSONObject(i);
                 cParams.location = i + 1;
-                activities[i] = new Circuit(c, act, cParams);
+                activities[i] = new Circuit(c, act, exNames, cParams);
             }
         } catch (JSONException e) {
             Log.e("Workout init", "Error while parsing JSON", e);
         }
 
-        title = workoutName;
+        title = c.getResources().getStringArray(ExerciseManager.titleKeys[type])[params.index];
         testMax = isTestDay[0];
         group = activities[0];
     }

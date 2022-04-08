@@ -40,22 +40,21 @@ public final class TextValidator {
             inflate(c, R.layout.input_view, this);
             field = findViewById(R.id.field);
             textField = findViewById(R.id.fieldTextView);
-            String hintText = null, suffix = null;
+            String suffix = null;
 
             if (attrs != null) {
                 TypedArray a = c.getTheme().obtainStyledAttributes(
                   attrs, R.styleable.InputView, 0, 0);
                 try {
-                    hintText = a.getString(R.styleable.InputView_fieldHint);
                     suffix = a.getString(R.styleable.InputView_extraError);
-                    emptyInputAllowed = a.getBoolean(R.styleable.InputView_emptyInputAllowed, false);
                 } finally {
                     a.recycle();
                 }
             }
-            field.setHint(hintText);
-            if (suffix != null)
+            if (suffix != null) {
                 errorSuffix = suffix;
+                emptyInputAllowed = true;
+            }
         }
 
         private void setup(short minVal, short maxVal, TextValidator validator) {

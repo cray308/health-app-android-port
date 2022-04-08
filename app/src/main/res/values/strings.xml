@@ -4,12 +4,6 @@
         <item>Finished exercise!</item>
         <item>Finished AMRAP circuit!</item>
     </string-array>
-    <string-array name="liftTypes">
-        <item>Squat</item>
-        <item>Pull-up</item>
-        <item>Bench</item>
-        <item>Deadlift</item>
-    </string-array>
     <string-array name="pickerValues">
         <item>1</item>
         <item>2</item>
@@ -58,10 +52,7 @@
     <string name="settingsSegment1">None</string>
     <string name="settingsSegment2">Base-building</string>
     <string name="settingsSegment3">Continuation</string>
-    <string name="maxWeightSquat">Max Squat Weight</string>
-    <string name="maxWeightPullUp">Max Pull-up Weight</string>
-    <string name="maxWeightBench">Max Bench Weight</string>
-    <string name="maxWeightDeadLift">Max Deadlift Weight</string>
+    <string name="maxWeightFormat">Max %s Weight</string>
     <string name="bodyWeightHint">Body weight (to calculate weight for calisthenics)</string>
     <plurals name="inputFieldError">
         <item quantity="one">Input must be between %1$d and %2$d</item>
@@ -95,8 +86,113 @@
     <string name="exerciseRepsWeight">%1$s x %2$d \@ %3$d lbs</string>
     <string name="exerciseDurationMinutes">%1$s for %2$.1f min</string>
     <string name="exerciseDurationSeconds">%1$s for %2$d s</string>
-    <string name="exerciseDistance">Run/row %1$d/%2$d m</string>
+    <string name="exerciseDistance">%1$s %2$d/%3$d m</string>
     <string name="circuitProgress">Circuit %1$d of %2$d</string>
     <string name="circuitHeaderRounds">Round 1 of %d</string>
     <string name="circuitHeaderAMRAP">AMRAP %1$d min</string>
+
+    <string-array name="exNames">
+        <item>1-arm KB Deadlift</item>
+        <item>1-hand KB Floor Press</item>
+        <item>Barbell Push-press</item>
+        <item>Bench Press</item>
+        <item>Bicycle Crunch</item>
+        <item>Box Jump</item>
+        <item>Burpee</item>
+        <item>Crunch</item>
+        <item>DB Bench</item>
+        <item>DB Lunge</item>
+        <item>DB Push-press</item>
+        <item>DB Row</item>
+        <item>Deadlift</item>
+        <item>Diamond Push-up</item>
+        <item>Dip</item>
+        <item>Front Squat</item>
+        <item>Goblet Squat</item>
+        <item>Handstand Hold</item>
+        <item>Hanging Knee-to-Elbow</item>
+        <item>Hanging Leg Raise</item>
+        <item>Hyper-extension</item>
+        <item>Inverted Row</item>
+        <item>Jump Squat</item>
+        <item>KB Clean &amp; Press each arm</item>
+        <item>KB Snatch</item>
+        <item>KB Snatch each arm</item>
+        <item>KB Swing</item>
+        <item>KB Swing each arm</item>
+        <item>Lunge</item>
+        <item>Lying Leg Raise</item>
+        <item>Muscle-up</item>
+        <item>Plyo Pull-up</item>
+        <item>Plyo Push-up</item>
+        <item>Pull-up</item>
+        <item>Push-up</item>
+        <item>Renegade Row</item>
+        <item>Run/row</item>
+        <item>Sprint/row</item>
+        <item>Squat</item>
+        <item>Weighted KB Swing</item>
+        <item>Weighted Ab Wheel Rollout</item>
+        <item>Weighted Box Jump</item>
+        <item>Weighted Burpee</item>
+        <item>Weighted Dip</item>
+        <item>Weighted Hyper-extension</item>
+        <item>Weighted Inverted Row</item>
+        <item>Weighted Jog/row</item>
+        <item>Weighted Mountain Climber</item>
+        <item>Weighted Plank</item>
+        <item>Weighted Plank Push-up</item>
+        <item>Weighted Pull-up</item>
+        <item>Weighted Push-up</item>
+        <item>Weighted Sprint/row</item>
+        <item>Weighted Squat</item>
+        <item>Weighted V-up</item>
+    </string-array>
+    <string-array name="wkNames0">
+        <item>Main Strength</item>
+        <item>Aux Strength</item>
+        <item>Test Day</item>
+    </string-array>
+    <string-array name="wkNames1">
+        <item>KB 1</item>
+        <item>KB 2</item>
+        <item>BW 1</item>
+        <item>KB 3</item>
+        <item>BW 2</item>
+        <item>DB 1</item>
+        <item>KB 4</item>
+        <item>Recovery</item>
+    </string-array>
+    <string-array name="wkNames2">
+        <item>Endurance</item>
+    </string-array>
+    <string-array name="wkNames3">
+        <item>Sprint 10 to 1s</item>
+        <item>Fast 5 Tempo Run</item>
+        <item>600 Meter Resets</item>
+        <item>Black on Oxygen</item>
+        <item>BoO II</item>
+        <item>Fobbit Intervals</item>
+        <item>Oxygen Debt 101</item>
+        <item>Sprint Ladders</item>
+        <item>Meat-Eater</item>
+        <item>Meat-Eater II</item>
+        <item>Anaerobic Capacity</item>
+        <item>Buffalo Laps</item>
+        <item>Meat-Eater III</item>
+        <item>GC 1</item>
+        <item>GC 2</item>
+        <item>GC 3</item>
+        <item>GC 4</item>
+        <item>GC 5</item>
+        <item>GC 6</item>
+        <item>GC 7</item>
+        <item>GC 8</item>
+        <item>GC 9</item>
+        <item>GC 10</item>
+        <item>GC 11</item>
+        <item>GC 12</item>
+        <item>BW Plyo</item>
+        <item>Kinetic Conditioning</item>
+    </string-array>
 </resources>

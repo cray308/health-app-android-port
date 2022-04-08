@@ -5,8 +5,6 @@
         <attr name="buttonLabel" format="string"/>
     </declare-styleable>
     <declare-styleable name="InputView">
-        <attr name="fieldHint" format="string"/>
-        <attr name="emptyInputAllowed" format="boolean"/>
         <attr name="extraError" format="string"/>
     </declare-styleable>
     <declare-styleable name="HeaderView">

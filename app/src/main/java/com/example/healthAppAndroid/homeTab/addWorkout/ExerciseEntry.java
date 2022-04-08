@@ -49,7 +49,7 @@ final class ExerciseEntry {
     final byte type;
     byte state = 0;
 
-    ExerciseEntry(Context c, JSONObject dict, Params params) {
+    ExerciseEntry(Context c, JSONObject dict, String[] exNames, Params params) {
         sets = params.customSets;
         short _reps = params.customReps;
         byte _type = 0;
@@ -61,7 +61,7 @@ final class ExerciseEntry {
             if (AppCoordinator.shared.onEmulator && _type == Type.duration)
                 _reps = (short)(params.workoutType == WorkoutType.HIC ? 15 : 120);
 
-            int rest = dict.getInt("rest");
+            int rest = dict.getInt("B");
             if (rest != 0)
                 _rest = c.getString(R.string.exerciseRest, rest);
 
@@ -71,7 +71,7 @@ final class ExerciseEntry {
                 headerStr.str.append(c.getString(R.string.exerciseHeader, sets));
             }
 
-            String title, name = dict.getString("name");
+            String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
             if (_type == Type.reps) {
                 if (params.workoutType == 0) {
                     title = c.getString(R.string.exerciseRepsWeight, name, _reps, params.weight);
@@ -85,7 +85,7 @@ final class ExerciseEntry {
                     title = c.getString(R.string.exerciseDurationSeconds, name, _reps);
                 }
             } else {
-                title = c.getString(R.string.exerciseDistance, _reps, ((5 * _reps) >> 2));
+                title = c.getString(R.string.exerciseDistance, name, _reps, ((5 * _reps) >> 2));
             }
             titleStr.str.append(title);
         } catch (JSONException ex) {

@@ -28,9 +28,9 @@ public final class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, null);
 
-        int[] ids = {
-          R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth, R.id.inputWeight
-        };
+        String[] exNames = getResources().getStringArray(R.array.exNames);
+        int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
+        int[] keys = {38, 33, 3, 12};
         MaterialButtonToggleGroup picker = view.findViewById(R.id.planPicker);
         selected = AppUserData.shared.currentPlan + 1;
         picker.check(segmentIds[selected]);
@@ -80,13 +80,16 @@ public final class SettingsFragment extends Fragment {
 
         validator = new TextValidator(saveButton);
         for (int i = 0; i < 4; ++i) {
-            validator.addChild((short)0, (short)999, view.findViewById(ids[i]));
+            TextValidator.InputView v = view.findViewById(ids[i]);
+            v.field.setHint(getString(R.string.maxWeightFormat, exNames[keys[i]]));
+            validator.addChild((short)0, (short)999, v);
         }
-        validator.addChild((short)1, (short)999, view.findViewById(ids[4]));
+        validator.addChild((short)1, (short)999, view.findViewById(R.id.inputWeight));
         short weight = AppUserData.shared.weight;
         validator.children[4].result = weight;
         validator.children[4].valid = true;
         validator.children[4].field.setError(null);
+        validator.children[4].field.setHint(getString(R.string.bodyWeightHint));
         if (weight > 0)
             validator.children[4].textField.setText(String.valueOf(weight));
         updateWeightFields(AppUserData.shared.liftArray);

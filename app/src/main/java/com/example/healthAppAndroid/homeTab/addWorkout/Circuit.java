@@ -76,7 +76,7 @@ final class Circuit {
     short completedReps = 0;
     final byte type;
 
-    Circuit(Context c, JSONObject dict, Params params) {
+    Circuit(Context c, JSONObject dict, String[] exNames, Params params) {
         short _reps = params.customCircuitReps;
         byte _type = 0;
 
@@ -90,7 +90,7 @@ final class Circuit {
             if (AppCoordinator.shared.onEmulator && _type == Type.AMRAP)
                 _reps = (short)(params.nActivities > 1 ? 1 : 2);
 
-            JSONArray foundExercises = dict.getJSONArray("exercises");
+            JSONArray foundExercises = dict.getJSONArray("E");
             int nExercises = foundExercises.length();
             if (params.workoutType == WorkoutType.HIC && _type == 0 && nExercises == 1) {
                 exerciseParams.customSets = _reps;
@@ -116,7 +116,7 @@ final class Circuit {
                 JSONObject ex = foundExercises.getJSONObject(i);
                 if (params.workoutType == WorkoutType.strength)
                     exerciseParams.weight = params.weights[i];
-                ExerciseEntry e = new ExerciseEntry(c, ex, exerciseParams);
+                ExerciseEntry e = new ExerciseEntry(c, ex, exNames, exerciseParams);
                 exercises[i] = e;
                 if (_type == Type.decrement && e.type == ExerciseEntry.Type.reps) {
                     e.titleStr.index = e.titleStr.str.indexOf("10");
