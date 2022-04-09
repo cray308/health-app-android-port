@@ -97,7 +97,6 @@
         <item>Bench</item>
         <item>Deadlift</item>
         <item>1-arm KB Deadlift</item>
-        <item>1-hand KB Floor Press</item>
         <item>Barbell Push-press</item>
         <item>Bicycle Crunch</item>
         <item>Box Jump</item>
@@ -117,6 +116,7 @@
         <item>Inverted Row</item>
         <item>Jump Squat</item>
         <item>Double KB Clean &amp; Press</item>
+        <item>KB Floor Press</item>
         <item>KB Snatch</item>
         <item>KB Swing</item>
         <item>Double KB Swing</item>
@@ -131,11 +131,9 @@
         <item>Sprint/row</item>
         <item>Weighted KB Swing</item>
         <item>Weighted Ab Wheel Rollout</item>
-        <item>Weighted Box Jump</item>
         <item>Weighted Burpee</item>
         <item>Weighted Dip</item>
         <item>Weighted Hyper-extension</item>
-        <item>Weighted Inverted Row</item>
         <item>Weighted Jog/row</item>
         <item>Weighted Mountain Climber</item>
         <item>Weighted Plank</item>
@@ -154,9 +152,9 @@
     <string-array name="wkNames1">
         <item>KB 1</item>
         <item>KB 2</item>
-        <item>BW 1</item>
+        <item>Weighted 1</item>
         <item>KB 3</item>
-        <item>BW 2</item>
+        <item>Weighted 2</item>
         <item>DB 1</item>
         <item>KB 4</item>
         <item>Recovery</item>
