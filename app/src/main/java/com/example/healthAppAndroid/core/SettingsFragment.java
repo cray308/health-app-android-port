@@ -30,7 +30,6 @@ public final class SettingsFragment extends Fragment {
 
         String[] exNames = getResources().getStringArray(R.array.exNames);
         int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
-        int[] keys = {38, 33, 3, 12};
         MaterialButtonToggleGroup picker = view.findViewById(R.id.planPicker);
         selected = AppUserData.shared.currentPlan + 1;
         picker.check(segmentIds[selected]);
@@ -81,7 +80,7 @@ public final class SettingsFragment extends Fragment {
         validator = new TextValidator(saveButton);
         for (int i = 0; i < 4; ++i) {
             TextValidator.InputView v = view.findViewById(ids[i]);
-            v.field.setHint(getString(R.string.maxWeightFormat, exNames[keys[i]]));
+            v.field.setHint(getString(R.string.maxWeightFormat, exNames[i]));
             validator.addChild((short)0, (short)999, v);
         }
         validator.addChild((short)1, (short)999, view.findViewById(R.id.inputWeight));

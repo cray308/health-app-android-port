@@ -63,7 +63,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         workoutNames = new String[]{res.getString(R.string.workout0), res.getString(R.string.workout1),
                                     res.getString(R.string.workout2), res.getString(R.string.workout3)};
         String[] exNames = res.getStringArray(R.array.exNames);
-        liftNames = new String[]{exNames[38], exNames[33], exNames[3], exNames[12]};
+        liftNames = new String[]{exNames[0], exNames[1], exNames[2], exNames[3]};
     }
 
     void populateData(WeekDataModel results) {

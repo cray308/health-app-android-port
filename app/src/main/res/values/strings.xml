@@ -92,10 +92,13 @@
     <string name="circuitHeaderAMRAP">AMRAP %1$d min</string>
 
     <string-array name="exNames">
+        <item>Squat</item>
+        <item>Pull-up</item>
+        <item>Bench</item>
+        <item>Deadlift</item>
         <item>1-arm KB Deadlift</item>
         <item>1-hand KB Floor Press</item>
         <item>Barbell Push-press</item>
-        <item>Bench Press</item>
         <item>Bicycle Crunch</item>
         <item>Box Jump</item>
         <item>Burpee</item>
@@ -104,10 +107,8 @@
         <item>DB Lunge</item>
         <item>DB Push-press</item>
         <item>DB Row</item>
-        <item>Deadlift</item>
         <item>Diamond Push-up</item>
         <item>Dip</item>
-        <item>Front Squat</item>
         <item>Goblet Squat</item>
         <item>Handstand Hold</item>
         <item>Hanging Knee-to-Elbow</item>
@@ -115,22 +116,20 @@
         <item>Hyper-extension</item>
         <item>Inverted Row</item>
         <item>Jump Squat</item>
-        <item>KB Clean &amp; Press each arm</item>
+        <item>Double KB Clean &amp; Press</item>
         <item>KB Snatch</item>
-        <item>KB Snatch each arm</item>
+        <item>Double KB Snatch</item>
         <item>KB Swing</item>
-        <item>KB Swing each arm</item>
+        <item>Double KB Swing</item>
         <item>Lunge</item>
         <item>Lying Leg Raise</item>
         <item>Muscle-up</item>
         <item>Plyo Pull-up</item>
         <item>Plyo Push-up</item>
-        <item>Pull-up</item>
         <item>Push-up</item>
         <item>Renegade Row</item>
         <item>Run/row</item>
         <item>Sprint/row</item>
-        <item>Squat</item>
         <item>Weighted KB Swing</item>
         <item>Weighted Ab Wheel Rollout</item>
         <item>Weighted Box Jump</item>

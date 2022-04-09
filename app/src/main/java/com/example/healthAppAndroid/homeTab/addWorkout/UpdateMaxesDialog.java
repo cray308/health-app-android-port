@@ -62,10 +62,9 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         });
         validator = new TextValidator(finishButton);
 
-        int[] keys = {38, 33, 3, 12};
         TextValidator.InputView input = view.findViewById(R.id.input);
         input.field.setHint(getString(R.string.maxWeightFormat,
-                                      getResources().getStringArray(R.array.exNames)[keys[index]]));
+                                      getResources().getStringArray(R.array.exNames)[index]));
         validator.addChild((short)0, (short)999, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) {
