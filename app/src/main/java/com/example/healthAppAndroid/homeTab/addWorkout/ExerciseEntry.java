@@ -9,6 +9,8 @@ import com.example.healthAppAndroid.core.AppCoordinator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 final class ExerciseEntry {
     static abstract class Type {
         static final byte reps = 0;
@@ -35,11 +37,9 @@ final class ExerciseEntry {
         }
     }
 
-    static void setupHeaderData(Context c) {
-        headerLoc = c.getString(R.string.exerciseHeader, 5).indexOf('1');
-    }
+    static void setupHeaderData(Context c) { setsSub = c.getString(R.string.sets1); }
 
-    private static int headerLoc;
+    private static String setsSub;
     final MutableString headerStr = new MutableString();
     final MutableString titleStr = new MutableString();
     final String restStr;
@@ -66,9 +66,13 @@ final class ExerciseEntry {
                 _rest = c.getString(R.string.exerciseRest, rest);
 
             if (sets > 1) {
-                headerStr.index = headerLoc;
-                headerStr.end = headerStr.index + 1;
-                headerStr.str.append(c.getString(R.string.exerciseHeader, sets));
+                String h = c.getString(R.string.exerciseHeader, 1, sets);
+                headerStr.str.append(h);
+                int subIdx = h.indexOf(setsSub);
+                String subhead = h.substring(subIdx, subIdx + setsSub.length());
+                int numIdx = subhead.indexOf(ExerciseManager.one);
+                headerStr.index = subIdx + numIdx;
+                headerStr.length = ExerciseManager.oneCount;
             }
 
             String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
@@ -118,7 +122,9 @@ final class ExerciseEntry {
                     return true;
                 } else {
                     state = State.active;
-                    headerStr.replace(String.valueOf(completedSets + 1));
+                    String newNum = String.format(Locale.getDefault(), "%d", completedSets + 1);
+                    headerStr.replace(newNum);
+                    headerStr.length = newNum.length();
                     if (type == Type.duration) {
                         NotificationService.scheduleAlarm(
                           c, reps, NotificationService.Type.Exercise, group, index);

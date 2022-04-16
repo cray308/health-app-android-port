@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public abstract class ExerciseManager {
     private static final class DictWrapper {
@@ -56,6 +57,7 @@ public abstract class ExerciseManager {
         ExerciseEntry.setupHeaderData(c);
         Circuit.setupHeaderData(c);
         weekInPlan = week;
+        oneCount = one.length();
     }
 
     static abstract class Keys {
@@ -64,6 +66,8 @@ public abstract class ExerciseManager {
         static final String index = "I";
     }
 
+    static String one = String.format(Locale.getDefault(), "%d", 1);
+    static int oneCount;
     private static int weekInPlan;
     final static int[] titleKeys = {
       R.array.wkNames0, R.array.wkNames1, R.array.wkNames2, R.array.wkNames3

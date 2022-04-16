@@ -2,6 +2,7 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.example.healthAppAndroid.core.AppCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.Instant;
+import java.util.Locale;
 
 public final class WorkoutActivity extends AppCompatActivity {
     private static abstract class Event {
@@ -37,7 +39,7 @@ public final class WorkoutActivity extends AppCompatActivity {
     private ExerciseContainer firstContainer;
     private final short[] weights = {0, 0, 0, 0};
 
-    public static void start(FragmentActivity parent, WorkoutParams params) {
+    public static void start(FragmentActivity parent, Parcelable params) {
         Intent intent = new Intent(parent, WorkoutActivity.class);
         intent.putExtra(bundleKey, params);
         parent.startActivity(intent);
@@ -181,7 +183,10 @@ public final class WorkoutActivity extends AppCompatActivity {
                 nextView = firstContainer.headerView.headerLabel;
             case Workout.Transition.finishedCircuit:
                 if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
-                    workout.group.headerStr.replace(String.valueOf(workout.group.completedReps + 1));
+                    String newNum = String.format(Locale.getDefault(),
+                                                  "%d", workout.group.completedReps + 1);
+                    workout.group.headerStr.replace(newNum);
+                    workout.group.headerStr.length = newNum.length();
                     firstContainer.headerView.headerLabel.setText(workout.group.headerStr.str);
                     nextView = firstContainer.headerView.headerLabel;
                 }

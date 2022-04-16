@@ -4,9 +4,6 @@
         <attr name="hideCheckbox" format="boolean"/>
         <attr name="buttonLabel" format="string"/>
     </declare-styleable>
-    <declare-styleable name="InputView">
-        <attr name="extraError" format="string"/>
-    </declare-styleable>
     <declare-styleable name="HeaderView">
         <attr name="hideSeparator" format="boolean"/>
         <attr name="headerText" format="string"/>

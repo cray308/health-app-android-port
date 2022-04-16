@@ -105,8 +105,7 @@
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:extraError="@string/emptyFieldSuffix" />
+            android:layout_marginTop="20dp" />
 
         <view
             android:id="@+id/inputFirst"

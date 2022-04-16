@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.core;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -18,72 +17,45 @@ public final class TextValidator {
         public TextInputLayout field;
         TextInputEditText textField;
         private TextValidator delegate;
-        private String errorSuffix = "";
+        private int id;
         private int min;
         private int max;
         short result = 0;
         boolean valid = false;
-        private boolean isInputNumeric = false;
         private boolean emptyInputAllowed = false;
 
         public InputView(Context c) {
             super(c);
-            setup(c, null);
+            setup(c);
         }
 
         public InputView(Context c, AttributeSet attrs) {
             super(c, attrs);
-            setup(c, attrs);
+            setup(c);
         }
 
-        private void setup(Context c, AttributeSet attrs) {
+        private void setup(Context c) {
             inflate(c, R.layout.input_view, this);
             field = findViewById(R.id.field);
             textField = findViewById(R.id.fieldTextView);
-            String suffix = null;
-
-            if (attrs != null) {
-                TypedArray a = c.getTheme().obtainStyledAttributes(
-                  attrs, R.styleable.InputView, 0, 0);
-                try {
-                    suffix = a.getString(R.styleable.InputView_extraError);
-                } finally {
-                    a.recycle();
-                }
-            }
-            if (suffix != null) {
-                errorSuffix = suffix;
-                emptyInputAllowed = true;
-            }
         }
 
-        private void setup(short minVal, short maxVal, TextValidator validator) {
+        private void setup(short minVal, short maxVal, int resId, TextValidator validator) {
             min = minVal;
             max = maxVal;
+            id = resId;
+            emptyInputAllowed = resId == R.plurals.inputFieldErrorEmpty;
             delegate = validator;
             textField.addTextChangedListener(this);
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (count == 0) {
-                isInputNumeric = true;
-                return;
-            }
-            for (int i = start; i < start + count; ++i) {
-                char c = s.charAt(i);
-                if (c < 48 || c > 57) {
-                    isInputNumeric = false;
-                    return;
-                }
-            }
-            isInputNumeric = true;
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         public void afterTextChanged(Editable s) {
             boolean isEmpty = s.length() == 0;
-            if (!isInputNumeric || (isEmpty && !emptyInputAllowed)) {
+            if (isEmpty && !emptyInputAllowed) {
                 showErrorMsg();
                 return;
             }
@@ -110,9 +82,7 @@ public final class TextValidator {
 
         private void showErrorMsg() {
             valid = false;
-            String msg = getContext().getResources().getQuantityString(
-              R.plurals.inputFieldError, 1, min, max) + errorSuffix;
-            field.setError(msg);
+            field.setError(getContext().getResources().getQuantityString(id, 1, min, max));
             delegate.disableButton();
         }
     }
@@ -143,8 +113,8 @@ public final class TextValidator {
         enableButton();
     }
 
-    public void addChild(short min, short max, InputView view) {
-        view.setup(min, max, this);
+    public void addChild(short min, short max, int id, InputView view) {
+        view.setup(min, max, id, this);
         children[count++] = view;
     }
 

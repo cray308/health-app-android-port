@@ -11,7 +11,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 final class HistoryViewModel extends IndexAxisValueFormatter {
     private String[] workoutNames;
@@ -25,23 +24,12 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         final float[] maxes = {0, 0, 0};
     }
 
-    final static class WorkoutTypeModel extends IndexAxisValueFormatter {
+    final static class WorkoutTypeModel {
         private ArrayList<List<Entry>> entries;
         ArrayList<ArrayList<List<Entry>>> entryRefs;
         final String[] legendLabels = {null, null, null, null};
         private final int[][] avgs = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
         final float[] maxes = {0, 0, 0};
-
-        public String getFormattedValue(float value) {
-            int minutes = (int)value;
-            if (minutes == 0) {
-                return "";
-            } else if (minutes < 60) {
-                return String.format(Locale.US, "%dm", minutes);
-            } else {
-                return String.format(Locale.US, "%dh %dm", minutes / 60, minutes % 60);
-            }
-        }
     }
 
     final static class LiftModel {
@@ -69,10 +57,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     void populateData(WeekDataModel results) {
         refIndices[0] = results.size - 26;
         refIndices[1] = results.size - 52;
-        if (refIndices[1] < 0)
-            refIndices[1] = 0;
-        if (refIndices[0] < 0)
-            refIndices[0] = 0;
+        refIndices[0] = Math.max(refIndices[0], 0);
+        refIndices[1] = Math.max(refIndices[1], 0);
 
         nEntries[0] = results.size - refIndices[0];
         nEntries[1] = results.size - refIndices[1];
@@ -160,10 +146,10 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         for (int i = 0; i < 4; ++i) {
             int typeAverage = workoutTypes.avgs[index][i];
             String buf;
-            if (typeAverage > 59) {
-                buf = String.format(Locale.US, "%d h %d m", typeAverage / 60, typeAverage % 60);
+            if (typeAverage < 60) {
+                buf = c.getString(R.string.minFmt, typeAverage);
             } else {
-                buf = String.format(Locale.US, "%d m", typeAverage);
+                buf = c.getString(R.string.hourMinFmt, typeAverage / 60, typeAverage % 60);
             }
             workoutTypes.legendLabels[i] = c.getString(R.string.legend1, workoutNames[i], buf);
             lifts.legendLabels[i] = c.getString(R.string.legend2, liftNames[i], lifts.avgs[index][i]);

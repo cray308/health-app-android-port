@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.example.healthAppAndroid.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
@@ -19,6 +21,23 @@ import com.github.mikephil.charting.utils.Transformer;
 import java.util.List;
 
 public final class WorkoutTypeChart extends ChartContainer {
+    private static final class ValueFormatter extends IndexAxisValueFormatter {
+        private final View del;
+
+        private ValueFormatter(View delegate) { del = delegate; }
+
+        public String getFormattedValue(float value) {
+            int minutes = (int)value;
+            if (minutes == 0) {
+                return "";
+            } else if (minutes < 60) {
+                return del.getResources().getString(R.string.minFmt, minutes);
+            } else {
+                return del.getResources().getString(R.string.hourMinFmt, minutes / 60, minutes % 60);
+            }
+        }
+    }
+
     private static final class Renderer extends LineChartRenderer {
         private static final class Formatter implements IFillFormatter {
             private final LineDataSet set;
@@ -94,9 +113,10 @@ public final class WorkoutTypeChart extends ChartContainer {
         }
         LineDataSet[] orderedSets = {dataSets[4], dataSets[3], dataSets[2], dataSets[1]};
         setupChartData(orderedSets, 4);
-        data.setValueFormatter(HistoryFragment.viewModel.workoutTypes);
+        ValueFormatter formatter = new ValueFormatter(this);
+        data.setValueFormatter(formatter);
         setupChartView();
-        chart.getAxisLeft().setValueFormatter(HistoryFragment.viewModel.workoutTypes);
+        chart.getAxisLeft().setValueFormatter(formatter);
         chart.setRenderer(new Renderer(chart));
     }
 

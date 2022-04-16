@@ -123,7 +123,7 @@ public final class SetupWorkoutDialog
             if (titles[i] == null) continue;
             TextValidator.InputView v = new TextValidator.InputView(c);
             v.field.setHint(titles[i]);
-            validator.addChild(minArr[i], maxes[i], v);
+            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError, v);
             inputViewStack.addView(v);
         }
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();

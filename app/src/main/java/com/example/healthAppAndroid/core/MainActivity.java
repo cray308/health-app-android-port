@@ -21,8 +21,7 @@ import java.time.ZoneId;
 
 public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
-        //noinspection VariableNotUsedInsideIf
-        if (AppUserData.shared != null) {
+        if (AppCoordinator.shared != null) {
             super.onCreate(null);
             setContentView(R.layout.activity_main);
             AppColors.setColors(this);

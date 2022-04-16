@@ -15,6 +15,8 @@ import android.widget.Button;
 import com.example.healthAppAndroid.R;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
+import java.util.Locale;
+
 public final class SettingsFragment extends Fragment {
     private TextValidator validator;
     private SwitchCompat switchView;
@@ -81,26 +83,28 @@ public final class SettingsFragment extends Fragment {
         for (int i = 0; i < 4; ++i) {
             TextValidator.InputView v = view.findViewById(ids[i]);
             v.field.setHint(getString(R.string.maxWeightFormat, exNames[i]));
-            validator.addChild((short)0, (short)999, v);
+            validator.addChild((short)0, (short)999, R.plurals.inputFieldError, v);
         }
-        validator.addChild((short)1, (short)999, view.findViewById(R.id.inputWeight));
+        validator.addChild((short)1, (short)999,
+                           R.plurals.inputFieldErrorEmpty, view.findViewById(R.id.inputWeight));
         short weight = AppUserData.shared.weight;
         validator.children[4].result = weight;
         validator.children[4].valid = true;
         validator.children[4].field.setError(null);
         validator.children[4].field.setHint(getString(R.string.bodyWeightHint));
         if (weight > 0)
-            validator.children[4].textField.setText(String.valueOf(weight));
+            validator.children[4].textField.setText(String.format(Locale.getDefault(), "%d", weight));
         updateWeightFields(AppUserData.shared.liftArray);
     }
 
     public void updateWeightFields(short[] lifts) {
+        Locale l = Locale.getDefault();
         for (int i = 0; i < 4; ++i) {
             short value = lifts[i];
             validator.children[i].result = value;
             validator.children[i].valid = true;
             validator.children[i].field.setError(null);
-            validator.children[i].textField.setText(String.valueOf(value));
+            validator.children[i].textField.setText(String.format(l, "%d", value));
         }
         if (validator.children[4].valid)
             validator.enableButton();

@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 final class Circuit {
     static abstract class Type {
         static final byte rounds = 0;
@@ -19,6 +21,7 @@ final class Circuit {
     }
 
     static final class Params {
+        private final Locale l = Locale.getDefault();
         final short customSets;
         final short customReps;
         private final short customCircuitReps;
@@ -39,8 +42,7 @@ final class Circuit {
                         int weight = ExerciseManager.getBodyWeightToUse();
                         weights[2] =
                           (short)((int)((lifts[LiftType.pullUp] + weight) * multiplier) - weight);
-                        if (weights[2] < 0)
-                            weights[2] = 0;
+                        weights[2] = (short)Math.max(weights[2], 0);
                     } else {
                         weights[2] = (short)(multiplier * lifts[LiftType.deadlift]);
                     }
@@ -65,10 +67,12 @@ final class Circuit {
     }
 
     static void setupHeaderData(Context c) {
-        roundsLoc = c.getString(R.string.circuitHeaderRounds, 5).indexOf('1');
+        rounds1S = c.getString(R.string.rounds1S);
+        rounds1M = c.getString(R.string.rounds1M);
     }
 
-    private static int roundsLoc;
+    private static String rounds1S;
+    private static String rounds1M;
     ExerciseEntry[] exercises;
     final MutableString headerStr = new MutableString();
     int index = 0;
@@ -79,11 +83,11 @@ final class Circuit {
     Circuit(Context c, JSONObject dict, String[] exNames, Params params) {
         short _reps = params.customCircuitReps;
         byte _type = 0;
+        boolean multiple = params.nActivities > 1;
 
         try {
             _type = (byte)dict.getInt(ExerciseManager.Keys.type);
             ExerciseEntry.Params exerciseParams = new ExerciseEntry.Params(params);
-            String separator = "";
 
             if (_reps == 0)
                 _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
@@ -96,19 +100,34 @@ final class Circuit {
                 exerciseParams.customSets = _reps;
                 _reps = 1;
             }
-            if (params.nActivities > 1) {
+            if (_type == Type.AMRAP) {
+                String h;
+                if (multiple) {
+                    h = c.getString(R.string.circuitHeaderAMRAPM,
+                                    params.location, params.nActivities, _reps);
+                } else {
+                    h = c.getString(R.string.circuitHeaderAMRAP, _reps);
+                }
+                headerStr.str.append(h);
+            } else if (_reps > 1) {
+                String h, s;
+                if (multiple) {
+                    h = c.getString(R.string.circuitHeaderRoundsM,
+                                    params.location, params.nActivities, 1, _reps);
+                    s = rounds1M;
+                } else {
+                    h = c.getString(R.string.circuitHeaderRounds, 1, _reps);
+                    s = rounds1S;
+                }
+                headerStr.str.append(h);
+                int subIdx = h.indexOf(s);
+                String subhead = h.substring(subIdx, subIdx + s.length());
+                int numIdx = subhead.indexOf(ExerciseManager.one);
+                headerStr.index = subIdx + numIdx;
+                headerStr.length = ExerciseManager.oneCount;
+            } else if (multiple) {
                 headerStr.str.append(
                   c.getString(R.string.circuitProgress, params.location, params.nActivities));
-                separator = " - ";
-            }
-            if (_type == Type.AMRAP) {
-                headerStr.str.append(separator);
-                headerStr.str.append(c.getString(R.string.circuitHeaderAMRAP, _reps));
-            } else if (_reps > 1) {
-                headerStr.str.append(separator);
-                headerStr.index = roundsLoc + headerStr.str.length();
-                headerStr.end = headerStr.index + 1;
-                headerStr.str.append(c.getString(R.string.circuitHeaderRounds, _reps));
             }
 
             exercises = new ExerciseEntry[nExercises];
@@ -119,8 +138,9 @@ final class Circuit {
                 ExerciseEntry e = new ExerciseEntry(c, ex, exNames, exerciseParams);
                 exercises[i] = e;
                 if (_type == Type.decrement && e.type == ExerciseEntry.Type.reps) {
-                    e.titleStr.index = e.titleStr.str.indexOf("10");
-                    e.titleStr.end = e.titleStr.index + 2;
+                    String ten = String.format(params.l, "%d", 10);
+                    e.titleStr.index = e.titleStr.str.indexOf(ten);
+                    e.titleStr.length = ten.length();
                 }
             }
 
@@ -137,15 +157,14 @@ final class Circuit {
         if (type == Type.rounds) {
             return ++completedReps == reps;
         } else if (type == Type.decrement) {
-            boolean changeRange = completedReps-- == 10;
-            if (completedReps == 0) return true;
+            if (--completedReps == 0) return true;
 
-            String newReps = String.valueOf(completedReps);
+            String newReps = String.format(Locale.getDefault(), "%d", completedReps);
+            int len = newReps.length();
             for (ExerciseEntry e : exercises) {
                 if (e.type == ExerciseEntry.Type.reps) {
                     e.titleStr.replace(newReps);
-                    if (changeRange)
-                        e.titleStr.end -= 1;
+                    e.titleStr.length = len;
                 }
             }
         }

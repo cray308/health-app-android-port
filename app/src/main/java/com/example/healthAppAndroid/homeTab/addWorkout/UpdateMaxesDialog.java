@@ -15,6 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.Locale;
+
 public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
     private static final String key = "UpdateMaxesDialog.Index";
     private TextValidator validator;
@@ -46,7 +48,12 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         NumberPicker picker = view.findViewById(R.id.numberPicker);
         picker.setMinValue(0);
         picker.setMaxValue(9);
-        picker.setDisplayedValues(getResources().getStringArray(R.array.pickerValues));
+        String[] values = new String[10];
+        Locale l = Locale.getDefault();
+        for (int i = 0; i < 10; ++i) {
+            values[i] = String.format(l, "%d", i + 1);
+        }
+        picker.setDisplayedValues(values);
         picker.setValue(0);
         picker.setOnValueChangedListener((picker1, old, newVal) -> value = (byte)(newVal + 1));
 
@@ -65,7 +72,7 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         TextValidator.InputView input = view.findViewById(R.id.input);
         input.field.setHint(getString(R.string.maxWeightFormat,
                                       getResources().getStringArray(R.array.exNames)[index]));
-        validator.addChild((short)0, (short)999, input);
+        validator.addChild((short)0, (short)999, R.plurals.inputFieldError, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) {
             dialog.setCancelable(false);

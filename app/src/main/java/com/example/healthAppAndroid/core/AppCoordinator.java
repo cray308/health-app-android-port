@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.historyTab.HistoryFragment;
 import com.example.healthAppAndroid.homeTab.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public final class AppCoordinator {
     private final FragmentManager fm;
@@ -47,7 +47,7 @@ public final class AppCoordinator {
     }
 
     private void init(FragmentActivity activity, int activeIndex) {
-        ((BottomNavigationView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
+        ((NavigationBarView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
             int index = 0;
             int id = item.getItemId();
             if (id == R.id.history) {

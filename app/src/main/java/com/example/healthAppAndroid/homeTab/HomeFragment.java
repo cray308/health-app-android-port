@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.os.Handler;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,13 +95,14 @@ public final class HomeFragment extends Fragment {
 
         String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(c, plan);
         DayOfWeek[] days = DayOfWeek.values();
+        Locale l = Locale.getDefault();
 
         for (int i = 0; i < 7; ++i) {
             if (workoutNames[i] == null) continue;
             StatusButton btn = new StatusButton(c);
             setTag(btn.button, i);
             btn.button.setOnClickListener(dayWorkoutListener);
-            btn.headerLabel.setText(days[i].getDisplayName(TextStyle.FULL, Locale.US));
+            btn.headerLabel.setText(days[i].getDisplayName(TextStyle.FULL, l));
             btn.button.setText(workoutNames[i]);
             weeklyWorkoutStack.addView(btn);
             btn.updateAccessibility();
@@ -144,7 +146,7 @@ public final class HomeFragment extends Fragment {
       navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(
         getContext(), getTag(view), AppUserData.shared.currentPlan));
 
-    void navigateToAddWorkout(BottomSheetDialogFragment dialog, WorkoutParams params) {
+    void navigateToAddWorkout(BottomSheetDialogFragment dialog, Parcelable params) {
         if (dialog != null)
             dialog.dismiss();
 

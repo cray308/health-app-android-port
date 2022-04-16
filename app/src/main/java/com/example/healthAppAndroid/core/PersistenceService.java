@@ -22,6 +22,7 @@ import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
@@ -93,7 +94,7 @@ public abstract class PersistenceService extends RoomDatabase {
         int count = data.length;
         if (count > 1) {
             model.size = count - 1;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
             for (int i = 0; i < model.size; ++i) {
                 model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
             }

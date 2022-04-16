@@ -98,7 +98,7 @@ public abstract class ChartContainer extends LinearLayout {
         chart.notifyDataSetChanged();
     }
 
-    void updateData(int index, boolean isSmall, List<Entry> entries, int iLegend, String text) {
+    void updateData(int index, boolean isSmall, List<Entry> entries, int iLegend, CharSequence text) {
         dataSets[index].setDrawCircles(isSmall);
         dataSets[index].setValues(entries);
         legendEntries[iLegend].label.setText(text);
