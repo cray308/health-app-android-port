@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
 import com.example.healthAppAndroid.core.AppUserData;
-import com.example.healthAppAndroid.core.StatusButton;
 import com.example.healthAppAndroid.homeTab.addWorkout.ExerciseManager;
 import com.example.healthAppAndroid.homeTab.addWorkout.HeaderView;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutActivity;
@@ -47,7 +46,42 @@ public final class HomeFragment extends Fragment {
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context c, Intent intent) {
-            handleFinishedWorkout(intent.getByteExtra(WorkoutActivity.userInfo, (byte)0));
+            byte completed = intent.getByteExtra(WorkoutActivity.userInfo, (byte)0);
+            LocalBroadcastManager.getInstance(c).unregisterReceiver(receiver);
+            if (completed == 0) return;
+
+            int totalCompleted = 0;
+            for (int i = 0; i < 7; ++i) {
+                if (((1 << i) & completed) != 0)
+                    ++totalCompleted;
+            }
+
+            updateWorkoutsList(completed);
+            if (numWorkouts == totalCompleted)
+                new Handler().postDelayed(this::showConfetti, 2500);
+        }
+
+        private void showConfetti() {
+            confettiView.setVisibility(View.VISIBLE);
+            confettiView.build()
+                        .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
+                        .setDirection(0.0, 359.0)
+                        .setSpeed(1f, 5f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(5000)
+                        .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                        .addSizes(new Size(12, 5f))
+                        .setPosition(150f, null, -50f, null)
+                        .streamFor(128, 4500);
+            new Handler().postDelayed(() -> {
+                confettiView.setVisibility(View.GONE);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                  .setTitle(getString(R.string.homeAlertTitle))
+                  .setMessage(getString(R.string.homeAlertMessage))
+                  .setPositiveButton(
+                    getString(com.google.android.material.R.string.mtrl_picker_confirm), null);
+                builder.create().show();
+            }, 5500);
         }
     };
 
@@ -157,46 +191,5 @@ public final class HomeFragment extends Fragment {
         IntentFilter filter = new IntentFilter(WorkoutActivity.notification);
         LocalBroadcastManager.getInstance(c).registerReceiver(receiver, filter);
         WorkoutActivity.start(activity, params);
-    }
-
-    private void handleFinishedWorkout(byte completed) {
-        Context c = getContext();
-        if (c == null) return;
-        LocalBroadcastManager.getInstance(c).unregisterReceiver(receiver);
-
-        if (completed == 0) return;
-
-        int totalCompleted = 0;
-        for (int i = 0; i < 7; ++i) {
-            if (((1 << i) & completed) != 0)
-                ++totalCompleted;
-        }
-
-        updateWorkoutsList(completed);
-        if (numWorkouts == totalCompleted)
-            new Handler().postDelayed(this::showConfetti, 2500);
-    }
-
-    private void showConfetti() {
-        confettiView.setVisibility(View.VISIBLE);
-        confettiView.build()
-                    .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
-                    .setDirection(0.0, 359.0)
-                    .setSpeed(1f, 5f)
-                    .setFadeOutEnabled(true)
-                    .setTimeToLive(5000)
-                    .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
-                    .addSizes(new Size(12, 5f))
-                    .setPosition(150f, null, -50f, null)
-                    .streamFor(128, 4500);
-        new Handler().postDelayed(() -> {
-            confettiView.setVisibility(View.GONE);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-              .setTitle(getString(R.string.homeAlertTitle))
-              .setMessage(getString(R.string.homeAlertMessage))
-              .setPositiveButton(
-                getString(com.google.android.material.R.string.mtrl_picker_confirm), null);
-            builder.create().show();
-        }, 5500);
     }
 }

@@ -24,7 +24,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-@SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
 public abstract class PersistenceService extends RoomDatabase {
     @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor") @Dao public interface DAO {
@@ -39,7 +38,7 @@ public abstract class PersistenceService extends RoomDatabase {
         @Delete void delete(WeeklyData[] weeks);
     }
 
-    @Entity(tableName = "weeks") public static class WeeklyData {
+    @Entity(tableName = "weeks") static class WeeklyData {
         @PrimaryKey(autoGenerate = true) int uid;
 
         @ColumnInfo(name = "start") long start;

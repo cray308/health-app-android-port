@@ -77,13 +77,24 @@ public final class TextValidator {
             field.setError(null);
             valid = true;
             result = (short)res;
-            delegate.checkFields();
+            for (int i = 0; i < delegate.count; ++i) {
+                if (!delegate.children[i].valid) {
+                    disableButton();
+                    return;
+                }
+            }
+            delegate.enableButton();
         }
 
         private void showErrorMsg() {
             valid = false;
             field.setError(getContext().getResources().getQuantityString(id, 1, min, max));
-            delegate.disableButton();
+            disableButton();
+        }
+
+        private void disableButton() {
+            delegate.button.setEnabled(false);
+            delegate.button.setTextColor(AppColors.labelDisabled);
         }
     }
 
@@ -96,21 +107,6 @@ public final class TextValidator {
     public void enableButton() {
         button.setEnabled(true);
         button.setTextColor(AppColors.blue);
-    }
-
-    private void disableButton() {
-        button.setEnabled(false);
-        button.setTextColor(AppColors.labelDisabled);
-    }
-
-    private void checkFields() {
-        for (int i = 0; i < count; ++i) {
-            if (!children[i].valid) {
-                disableButton();
-                return;
-            }
-        }
-        enableButton();
     }
 
     public void addChild(short min, short max, int id, InputView view) {

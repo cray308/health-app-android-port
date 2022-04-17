@@ -51,14 +51,14 @@
                     android:layout_height="wrap_content"
                     app:headerText="@string/customWorkoutsHeader" />
 
-                <com.example.healthAppAndroid.core.StatusButton
+                <com.example.healthAppAndroid.homeTab.StatusButton
                     android:id="@+id/customButton1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:buttonLabel="@string/workoutTypeTestMax"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.core.StatusButton
+                <com.example.healthAppAndroid.homeTab.StatusButton
                     android:id="@+id/customButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     app:buttonLabel="@string/workout0"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.core.StatusButton
+                <com.example.healthAppAndroid.homeTab.StatusButton
                     android:id="@+id/customButton3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                     app:buttonLabel="@string/workout1"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.core.StatusButton
+                <com.example.healthAppAndroid.homeTab.StatusButton
                     android:id="@+id/customButton4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                     app:buttonLabel="@string/workout2"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.core.StatusButton
+                <com.example.healthAppAndroid.homeTab.StatusButton
                     android:id="@+id/customButton5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.healthAppAndroid.core.AppColors;
-import com.example.healthAppAndroid.core.StatusButton;
+import com.example.healthAppAndroid.homeTab.StatusButton;
 
 public final class ExerciseView extends StatusButton {
     boolean userInteractionEnabled = true;

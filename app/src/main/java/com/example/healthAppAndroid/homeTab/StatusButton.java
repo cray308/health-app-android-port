@@ -1,4 +1,4 @@
-package com.example.healthAppAndroid.core;
+package com.example.healthAppAndroid.homeTab;
 
 import android.content.Context;
 import android.content.res.TypedArray;

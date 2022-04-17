@@ -111,7 +111,6 @@ final class ExerciseEntry {
                 break;
 
             case State.active:
-                //noinspection VariableNotUsedInsideIf
                 if (restStr != null) {
                     state = State.resting;
                     break;
