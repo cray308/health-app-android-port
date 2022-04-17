@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
@@ -25,12 +24,16 @@ final class ExerciseEntry {
     }
 
     static final class Params {
+        private final String one;
+        private final int oneCount;
         private final short customReps;
         short customSets;
         short weight = -1;
         private final byte workoutType;
 
         Params(Circuit.Params params) {
+            one = params.one;
+            oneCount = params.oneCount;
             customSets = params.customSets;
             customReps = params.customReps;
             workoutType = params.workoutType;
@@ -70,9 +73,9 @@ final class ExerciseEntry {
                 headerStr.str.append(h);
                 int subIdx = h.indexOf(setsSub);
                 String subhead = h.substring(subIdx, subIdx + setsSub.length());
-                int numIdx = subhead.indexOf(ExerciseManager.one);
+                int numIdx = subhead.indexOf(params.one);
                 headerStr.index = subIdx + numIdx;
-                headerStr.length = ExerciseManager.oneCount;
+                headerStr.length = params.oneCount;
             }
 
             String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
@@ -92,9 +95,7 @@ final class ExerciseEntry {
                 title = c.getString(R.string.exerciseDistance, name, _reps, ((5 * _reps) >> 2));
             }
             titleStr.str.append(title);
-        } catch (JSONException ex) {
-            Log.e("ExerciseEntry init", "Error while parsing JSON", ex);
-        }
+        } catch (JSONException ignored) {}
         reps = _reps;
         type = _type;
         restStr = _rest;

@@ -23,13 +23,13 @@ public final class AppCoordinator {
 
     private static boolean isOnEmulator() {
         String fp = Build.FINGERPRINT, hw = Build.HARDWARE, pr = Build.PRODUCT, m = Build.MODEL;
-        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-               || fp.startsWith("generic") || fp.startsWith("unknown") || hw.contains("goldfish")
-               || hw.contains("ranchu") || m.contains("google_sdk") || m.contains("Emulator")
-               || m.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion")
-               || pr.contains("sdk_google") || pr.contains("google_sdk") || pr.contains("sdk")
-               || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64") || pr.contains("vbox86p")
-               || pr.contains("emulator") || pr.contains("simulator");
+        String gen = "generic", gSDK = "google_sdk";
+        return (Build.BRAND.startsWith(gen) && Build.DEVICE.startsWith(gen)) || fp.startsWith(gen)
+               || fp.startsWith("unknown") || hw.contains("goldfish") || hw.contains("ranchu")
+               || m.contains(gSDK) || m.contains("Emulator") || m.contains("Android SDK built for x86")
+               || Build.MANUFACTURER.contains("Genymotion") || pr.contains("sdk_google") || pr.contains(gSDK)
+               || pr.contains("sdk") || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64")
+               || pr.contains("vbox86p") || pr.contains("emulator") || pr.contains("simulator");
     }
 
     AppCoordinator(FragmentActivity activity) {

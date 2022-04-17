@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
@@ -22,6 +21,8 @@ final class Circuit {
 
     static final class Params {
         private final Locale l = Locale.getDefault();
+        final String one;
+        final int oneCount;
         final short customSets;
         final short customReps;
         private final short customCircuitReps;
@@ -58,6 +59,8 @@ final class Circuit {
             } else if (params.type == WorkoutType.endurance) {
                 exReps = (short)(params.reps * 60);
             }
+            one = String.format(l, "%d", 1);
+            oneCount = one.length();
             customSets = exSets;
             customReps = exReps;
             customCircuitReps = circuitReps;
@@ -122,9 +125,9 @@ final class Circuit {
                 headerStr.str.append(h);
                 int subIdx = h.indexOf(s);
                 String subhead = h.substring(subIdx, subIdx + s.length());
-                int numIdx = subhead.indexOf(ExerciseManager.one);
+                int numIdx = subhead.indexOf(params.one);
                 headerStr.index = subIdx + numIdx;
-                headerStr.length = ExerciseManager.oneCount;
+                headerStr.length = params.oneCount;
             } else if (multiple) {
                 headerStr.str.append(
                   c.getString(R.string.circuitProgress, params.location, params.nActivities));
@@ -146,9 +149,7 @@ final class Circuit {
 
             if (_type == Type.decrement)
                 completedReps = exercises[0].reps;
-        } catch (JSONException e) {
-            Log.e("Circuit init", "Error while parsing JSON", e);
-        }
+        } catch (JSONException ignored) {}
         type = _type;
         reps = _reps;
     }

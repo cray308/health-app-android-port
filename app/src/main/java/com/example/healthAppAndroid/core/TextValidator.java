@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -64,8 +63,6 @@ public final class TextValidator {
             if (!isEmpty) {
                 try {
                     res = Integer.parseInt(s.toString());
-                } catch (NumberFormatException e) {
-                    Log.e("checkInput", "Error while validating input", e);
                 } finally {
                     if (res < min || res > max) {
                         showErrorMsg();

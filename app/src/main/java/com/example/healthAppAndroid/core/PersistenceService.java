@@ -26,7 +26,7 @@ import java.time.format.FormatStyle;
 
 @Database(entities = {PersistenceService.WeeklyData.class}, version = 1, exportSchema = false)
 public abstract class PersistenceService extends RoomDatabase {
-    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor") @Dao public interface DAO {
+    @Dao public interface DAO {
         @Query("SELECT * FROM weeks ORDER BY start") WeeklyData[] getAllSorted();
 
         @Query("SELECT * FROM weeks ORDER BY start DESC LIMIT 1") WeeklyData findCurrentWeek();
@@ -89,13 +89,15 @@ public abstract class PersistenceService extends RoomDatabase {
     private static void fetchHistory(ZoneId zoneId, Object[] args, DAO dao) {
         WeekDataModel model = (WeekDataModel)args[0];
         HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler)args[1];
-        WeeklyData[] data = dao.getAllSorted();
-        int count = data.length;
-        if (count > 1) {
-            model.size = count - 1;
-            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-            for (int i = 0; i < model.size; ++i) {
-                model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
+        if (model.arr != null) {
+            WeeklyData[] data = dao.getAllSorted();
+            int count = data.length;
+            if (count > 1) {
+                model.size = count - 1;
+                DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+                for (int i = 0; i < model.size; ++i) {
+                    model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
+                }
             }
         }
         new Handler(Looper.getMainLooper()).post(block::completion);

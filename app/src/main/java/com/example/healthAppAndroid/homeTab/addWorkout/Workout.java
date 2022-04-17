@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
@@ -46,9 +45,7 @@ final class Workout {
                 cParams.location = i + 1;
                 activities[i] = new Circuit(c, act, exNames, cParams);
             }
-        } catch (JSONException e) {
-            Log.e("Workout init", "Error while parsing JSON", e);
-        }
+        } catch (JSONException ignored) {}
 
         title = c.getResources().getStringArray(ExerciseManager.titleKeys[type])[params.index];
         testMax = isTestDay[0];

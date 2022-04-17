@@ -97,7 +97,7 @@ public final class SettingsFragment extends Fragment {
         updateWeightFields(AppUserData.shared.liftArray);
     }
 
-    public void updateWeightFields(short[] lifts) {
+    void updateWeightFields(short[] lifts) {
         Locale l = Locale.getDefault();
         for (int i = 0; i < 4; ++i) {
             short value = lifts[i];

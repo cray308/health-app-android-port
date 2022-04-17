@@ -34,6 +34,14 @@ public final class WeekDataModel {
         }
     }
 
-    public final Week[] arr = new Week[105];
+    public final Week[] arr;
     public int size;
+
+    public WeekDataModel() {
+        Week[] weeks = null;
+        try {
+            weeks = new Week[105];
+        } catch (OutOfMemoryError ignored) {}
+        arr = weeks;
+    }
 }

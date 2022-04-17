@@ -158,18 +158,18 @@ public final class AppUserData {
     byte addWorkoutData(byte day, short[] weights, short[] output, boolean[] updated) {
         SharedPreferences.Editor editor = prefs.edit();
         byte completed = 0;
-        boolean madeChange = false;
-        if (weights != null)
-            madeChange = updateWeights(weights, output, editor);
+        int changes = 0;
+        if (weights != null && updateWeights(weights, output, editor))
+            changes = 1;
         if (day >= 0) {
-            madeChange = true;
+            changes += 2;
             completedWorkouts |= (1 << day);
             completed = completedWorkouts;
             editor.putInt(Keys.completedWorkouts, completedWorkouts);
         }
-        if (madeChange)
+        if (changes != 0)
             editor.apply();
-        updated[0] = madeChange;
+        updated[0] = (changes & 1) != 0;
         return completed;
     }
 
