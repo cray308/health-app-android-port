@@ -17,7 +17,9 @@ public final class AppCoordinator {
     private final FragmentManager fm;
     private final Fragment[] children = {new HomeFragment(), null, new SettingsFragment()};
     private Fragment active;
+    public final float toSavedMass;
     public final boolean onEmulator;
+    public final boolean metric;
 
     public static AppCoordinator shared;
 
@@ -32,17 +34,21 @@ public final class AppCoordinator {
                || pr.contains("vbox86p") || pr.contains("emulator") || pr.contains("simulator");
     }
 
-    AppCoordinator(FragmentActivity activity) {
+    AppCoordinator(FragmentActivity activity, boolean isMetric) {
         onEmulator = isOnEmulator();
         fm = activity.getSupportFragmentManager();
         children[1] = new HistoryFragment();
+        metric = isMetric;
+        toSavedMass = isMetric ? 2.204623f : 1;
         init(activity, 2);
     }
 
-    AppCoordinator(FragmentActivity activity, Object[] results) {
+    AppCoordinator(FragmentActivity activity, Object[] results, boolean isMetric) {
         onEmulator = isOnEmulator();
         fm = activity.getSupportFragmentManager();
         children[1] = new HistoryFragment(results);
+        metric = isMetric;
+        toSavedMass = isMetric ? 2.204623f : 1;
         init(activity, 0);
     }
 

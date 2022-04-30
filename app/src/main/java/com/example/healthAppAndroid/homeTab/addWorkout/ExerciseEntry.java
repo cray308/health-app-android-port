@@ -1,6 +1,8 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.content.Context;
+import android.icu.text.MeasureFormat;
+import android.icu.util.MeasureUnit;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
@@ -28,7 +30,7 @@ final class ExerciseEntry {
         private final int oneCount;
         private final short customReps;
         short customSets;
-        short weight = -1;
+        float weight = -1;
         private final byte workoutType;
 
         Params(Circuit.Params params) {
@@ -40,9 +42,15 @@ final class ExerciseEntry {
         }
     }
 
-    static void setupHeaderData(Context c) { setsSub = c.getString(R.string.sets1); }
+    static void setupData(Context c, boolean metric) {
+        setsSub = c.getString(R.string.sets1);
+        MeasureUnit unit = metric ? MeasureUnit.KILOGRAM : MeasureUnit.POUND;
+        weightUnit = MeasureFormat.getInstance(
+          Locale.getDefault(), MeasureFormat.FormatWidth.NARROW).getUnitDisplayName(unit);
+    }
 
     private static String setsSub;
+    private static String weightUnit;
     final MutableString headerStr = new MutableString();
     final MutableString titleStr = new MutableString();
     final String restStr;
@@ -81,7 +89,8 @@ final class ExerciseEntry {
             String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
             if (_type == Type.reps) {
                 if (params.workoutType == 0) {
-                    title = c.getString(R.string.exerciseRepsWeight, name, _reps, params.weight);
+                    title = c.getString(
+                      R.string.exerciseRepsWeight, name, _reps, params.weight, weightUnit);
                 } else {
                     title = c.getString(R.string.exerciseReps, name, _reps);
                 }

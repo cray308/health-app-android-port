@@ -2,6 +2,7 @@ package com.example.healthAppAndroid.homeTab;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,17 +65,16 @@ public final class SetupWorkoutDialog
 
         Button submitButton = view.findViewById(R.id.submitBtn);
         submitButton.setOnClickListener(view2 -> {
-            short[] results = validator.getResults();
             switch (output.type) {
                 case WorkoutType.strength:
-                    output.weight = results[2];
+                    output.weight = (short)validator.children[2].result;
                 case WorkoutType.SE:
-                    output.sets = results[0];
-                    output.reps = results[1];
+                    output.sets = (short)validator.children[0].result;
+                    output.reps = (short)validator.children[1].result;
                     break;
 
                 case WorkoutType.endurance:
-                    output.reps = results[0];
+                    output.reps = (short)validator.children[0].result;
                 default:
             }
             List<Fragment> fragments = getParentFragmentManager().getFragments();
@@ -100,8 +100,8 @@ public final class SetupWorkoutDialog
         picker.setAdapter(adapter);
         picker.setSelection(0);
 
-        short[] maxes = {5, 5, 100};
-        short[] minArr = {1, 1, 1};
+        int[] maxes = {5, 5, 100};
+        int[] minArr = {1, 1, 1};
         String[] titles = {getString(R.string.sets), getString(R.string.reps), null};
 
         if (type == WorkoutType.strength) {
@@ -123,7 +123,8 @@ public final class SetupWorkoutDialog
             if (titles[i] == null) continue;
             TextValidator.InputView v = new TextValidator.InputView(c);
             v.field.setHint(titles[i]);
-            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError, v);
+            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError,
+                               InputType.TYPE_NUMBER_VARIATION_NORMAL, v);
             inputViewStack.addView(v);
         }
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();

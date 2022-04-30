@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notifications">
+        <item>Готовая схема!</item>
+        <item>Закончил упражнение!</item>
+    </string-array>
+    <plurals name="inputFieldError">
+        <item quantity="one">Вход должен быть в диапазоне от %1$d до %2$d</item>
+        <item quantity="other">Вход должен быть в диапазоне от %1$d до %2$d</item>
+        <item quantity="few">Вход должен быть в диапазоне от %1$d до %2$d</item>
+        <item quantity="many">Вход должен быть в диапазоне от %1$d до %2$d</item>
+    </plurals>
+    <plurals name="inputFieldErrorEmpty">
+        <item quantity="one">Вход должен быть в диапазоне от %1$d до %2$d или пустое значение</item>
+        <item quantity="other">Вход должен быть в диапазоне от %1$d до %2$d или пустое значение</item>
+        <item quantity="few">Вход должен быть в диапазоне от %1$d до %2$d или пустое значение</item>
+        <item quantity="many">Вход должен быть в диапазоне от %1$d до %2$d или пустое значение</item>
+    </plurals>
+
+    <string name="channelDescription">Обновления во время тренировки</string>
+    <string name="tab_home">Дом</string>
+    <string name="tab_history">История</string>
+    <string name="tab_settings">Настройки</string>
+    <string name="workout0">Сила</string>
+    <string name="workout1">Сила и Выносливость</string>
+    <string name="workout2">Выносливость</string>
+    <string name="workout3">Кондиционирование</string>
+    <string name="workoutNotificationTitle">Обновление тренировки</string>
+    <string name="exerciseProgressHint">Упражнение %1$d из %2$d</string>
+    <string name="exerciseDurationMet">Достигнута минимальная продолжительность упражнений</string>
+    <string name="cancel">Отмена</string>
+    <string name="go">Ближайший</string>
+    <string name="finish">Готово</string>
+    <string name="start">Начинать</string>
+    <string name="end">Остановка</string>
+    <string name="weeklyWorkoutsHeader">Тренировки на Этой Неделе</string>
+    <string name="customWorkoutsHeader">Добавить Пользовательскую Тренировку</string>
+    <string name="workoutTypeTestMax">Проверьте Максимальные Веса</string>
+    <string name="homeAlertTitle">Отлично сделано!</string>
+    <string name="homeAlertMessage">Отличная работа по достижению вашей цели тренировки на этой неделе.</string>
+    <string name="historySegment1">6 месяцев</string>
+    <string name="historySegment2">1 год</string>
+    <string name="historySegment3">2 года</string>
+    <string name="chartHeaderTotalWorkouts">Всего Тренировок</string>
+    <string name="chartHeaderWorkoutType">Время Активности по Типу</string>
+    <string name="chartHeaderLifts">Силовой Прогресс</string>
+    <string name="chartEmptyText">Данные недоступны</string>
+    <string name="legend0">Среднее количество тренировок (%.2f)</string>
+    <string name="legend1">%1$s (Среднее: %2$s)</string>
+    <string name="legend2">%1$s (Среднее: %2$.1f)</string>
+    <string name="hourMinFmt">%1$dч %2$dм</string>
+    <string name="minFmt">%dм</string>
+    <string name="planPickerTitle">Изменить план тренировки</string>
+    <string name="darkMode">Темный внешний вид</string>
+    <string name="settingsSegment1">Нет</string>
+    <string name="settingsSegment2">Основание</string>
+    <string name="settingsSegment3">Продолжение</string>
+    <string name="maxWeightFormat">Максимальный вес %s</string>
+    <string name="bodyWeightHint">Масса тела</string>
+    <string name="settingsSaveButtonTitle">Сохранить настройки</string>
+    <string name="settingsDeleteButtonTitle">Удалить данные</string>
+    <string name="settingsAlertTitle">Ты уверен?</string>
+    <string name="settingsAlertMessageSave">Это сохранит предоставленные данные.</string>
+    <string name="settingsAlertMessageDelete">Это удалит всю историю тренировок.</string>
+    <string name="setupWorkoutTitle">Настроить Тренировку</string>
+    <string name="setupWorkoutPickerTitle">Выберите тренировку</string>
+    <string name="sets">Наборы</string>
+    <string name="reps">Повторения</string>
+    <string name="setupWorkoutMaxWeight">Максимальный процент веса</string>
+    <string name="setupWorkoutDuration">Продолжительность в минутах</string>
+    <string name="updateMaxesTitle">Обеспечить Вес и Повторения</string>
+    <string name="stepperDescription">Изменить количество выполненных повторений</string>
+    <string name="exerciseHeader">Набор %1$d из %2$d</string>
+    <string name="exerciseRest">Отдых: %d с</string>
+    <string name="exerciseReps">%1$s x %2$d</string>
+    <string name="exerciseRepsWeight">%1$s x %2$d с %3$.2f %4$s</string>
+    <string name="exerciseDurationMinutes">%1$s на %2$.1f мин</string>
+    <string name="exerciseDurationSeconds">%1$s на %2$d с</string>
+    <string name="exerciseDistance">%1$s на %2$d или %3$d м</string>
+    <string name="circuitProgress">Схема %1$d из %2$d</string>
+    <string name="circuitHeaderRounds">Раунд %1$d из %2$d</string>
+    <string name="circuitHeaderAMRAP">МКПВ течение %d мин</string>
+    <string name="circuitHeaderRoundsM">Схема %1$d из %2$d - Раунд %3$d из %4$d</string>
+    <string name="circuitHeaderAMRAPM">Схема %1$d из %2$d - МКПВ течение %3$d мин</string>
+    <string name="sets1">Набор 1</string>
+    <string name="rounds1">Раунд 1</string>
+    <string name="sep">%1$s, %2$s</string>
+
+    <string-array name="exNames">
+        <item>Сидение на корточках</item>
+        <item>Подтягивание</item>
+        <item>Пресс для скамеек</item>
+        <item>Становатая тяга</item>
+        <item>Одноручная гиревой становая тяга</item>
+        <item>Кножатие штанги</item>
+        <item>Хруст велосипеда</item>
+        <item>Прыжок в коробку</item>
+        <item>Берпи</item>
+        <item>Хруст</item>
+        <item>Пресс для гантелей</item>
+        <item>Выпад с гантелями</item>
+        <item>Кнопч-пресс для гантелей</item>
+        <item>Ряд гантелей</item>
+        <item>Алмазный отжимание</item>
+        <item>Погружение</item>
+        <item>Кубок на корточках</item>
+        <item>Удержание подставки для рук</item>
+        <item>Висячие колени к локтю</item>
+        <item>Подвесной подъем ноги</item>
+        <item>Гиперрасширение</item>
+        <item>Перевернутая строка</item>
+        <item>Прыгать на корточках</item>
+        <item>Двойная гиря чистка и пресс</item>
+        <item>Гиревой пресс</item>
+        <item>Гиревой рывок</item>
+        <item>Гиревые качели</item>
+        <item>Двойные гиревые качели</item>
+        <item>Бросок</item>
+        <item>Лежащая нога поднимает</item>
+        <item>Мышцы вверх</item>
+        <item>Плиометрическое подтягивание</item>
+        <item>Плиометрический отжимание</item>
+        <item>Отжимание</item>
+        <item>Ряд ренегат</item>
+        <item>Выполнить или со строкой</item>
+        <item>Спринт или ряд</item>
+        <item>Утяжеленные гиревые качели</item>
+        <item>Взвешенное развертывание брюшного колеса</item>
+        <item>Взвешенная отрыжка</item>
+        <item>Взвешенное погружение</item>
+        <item>Взвешенное гиперрасширение</item>
+        <item>Взвешенная пробежка или ряд</item>
+        <item>Взвешенный альпинист</item>
+        <item>Взвешенная доска</item>
+        <item>Взвешенный отжимание доски</item>
+        <item>Взвешенное подтягивание</item>
+        <item>Взвешенный отжимание</item>
+        <item>Взвешенный спринт или ряд</item>
+        <item>Взвешенное приседание</item>
+        <item>Взвешенный v-up</item>
+    </string-array>
+
+    <string-array name="wkNames0">
+        <item>Основная Сила</item>
+        <item>Вторичная Прочность</item>
+        <item>День Тестирования</item>
+    </string-array>
+    <string-array name="wkNames1">
+        <item>Гиря 1</item>
+        <item>Гиря 2</item>
+        <item>Весовой Жилет 1</item>
+        <item>Гиря 3</item>
+        <item>Весовой Жилет 2</item>
+        <item>Гантель 1</item>
+        <item>Гиря 4</item>
+        <item>Возврат</item>
+    </string-array>
+    <string-array name="wkNames2">
+        <item>Выносливость</item>
+    </string-array>
+    <string-array name="wkNames3">
+        <item>Спринт 10 к 1</item>
+        <item>Быстрые 5 км</item>
+        <item>600-Метровые Сбросы</item>
+        <item>Черный на Кислороде</item>
+        <item>Черный на Кислороде 2</item>
+        <item>Интервалы Отслеживания</item>
+        <item>Кислородный Долг 101</item>
+        <item>Спринтеровые Лестницы</item>
+        <item>Плотоядное Животное</item>
+        <item>Плотоядное Животное 2</item>
+        <item>Анаэробная Емкость</item>
+        <item>Буффало Лапс</item>
+        <item>Плотоядное Животное 3</item>
+        <item>Общее Кондиционирование 1</item>
+        <item>Общее Кондиционирование 2</item>
+        <item>Общее Кондиционирование 3</item>
+        <item>Общее Кондиционирование 4</item>
+        <item>Общее Кондиционирование 5</item>
+        <item>Общее Кондиционирование 6</item>
+        <item>Общее Кондиционирование 7</item>
+        <item>Общее Кондиционирование 8</item>
+        <item>Общее Кондиционирование 9</item>
+        <item>Общее Кондиционирование 10</item>
+        <item>Общее Кондиционирование 11</item>
+        <item>Общее Кондиционирование 12</item>
+        <item>Плиометрия Массы Тела</item>
+        <item>Кинетическое Кондиционирование</item>
+    </string-array>
+</resources>

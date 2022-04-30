@@ -26,7 +26,7 @@ final class Circuit {
         final short customSets;
         final short customReps;
         private final short customCircuitReps;
-        private final short[] weights = {-1, -1, -1, -1};
+        private final float[] weights = {-1, -1, -1, -1};
         int location;
         private final int nActivities;
         final byte workoutType;
@@ -36,20 +36,22 @@ final class Circuit {
             if (params.type == WorkoutType.strength) {
                 short[] lifts = AppUserData.shared.liftArray;
                 float multiplier = params.weight / 100f;
-                weights[0] = (short)(multiplier * lifts[0]);
+                weights[0] = multiplier * lifts[0];
                 if (params.index <= 1) {
-                    weights[1] = (short)(multiplier * lifts[LiftType.bench]);
+                    weights[1] = multiplier * lifts[LiftType.bench];
                     if (params.index == 0) {
-                        int weight = ExerciseManager.getBodyWeightToUse();
-                        weights[2] =
-                          (short)((int)((lifts[LiftType.pullUp] + weight) * multiplier) - weight);
-                        weights[2] = (short)Math.max(weights[2], 0);
+                        int w = ExerciseManager.getBodyWeightToUse();
+                        int weight = ((int)((lifts[LiftType.pullUp] + w) * multiplier) - w);
+                        weights[2] = Math.max(weight, 0);
                     } else {
-                        weights[2] = (short)(multiplier * lifts[LiftType.deadlift]);
+                        weights[2] = multiplier * lifts[LiftType.deadlift];
                     }
                 } else {
-                    System.arraycopy(lifts, 1, weights, 1, 3);
+                    for (int i = 1; i < 4; ++i) weights[i] = lifts[i];
                     isTestDay[0] = true;
+                }
+                if (AppCoordinator.shared.metric) {
+                    for (int i = 0; i < 4; ++i) weights[i] *= 0.453592f;
                 }
                 exReps = params.reps;
                 exSets = params.sets;
@@ -69,13 +71,9 @@ final class Circuit {
         }
     }
 
-    static void setupHeaderData(Context c) {
-        rounds1S = c.getString(R.string.rounds1S);
-        rounds1M = c.getString(R.string.rounds1M);
-    }
+    static void setupHeaderData(Context c) { rounds1 = c.getString(R.string.rounds1); }
 
-    private static String rounds1S;
-    private static String rounds1M;
+    private static String rounds1;
     ExerciseEntry[] exercises;
     final MutableString headerStr = new MutableString();
     int index = 0;
@@ -113,18 +111,16 @@ final class Circuit {
                 }
                 headerStr.str.append(h);
             } else if (_reps > 1) {
-                String h, s;
+                String h;
                 if (multiple) {
                     h = c.getString(R.string.circuitHeaderRoundsM,
                                     params.location, params.nActivities, 1, _reps);
-                    s = rounds1M;
                 } else {
                     h = c.getString(R.string.circuitHeaderRounds, 1, _reps);
-                    s = rounds1S;
                 }
                 headerStr.str.append(h);
-                int subIdx = h.indexOf(s);
-                String subhead = h.substring(subIdx, subIdx + s.length());
+                int subIdx = h.indexOf(rounds1);
+                String subhead = h.substring(subIdx, subIdx + rounds1.length());
                 int numIdx = subhead.indexOf(params.one);
                 headerStr.index = subIdx + numIdx;
                 headerStr.length = params.oneCount;

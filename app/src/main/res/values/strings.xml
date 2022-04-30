@@ -1,49 +1,9 @@
 <resources>
-    <string name="app_name">HealthAppAndroid</string>
+    <string name="app_name" translatable="false">HealthAppAndroid</string>
     <string-array name="notifications">
+        <item>Finished circuit!</item>
         <item>Finished exercise!</item>
-        <item>Finished AMRAP circuit!</item>
     </string-array>
-
-    <string name="channelDescription">Intra-workout updates</string>
-    <string name="workoutNotificationTitle">Workout Update</string>
-
-    <string name="cancel">Cancel</string>
-    <string name="go">Go</string>
-
-    <string name="tab_home">Home</string>
-    <string name="tab_history">History</string>
-    <string name="tab_settings">Settings</string>
-
-    <string name="weeklyWorkoutsHeader">Workouts This Week</string>
-    <string name="customWorkoutsHeader">Add Custom Workout</string>
-    <string name="workoutTypeTestMax">Test Max</string>
-    <string name="workout0">Strength</string>
-    <string name="workout1">Strength-Endurance</string>
-    <string name="workout2">Endurance</string>
-    <string name="workout3">Conditioning</string>
-    <string name="homeAlertTitle">Nicely done!</string>
-    <string name="homeAlertMessage">Great job meeting your workout goal this week.</string>
-
-    <string name="historySegment1">6 Months</string>
-    <string name="historySegment2">1 Year</string>
-    <string name="historySegment3">2 Years</string>
-    <string name="chartHeaderWorkoutType">Activity Time By Type</string>
-    <string name="chartHeaderLifts">Lift Progress</string>
-    <string name="chartHeaderTotalWorkouts">Total Workouts</string>
-    <string name="chartEmptyText">No data is available</string>
-    <string name="legend0">Avg Workouts (%1$.2f)</string>
-    <string name="legend1">%1$s (Avg: %2$s)</string>
-    <string name="legend2">%1$s (Avg: %2$.1f)</string>
-    <string name="hourMinFmt">%1$dh %2$dm</string>
-    <string name="minFmt">%dm</string>
-
-    <string name="planPickerTitle">Change workout plan</string>
-    <string name="settingsSegment1">None</string>
-    <string name="settingsSegment2">Base-building</string>
-    <string name="settingsSegment3">Continuation</string>
-    <string name="maxWeightFormat">Max %s Weight</string>
-    <string name="bodyWeightHint">Body weight (to calculate weight for calisthenics)</string>
     <plurals name="inputFieldError">
         <item quantity="one">Input must be between %1$d and %2$d</item>
         <item quantity="other">Input must be between %1$d and %2$d</item>
@@ -52,95 +12,128 @@
         <item quantity="one">Input must be between %1$d and %2$d, or empty</item>
         <item quantity="other">Input must be between %1$d and %2$d, or empty</item>
     </plurals>
-    <string name="updateMaxesTitle">Set Weight &amp; Reps</string>
-    <string name="stepperDescription">Reps completed</string>
-    <string name="darkMode">Dark Mode</string>
-    <string name="settingsSaveButtonTitle">Save Settings</string>
-    <string name="settingsDeleteButtonTitle">Delete Data</string>
-    <string name="settingsAlertTitle">Are you sure\?</string>
+
+    <string name="channelDescription">Intra-workout updates</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_history">History</string>
+    <string name="tab_settings">Settings</string>
+    <string name="workout0">Strength</string>
+    <string name="workout1">Strength-Endurance</string>
+    <string name="workout2">Endurance</string>
+    <string name="workout3">Conditioning</string>
+    <string name="workoutNotificationTitle">Workout Update</string>
+    <string name="exerciseProgressHint">Exercise %1$d of %2$d</string>
+    <string name="exerciseDurationMet">Minimum exercise duration met</string>
+    <string name="cancel">Cancel</string>
+    <string name="go">Go</string>
+    <string name="finish">Finish</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="weeklyWorkoutsHeader">Workouts This Week</string>
+    <string name="customWorkoutsHeader">Add Custom Workout</string>
+    <string name="workoutTypeTestMax">Test Max</string>
+    <string name="homeAlertTitle">Nicely done!</string>
+    <string name="homeAlertMessage">Great job meeting your workout goal this week.</string>
+    <string name="historySegment1">6 Months</string>
+    <string name="historySegment2">1 Year</string>
+    <string name="historySegment3">2 Years</string>
+    <string name="chartHeaderTotalWorkouts">Total Workouts</string>
+    <string name="chartHeaderWorkoutType">Activity Time By Type</string>
+    <string name="chartHeaderLifts">Lift Progress</string>
+    <string name="chartEmptyText">No data is available</string>
+    <string name="legend0">Avg workouts (%.2f)</string>
+    <string name="legend1">%1$s (Avg: %2$s)</string>
+    <string name="legend2">%1$s (Avg: %2$.1f)</string>
+    <string name="hourMinFmt">%1$dh %2$dm</string>
+    <string name="minFmt">%dm</string>
+    <string name="planPickerTitle">Change workout plan</string>
+    <string name="darkMode">Dark mode</string>
+    <string name="settingsSegment1">None</string>
+    <string name="settingsSegment2">Foundation</string>
+    <string name="settingsSegment3">Continuation</string>
+    <string name="maxWeightFormat">Max %s weight</string>
+    <string name="bodyWeightHint">Body weight</string>
+    <string name="settingsSaveButtonTitle">Save settings</string>
+    <string name="settingsDeleteButtonTitle">Delete data</string>
+    <string name="settingsAlertTitle">Are you sure?</string>
     <string name="settingsAlertMessageSave">This will save the currently entered data.</string>
     <string name="settingsAlertMessageDelete">This will delete all workout history.</string>
-
     <string name="setupWorkoutTitle">Set up Workout</string>
     <string name="setupWorkoutPickerTitle">Choose workout</string>
     <string name="sets">Sets</string>
     <string name="reps">Reps</string>
-    <string name="setupWorkoutMaxWeight">Max Weight Percentage</string>
+    <string name="setupWorkoutMaxWeight">Max weight percentage</string>
     <string name="setupWorkoutDuration">Duration in minutes</string>
-
-    <string name="start">Start</string>
-    <string name="end">End</string>
-    <string name="finish">Finish</string>
-    <string name="exerciseProgressHint">Exercise %1$d of %2$d</string>
-    <string name="exerciseDurationMet">Minimum exercise duration met</string>
+    <string name="updateMaxesTitle">Set Weight &amp; Reps</string>
+    <string name="stepperDescription">Change the number of reps completed</string>
     <string name="exerciseHeader">Set %1$d of %2$d</string>
-    <string name="exerciseRest">Rest: %1$d s</string>
+    <string name="exerciseRest">Rest: %d s</string>
     <string name="exerciseReps">%1$s x %2$d</string>
-    <string name="exerciseRepsWeight">%1$s x %2$d \@ %3$d lbs</string>
+    <string name="exerciseRepsWeight">%1$s x %2$d \@ %3$.2f %4$s</string>
     <string name="exerciseDurationMinutes">%1$s for %2$.1f min</string>
     <string name="exerciseDurationSeconds">%1$s for %2$d s</string>
     <string name="exerciseDistance">%1$s %2$d/%3$d m</string>
     <string name="circuitProgress">Circuit %1$d of %2$d</string>
     <string name="circuitHeaderRounds">Round %1$d of %2$d</string>
-    <string name="circuitHeaderAMRAP">AMRAP %1$d min</string>
+    <string name="circuitHeaderAMRAP">AMRAP %d min</string>
     <string name="circuitHeaderRoundsM">Circuit %1$d of %2$d - Round %3$d of %4$d</string>
     <string name="circuitHeaderAMRAPM">Circuit %1$d of %2$d - AMRAP %3$d min</string>
     <string name="sets1">Set 1</string>
-    <string name="rounds1S">Round 1</string>
-    <string name="rounds1M">- Round 1</string>
+    <string name="rounds1">Round 1</string>
+    <string name="sep">%1$s, %2$s</string>
 
     <string-array name="exNames">
         <item>Squat</item>
         <item>Pull-up</item>
         <item>Bench</item>
         <item>Deadlift</item>
-        <item>1-arm KB Deadlift</item>
-        <item>Barbell Push-press</item>
-        <item>Bicycle Crunch</item>
-        <item>Box Jump</item>
+        <item>1-arm KB deadlift</item>
+        <item>Barbell push-press</item>
+        <item>Bicycle crunch</item>
+        <item>Box jump</item>
         <item>Burpee</item>
         <item>Crunch</item>
-        <item>DB Bench</item>
-        <item>DB Lunge</item>
-        <item>DB Push-press</item>
-        <item>DB Row</item>
-        <item>Diamond Push-up</item>
+        <item>DB bench</item>
+        <item>DB lunge</item>
+        <item>DB push-press</item>
+        <item>DB row</item>
+        <item>Diamond push-up</item>
         <item>Dip</item>
-        <item>Goblet Squat</item>
-        <item>Handstand Hold</item>
-        <item>Hanging Knee-to-Elbow</item>
-        <item>Hanging Leg Raise</item>
+        <item>Goblet squat</item>
+        <item>Handstand hold</item>
+        <item>Hanging knee-to-elbow</item>
+        <item>Hanging leg raise</item>
         <item>Hyper-extension</item>
-        <item>Inverted Row</item>
-        <item>Jump Squat</item>
-        <item>Double KB Clean &amp; Press</item>
-        <item>KB Floor Press</item>
-        <item>KB Snatch</item>
-        <item>KB Swing</item>
-        <item>Double KB Swing</item>
+        <item>Inverted row</item>
+        <item>Jump squat</item>
+        <item>Double KB clean &amp; press</item>
+        <item>KB floor press</item>
+        <item>KB snatch</item>
+        <item>KB swing</item>
+        <item>Double KB swing</item>
         <item>Lunge</item>
-        <item>Lying Leg Raise</item>
+        <item>Lying leg raise</item>
         <item>Muscle-up</item>
-        <item>Plyo Pull-up</item>
-        <item>Plyo Push-up</item>
+        <item>Plyo pull-up</item>
+        <item>Plyo push-up</item>
         <item>Push-up</item>
-        <item>Renegade Row</item>
+        <item>Renegade row</item>
         <item>Run/row</item>
         <item>Sprint/row</item>
-        <item>Weighted KB Swing</item>
-        <item>Weighted Ab Wheel Rollout</item>
-        <item>Weighted Burpee</item>
-        <item>Weighted Dip</item>
-        <item>Weighted Hyper-extension</item>
-        <item>Weighted Jog/row</item>
-        <item>Weighted Mountain Climber</item>
-        <item>Weighted Plank</item>
-        <item>Weighted Plank Push-up</item>
-        <item>Weighted Pull-up</item>
-        <item>Weighted Push-up</item>
-        <item>Weighted Sprint/row</item>
-        <item>Weighted Squat</item>
-        <item>Weighted V-up</item>
+        <item>Weighted KB swing</item>
+        <item>Weighted ab wheel rollout</item>
+        <item>Weighted burpee</item>
+        <item>Weighted dip</item>
+        <item>Weighted hyper-extension</item>
+        <item>Weighted jog/row</item>
+        <item>Weighted mountain climber</item>
+        <item>Weighted plank</item>
+        <item>Weighted plank push-up</item>
+        <item>Weighted pull-up</item>
+        <item>Weighted push-up</item>
+        <item>Weighted sprint/row</item>
+        <item>Weighted squat</item>
+        <item>Weighted v-up</item>
     </string-array>
     <string-array name="wkNames0">
         <item>Main Strength</item>
@@ -166,7 +159,7 @@
         <item>600 Meter Resets</item>
         <item>Black on Oxygen</item>
         <item>BoO II</item>
-        <item>Fobbit Intervals</item>
+        <item>Track Intervals</item>
         <item>Oxygen Debt 101</item>
         <item>Sprint Ladders</item>
         <item>Meat-Eater</item>

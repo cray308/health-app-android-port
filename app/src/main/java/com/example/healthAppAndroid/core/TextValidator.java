@@ -2,6 +2,9 @@ package com.example.healthAppAndroid.core;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.Button;
@@ -11,15 +14,28 @@ import com.example.healthAppAndroid.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.regex.Pattern;
+
 public final class TextValidator {
     public static final class InputView extends LinearLayout implements TextWatcher {
+        private static final InputFilter filter = new InputFilter() {
+            private final Pattern pattern = Pattern.compile("([0-9]+)?(\\.[0-9]{0,2})?");
+
+            public CharSequence filter(CharSequence seq, int i, int j, Spanned dest, int d1, int d2) {
+                StringBuilder sb = new StringBuilder(dest);
+                sb.replace(d1, d2, seq.subSequence(i, j).toString());
+                if (pattern.matcher(sb.toString()).matches()) return null;
+                return seq.length() == 0 ? dest.subSequence(d1, d2) : "";
+            }
+        };
+
         public TextInputLayout field;
         TextInputEditText textField;
         private TextValidator delegate;
         private int id;
         private int min;
         private int max;
-        short result = 0;
+        public float result = 0;
         boolean valid = false;
         private boolean emptyInputAllowed = false;
 
@@ -39,13 +55,16 @@ public final class TextValidator {
             textField = findViewById(R.id.fieldTextView);
         }
 
-        private void setup(short minVal, short maxVal, int resId, TextValidator validator) {
+        private void setup(int minVal, int maxVal, int resId, int type, TextValidator validator) {
             min = minVal;
             max = maxVal;
             id = resId;
             emptyInputAllowed = resId == R.plurals.inputFieldErrorEmpty;
             delegate = validator;
             textField.addTextChangedListener(this);
+            textField.setInputType(InputType.TYPE_CLASS_NUMBER | type);
+            if (type == InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                textField.setFilters(new InputFilter[]{filter});
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -59,10 +78,10 @@ public final class TextValidator {
                 return;
             }
 
-            int res = -1;
+            float res = -1;
             if (!isEmpty) {
                 try {
-                    res = Integer.parseInt(s.toString());
+                    res = Float.parseFloat(s.toString());
                 } finally {
                     if (res < min || res > max) {
                         showErrorMsg();
@@ -95,7 +114,7 @@ public final class TextValidator {
         }
     }
 
-    final InputView[] children = {null, null, null, null, null};
+    public final InputView[] children = {null, null, null, null, null};
     private final Button button;
     private int count = 0;
 
@@ -106,15 +125,8 @@ public final class TextValidator {
         button.setTextColor(AppColors.blue);
     }
 
-    public void addChild(short min, short max, int id, InputView view) {
-        view.setup(min, max, id, this);
+    public void addChild(int min, int max, int id, int kb, InputView view) {
+        view.setup(min, max, id, kb, this);
         children[count++] = view;
-    }
-
-    public short[] getResults() {
-        short[] results = {0, 0, 0, 0, 0};
-        for (int i = 0; i < count; ++i)
-            results[i] = children[i].result;
-        return results;
     }
 }

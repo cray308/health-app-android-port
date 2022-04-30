@@ -48,9 +48,9 @@ public abstract class ExerciseManager {
         }
     }
 
-    public static void init(Context c, int week) {
+    public static void init(Context c, int week, boolean metric) {
         NotificationService.init(c);
-        ExerciseEntry.setupHeaderData(c);
+        ExerciseEntry.setupData(c, metric);
         Circuit.setupHeaderData(c);
         weekInPlan = week;
     }

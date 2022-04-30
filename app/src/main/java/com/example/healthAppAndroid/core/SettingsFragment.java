@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,11 @@ public final class SettingsFragment extends Fragment {
               .setTitle(getString(R.string.settingsAlertTitle))
               .setMessage(getString(R.string.settingsAlertMessageSave))
               .setNegativeButton(getString(R.string.cancel), null)
-              .setPositiveButton(getString(com.google.android.material.R.string.mtrl_picker_save), (dialog, i) -> {
-                  short[] results = validator.getResults();
+              .setPositiveButton(getString(com.google.android.material.R.string.mtrl_picker_save), (dialog, x) -> {
+                  short[] results = {0, 0, 0, 0, 0};
+                  float mf = AppCoordinator.shared.toSavedMass;
+                  for (int i = 0; i < 5; ++i)
+                      results[i] = (short)Math.round(validator.children[i].result * mf);
                   byte dm = -1;
                   if (switchView != null)
                       dm = (byte)(switchView.isChecked() ? 1 : 0);
@@ -80,31 +84,50 @@ public final class SettingsFragment extends Fragment {
         });
 
         validator = new TextValidator(saveButton);
+        int kb = AppCoordinator.shared.metric
+                 ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
         for (int i = 0; i < 4; ++i) {
             TextValidator.InputView v = view.findViewById(ids[i]);
             v.field.setHint(getString(R.string.maxWeightFormat, exNames[i]));
-            validator.addChild((short)0, (short)999, R.plurals.inputFieldError, v);
+            validator.addChild(0, 999, R.plurals.inputFieldError, kb, v);
         }
-        validator.addChild((short)1, (short)999,
-                           R.plurals.inputFieldErrorEmpty, view.findViewById(R.id.inputWeight));
+        validator.addChild(1, 999, R.plurals.inputFieldErrorEmpty,
+                           kb, view.findViewById(R.id.inputWeight));
         short weight = AppUserData.shared.weight;
-        validator.children[4].result = weight;
         validator.children[4].valid = true;
         validator.children[4].field.setError(null);
         validator.children[4].field.setHint(getString(R.string.bodyWeightHint));
-        if (weight > 0)
-            validator.children[4].textField.setText(String.format(Locale.getDefault(), "%d", weight));
+        if (weight > 0) {
+            if (AppCoordinator.shared.metric) {
+                float fWeight = weight * 0.453592f;
+                validator.children[4].result = fWeight;
+                validator.children[4].textField.setText(String.format(Locale.US, "%.2f", fWeight));
+            } else {
+                validator.children[4].result = weight;
+                validator.children[4].textField.setText(String.format(Locale.US, "%d", weight));
+            }
+        }
         updateWeightFields(AppUserData.shared.liftArray);
     }
 
     void updateWeightFields(short[] lifts) {
-        Locale l = Locale.getDefault();
-        for (int i = 0; i < 4; ++i) {
-            short value = lifts[i];
-            validator.children[i].result = value;
-            validator.children[i].valid = true;
-            validator.children[i].field.setError(null);
-            validator.children[i].textField.setText(String.format(l, "%d", value));
+        Locale l = Locale.US;
+        if (AppCoordinator.shared.metric) {
+            for (int i = 0; i < 4; ++i) {
+                float value = lifts[i] * 0.453592f;
+                validator.children[i].result = value;
+                validator.children[i].valid = true;
+                validator.children[i].field.setError(null);
+                validator.children[i].textField.setText(String.format(l, "%.2f", value));
+            }
+        } else {
+            for (int i = 0; i < 4; ++i) {
+                short value = lifts[i];
+                validator.children[i].result = value;
+                validator.children[i].valid = true;
+                validator.children[i].field.setError(null);
+                validator.children[i].textField.setText(String.format(l, "%d", value));
+            }
         }
         if (validator.children[4].valid)
             validator.enableButton();

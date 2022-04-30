@@ -51,13 +51,11 @@ public class StatusButton extends LinearLayout {
     }
 
     public void updateAccessibility() {
-        StringBuilder builder = new StringBuilder(64);
-        String header = headerLabel.getText().toString();
-        if (!header.isEmpty()) {
-            builder.append(header);
-            builder.append(", ");
+        String header = headerLabel.getText().toString(), title = button.getText().toString();
+        if (header.isEmpty()) {
+            button.setContentDescription(title);
+            return;
         }
-        builder.append(button.getText());
-        button.setContentDescription(builder.toString());
+        button.setContentDescription(getContext().getString(R.string.sep, header, title));
     }
 }

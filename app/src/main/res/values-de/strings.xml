@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notifications">
+        <item>Fertige Schaltung!</item>
+        <item>Fertige Übung!</item>
+    </string-array>
+    <plurals name="inputFieldError">
+        <item quantity="one">Die Eingabe muss zwischen %1$d und %2$d liegen</item>
+        <item quantity="other">Die Eingabe muss zwischen %1$d und %2$d liegen</item>
+    </plurals>
+    <plurals name="inputFieldErrorEmpty">
+        <item quantity="one">Die Eingabe muss zwischen %1$d und %2$d liegen oder leer sein</item>
+        <item quantity="other">Die Eingabe muss zwischen %1$d und %2$d liegen oder leer sein</item>
+    </plurals>
+
+    <string name="channelDescription">Aktualisieren Sie während des Trainings</string>
+    <string name="tab_home">Zuhause</string>
+    <string name="tab_history">Geschichte</string>
+    <string name="tab_settings">Einstellungen</string>
+    <string name="workout0">Kraft</string>
+    <string name="workout1">Kraft und Ausdauer</string>
+    <string name="workout2">Widerstandskraft</string>
+    <string name="workout3">Konditionierung</string>
+    <string name="workoutNotificationTitle">Trainings-Update</string>
+    <string name="exerciseProgressHint">Übung %1$d von %2$d</string>
+    <string name="exerciseDurationMet">Die Mindestübungsdauer wurde erreicht.</string>
+    <string name="cancel">Streichen</string>
+    <string name="go">Gehen</string>
+    <string name="finish">Beenden</string>
+    <string name="start">Anfangen</string>
+    <string name="end">Anhalten</string>
+    <string name="weeklyWorkoutsHeader">Training diese Woche</string>
+    <string name="customWorkoutsHeader">Benutzerdefiniertes Training hinzufügen</string>
+    <string name="workoutTypeTestMax">Maximale Gewichte testen</string>
+    <string name="homeAlertTitle">Gut gemacht!</string>
+    <string name="homeAlertMessage">Tolle Arbeit, um Ihr Trainingsziele diese Woche zu erreichen.</string>
+    <string name="historySegment1">6 Monate</string>
+    <string name="historySegment2">1 Jahr</string>
+    <string name="historySegment3">2 Jahre</string>
+    <string name="chartHeaderTotalWorkouts">Workouts insgesamt</string>
+    <string name="chartHeaderWorkoutType">Aktivitätszeit nach Typ</string>
+    <string name="chartHeaderLifts">Stärkefortschritt</string>
+    <string name="chartEmptyText">Es sind keine Daten verfügbar</string>
+    <string name="legend0">Durchschnittliches Training (%.2f)</string>
+    <string name="legend1">%1$s (Durchschnitt: %2$s)</string>
+    <string name="legend2">%1$s (Durchschnitt: %2$.1f)</string>
+    <string name="hourMinFmt">%1$dSek. %2$dMin.</string>
+    <string name="minFmt">%dMin.</string>
+    <string name="planPickerTitle">Trainingsplan ändern</string>
+    <string name="darkMode">Dunkles Aussehen</string>
+    <string name="settingsSegment1">Keines</string>
+    <string name="settingsSegment2">Gründung</string>
+    <string name="settingsSegment3">Fortsetzung</string>
+    <string name="maxWeightFormat">Maximales Gewicht der %s</string>
+    <string name="bodyWeightHint">Körpergewicht</string>
+    <string name="settingsSaveButtonTitle">Einstellungen speichern</string>
+    <string name="settingsDeleteButtonTitle">Daten löschen</string>
+    <string name="settingsAlertTitle">Bist du sicher?</string>
+    <string name="settingsAlertMessageSave">Dadurch werden die bereitgestellten Daten gespeichert.</string>
+    <string name="settingsAlertMessageDelete">Dadurch wird der gesamte Trainingsverlauf gelöscht.</string>
+    <string name="setupWorkoutTitle">Training konfigurieren</string>
+    <string name="setupWorkoutPickerTitle">Training wählen</string>
+    <string name="sets">Sätze</string>
+    <string name="reps">Wiederholungen</string>
+    <string name="setupWorkoutMaxWeight">Höchstgewicht Prozentsatz</string>
+    <string name="setupWorkoutDuration">Dauer in Minuten</string>
+    <string name="updateMaxesTitle">Gewicht und Wiederholungen bereitstellen</string>
+    <string name="stepperDescription">Ändern Sie die Anzahl der abgeschlossenen Wiederholungen</string>
+    <string name="exerciseHeader">Set %1$d von %2$d</string>
+    <string name="exerciseRest">Ruhe: %d Sek.</string>
+    <string name="exerciseReps">%1$s x %2$d</string>
+    <string name="exerciseRepsWeight">%1$s x %2$d mit %3$.2f %4$s</string>
+    <string name="exerciseDurationMinutes">%1$s für %2$.1f Min.</string>
+    <string name="exerciseDurationSeconds">%1$s für %2$d Sek.</string>
+    <string name="exerciseDistance">%1$s %2$d oder %3$d m</string>
+    <string name="circuitProgress">Schaltung %1$d von %2$d</string>
+    <string name="circuitHeaderRounds">Runde %1$d von %2$d</string>
+    <string name="circuitHeaderAMRAP">SVWWM für %d Min.</string>
+    <string name="circuitHeaderRoundsM">Schaltung %1$d von %2$d - Runde %3$d von %4$d</string>
+    <string name="circuitHeaderAMRAPM">Schaltung %1$d von %2$d - SVWWM für %3$d Min.</string>
+    <string name="sets1">Set 1</string>
+    <string name="rounds1">Runde 1</string>
+    <string name="sep">%1$s, %2$s</string>
+
+    <string-array name="exNames">
+        <item>Hocken</item>
+        <item>Platz zum Haltmachen</item>
+        <item>Tischpresse</item>
+        <item>Kreuzheben</item>
+        <item>Einarmige Kugelhantel Kreuzheben</item>
+        <item>Langhanteldruckmaschine</item>
+        <item>Fahrradknirschen</item>
+        <item>Boxspringen</item>
+        <item>Burpee</item>
+        <item>Knabbern</item>
+        <item>Hantelbankpresse</item>
+        <item>Hantellunge</item>
+        <item>Hanteldruckmaschine</item>
+        <item>Hantelreihe</item>
+        <item>Diamant Liegestütze</item>
+        <item>Tauchen</item>
+        <item>Kelchbeuge</item>
+        <item>Handstand halten</item>
+        <item>Hängendes Knie-an-Ellbogen</item>
+        <item>Hängende Beinerhöhung</item>
+        <item>Überdehnung</item>
+        <item>Invertierte Zeile</item>
+        <item>Sprungbeuge</item>
+        <item>Doppeltes Kugelhantel rein und drücken</item>
+        <item>Kugelhantel Bodenpresse</item>
+        <item>Kugelhantel Schnatch</item>
+        <item>Kugelhantel Schaukel</item>
+        <item>Doppelte russische Gewichtsschaukel</item>
+        <item>Ausfall</item>
+        <item>Liegendes Bein heben</item>
+        <item>Muskelaufbau</item>
+        <item>Plyometrisches Klimmzug</item>
+        <item>Plyometrischer Liegestütze</item>
+        <item>Liegestütze</item>
+        <item>Abtrünnige Reihe</item>
+        <item>Laufen oder rudern</item>
+        <item>Rennen oder Ruder</item>
+        <item>Kugelhantel Schaukel mit Gewichtsweste</item>
+        <item>Gewichteter Rollout des Bauchrads</item>
+        <item>Gewichtetes Burpee</item>
+        <item>Gewichteter Dip</item>
+        <item>Gewichtete Überdehnung</item>
+        <item>Gewichtetes Joggen oder Rudern</item>
+        <item>Gewichteter Bergsteiger</item>
+        <item>Gewichtete Planke</item>
+        <item>Gewichteter Dielenschub</item>
+        <item>Gewichteter Klimmzug</item>
+        <item>Gewichteter Liegestütze</item>
+        <item>Gewichteter Rennen oder Zeile</item>
+        <item>Gewichtete Kniebeuge</item>
+        <item>Gewichteter V-up</item>
+    </string-array>
+
+    <string-array name="wkNames0">
+        <item>Hauptstärke</item>
+        <item>Sekundärstärke</item>
+        <item>Testtag</item>
+    </string-array>
+    <string-array name="wkNames1">
+        <item>Kugelhantel 1</item>
+        <item>Kugelhantel 2</item>
+        <item>Gewichtsweste 1</item>
+        <item>Kugelhantel 3</item>
+        <item>Gewichtsweste 2</item>
+        <item>Hantel 1</item>
+        <item>Kugelhantel 4</item>
+        <item>Erholung</item>
+    </string-array>
+    <string-array name="wkNames2">
+        <item>Widerstandskraft</item>
+    </string-array>
+    <string-array name="wkNames3">
+        <item>Rennen 10 zu 1</item>
+        <item>Schneller 5-Zeitlauf</item>
+        <item>600 Meter Resets</item>
+        <item>Schwarz auf Sauerstoff</item>
+        <item>Schwarz auf Sauerstoff 2</item>
+        <item>Gleisintervalle</item>
+        <item>Sauerstoffschulden 101</item>
+        <item>Sprintleitern</item>
+        <item>Fleischesser</item>
+        <item>Fleischesser 2</item>
+        <item>Anaerobe Kapazität</item>
+        <item>Büffelrunden</item>
+        <item>Fleischesser 3</item>
+        <item>Allgemeine Konditionierung 1</item>
+        <item>Allgemeine Konditionierung 2</item>
+        <item>Allgemeine Konditionierung 3</item>
+        <item>Allgemeine Konditionierung 4</item>
+        <item>Allgemeine Konditionierung 5</item>
+        <item>Allgemeine Konditionierung 6</item>
+        <item>Allgemeine Konditionierung 7</item>
+        <item>Allgemeine Konditionierung 8</item>
+        <item>Allgemeine Konditionierung 9</item>
+        <item>Allgemeine Konditionierung 10</item>
+        <item>Allgemeine Konditionierung 11</item>
+        <item>Allgemeine Konditionierung 12</item>
+        <item>Körpergewicht Plyometrie</item>
+        <item>Kinetische Konditionierung</item>
+    </string-array>
+</resources>

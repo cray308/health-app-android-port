@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notifications">
+        <item>Circuito finito!</item>
+        <item>Esercizio finito!</item>
+    </string-array>
+    <plurals name="inputFieldError">
+        <item quantity="one">L’ingresso deve essere compreso tra %1$d e %2$d</item>
+        <item quantity="other">L’ingresso deve essere compreso tra %1$d e %2$d</item>
+    </plurals>
+    <plurals name="inputFieldErrorEmpty">
+        <item quantity="one">L’ingresso deve essere compreso tra %1$d e %2$d o vuoto</item>
+        <item quantity="other">L’ingresso deve essere compreso tra %1$d e %2$d o vuoto</item>
+    </plurals>
+
+    <string name="channelDescription">Aggiornamenti durante gli allenamenti</string>
+    <string name="tab_home">Abitazione</string>
+    <string name="tab_history">Storia</string>
+    <string name="tab_settings">Impostazioni</string>
+    <string name="workout0">Forza</string>
+    <string name="workout1">Forza e Resistenza</string>
+    <string name="workout2">Sopportazione</string>
+    <string name="workout3">Condizionamento</string>
+    <string name="workoutNotificationTitle">Aggiornamento Allenamento</string>
+    <string name="exerciseProgressHint">Esercizio %1$d di %2$d</string>
+    <string name="exerciseDurationMet">È stata raggiunta la durata minima dell’esercizio</string>
+    <string name="cancel">Annulla</string>
+    <string name="go">Andare</string>
+    <string name="finish">Fine</string>
+    <string name="start">Inizio</string>
+    <string name="end">Arresto</string>
+    <string name="weeklyWorkoutsHeader">Allenamenti Questa Settimana</string>
+    <string name="customWorkoutsHeader">Aggiungi Allenamento Personalizzato</string>
+    <string name="workoutTypeTestMax">Testa i Pesi Massimi</string>
+    <string name="homeAlertTitle">Ben fatto!</string>
+    <string name="homeAlertMessage">Ottimo lavoro per raggiungere il tuo obiettivo di allenamento questa settimana.</string>
+    <string name="historySegment1">6 mesi</string>
+    <string name="historySegment2">1 anno</string>
+    <string name="historySegment3">2 anni</string>
+    <string name="chartHeaderTotalWorkouts">Allenamenti Totali</string>
+    <string name="chartHeaderWorkoutType">Tempo di Attività per Tipo</string>
+    <string name="chartHeaderLifts">Progresso della Forza</string>
+    <string name="chartEmptyText">Nessun dato è disponibile</string>
+    <string name="legend0">Allenamenti medi (%.2f)</string>
+    <string name="legend1">%1$s (Media: %2$s)</string>
+    <string name="legend2">%1$s (Media: %2$.1f)</string>
+    <string name="hourMinFmt">%1$do %2$dm</string>
+    <string name="minFmt">%dm</string>
+    <string name="planPickerTitle">Cambia piano di allenamento</string>
+    <string name="darkMode">Aspetto scuro</string>
+    <string name="settingsSegment1">Nessuno</string>
+    <string name="settingsSegment2">Fondamenta</string>
+    <string name="settingsSegment3">Continuazione</string>
+    <string name="maxWeightFormat">Peso massimo %s</string>
+    <string name="bodyWeightHint">Peso corporeo</string>
+    <string name="settingsSaveButtonTitle">Salva impostazioni</string>
+    <string name="settingsDeleteButtonTitle">Elimina i dati</string>
+    <string name="settingsAlertTitle">Sei sicuro?</string>
+    <string name="settingsAlertMessageSave">Questo salverà i dati forniti.</string>
+    <string name="settingsAlertMessageDelete">Questo eliminerà tutta la cronologia degli allenamenti.</string>
+    <string name="setupWorkoutTitle">Configura l’Allenamento</string>
+    <string name="setupWorkoutPickerTitle">Scegli l’allenamento</string>
+    <string name="sets">Imposta</string>
+    <string name="reps">Ripetizioni</string>
+    <string name="setupWorkoutMaxWeight">Percentuale massima di peso</string>
+    <string name="setupWorkoutDuration">Durata in minuti</string>
+    <string name="updateMaxesTitle">Fornire Peso e Ripetizioni</string>
+    <string name="stepperDescription">Cambia il numero di ripetizioni completate</string>
+    <string name="exerciseHeader">Serie %1$d di %2$d</string>
+    <string name="exerciseRest">Riposo: %d s</string>
+    <string name="exerciseReps">%1$s x %2$d</string>
+    <string name="exerciseRepsWeight">%1$s x %2$d con %3$.2f %4$s</string>
+    <string name="exerciseDurationMinutes">%1$s per %2$.1f min</string>
+    <string name="exerciseDurationSeconds">%1$s per %2$d s</string>
+    <string name="exerciseDistance">%1$s %2$d o %3$d m</string>
+    <string name="circuitProgress">Circuito %1$d di %2$d</string>
+    <string name="circuitHeaderRounds">Giro %1$d di %2$d</string>
+    <string name="circuitHeaderAMRAP">QPRP per %d min</string>
+    <string name="circuitHeaderRoundsM">Circuito %1$d di %2$d - Giro %3$d di %4$d</string>
+    <string name="circuitHeaderAMRAPM">Circuito %1$d di %2$d - QPRP per %3$d min</string>
+    <string name="sets1">Serie 1</string>
+    <string name="rounds1">Giro 1</string>
+    <string name="sep">%1$s, %2$s</string>
+
+    <string-array name="exNames">
+        <item>Accovacciarsi</item>
+        <item>Tira-su</item>
+        <item>Pressa per il torace</item>
+        <item>Stacco</item>
+        <item>Stacco peso russo a braccio singolo</item>
+        <item>Bilanciere spingere</item>
+        <item>Scricchiolio per biciclette</item>
+        <item>Salto alla scatola</item>
+        <item>Burpee</item>
+        <item>Scricchiolio</item>
+        <item>Pressa da banco con manubri</item>
+        <item>Affondo con manubri</item>
+        <item>Manubrio spingere</item>
+        <item>Fila di manubri</item>
+        <item>Spinta diamantata</item>
+        <item>Tuffo</item>
+        <item>Calice accovacciarsi</item>
+        <item>Tenuta in piedi</item>
+        <item>Gamba a gomito appesa</item>
+        <item>Sollevare le gambe appese</item>
+        <item>Iperestensione</item>
+        <item>Riga invertita</item>
+        <item>Salta accovacciarsi</item>
+        <item>Doppio peso russo pulito e pressa</item>
+        <item>Peso russo pressa da pavimento</item>
+        <item>Peso russo strappa</item>
+        <item>Altalena peso russo</item>
+        <item>Doppia altalena peso russo</item>
+        <item>Scatto in avanti</item>
+        <item>Sollevamento delle gambe sdraiato</item>
+        <item>Muscolo-su</item>
+        <item>Tira-su pliometrico</item>
+        <item>Ammassare pliometrico</item>
+        <item>Ammassare</item>
+        <item>Fila rinnegata</item>
+        <item>Corri o rema</item>
+        <item>Sprint o fila</item>
+        <item>Altalena peso russo ponderata</item>
+        <item>Svolgimento ponderato della ruota addominale</item>
+        <item>Burpee ponderato</item>
+        <item>Immersione ponderata</item>
+        <item>Iperestensione ponderata</item>
+        <item>Avanzare a scatti o fila ponderati</item>
+        <item>Alpinista ponderato</item>
+        <item>Tavola ponderata</item>
+        <item>Ammassare della tavola ponderata</item>
+        <item>Tira-su ponderato</item>
+        <item>Ammassare ponderato</item>
+        <item>Sprint o fila ponderati</item>
+        <item>Accovacciarsi ponderato</item>
+        <item>V-up ponderato</item>
+    </string-array>
+
+    <string-array name="wkNames0">
+        <item>Forza Principale</item>
+        <item>Forza Secondaria</item>
+        <item>Giornata del Test</item>
+    </string-array>
+    <string-array name="wkNames1">
+        <item>Peso Russo 1</item>
+        <item>Peso Russo 2</item>
+        <item>Gilet di Peso 1</item>
+        <item>Peso Russo 3</item>
+        <item>Gilet di Peso 2</item>
+        <item>Manubrio 1</item>
+        <item>Peso Russo 4</item>
+        <item>Guarigione</item>
+    </string-array>
+    <string-array name="wkNames2">
+        <item>Resistenza</item>
+    </string-array>
+    <string-array name="wkNames3">
+        <item>Sprint da 10 a 1</item>
+        <item>Corse Veloce a 5 km</item>
+        <item>Ripristini dei 600 Metri</item>
+        <item>Nero sull’Ossigeno</item>
+        <item>Nero sull’Ossigeno 2</item>
+        <item>Intervalli di Tracciamento</item>
+        <item>Debito di Ossigeno 101</item>
+        <item>Scale Sprints</item>
+        <item>Carnivoro</item>
+        <item>Carnivoro 2</item>
+        <item>Capacità Anaerobica</item>
+        <item>Giri di Bufalo</item>
+        <item>Carnivoro 3</item>
+        <item>Conzionamento Generale 1</item>
+        <item>Conzionamento Generale 2</item>
+        <item>Conzionamento Generale 3</item>
+        <item>Conzionamento Generale 4</item>
+        <item>Conzionamento Generale 5</item>
+        <item>Conzionamento Generale 6</item>
+        <item>Conzionamento Generale 7</item>
+        <item>Conzionamento Generale 8</item>
+        <item>Conzionamento Generale 9</item>
+        <item>Conzionamento Generale 10</item>
+        <item>Conzionamento Generale 11</item>
+        <item>Conzionamento Generale 12</item>
+        <item>Pliometria del Peso Corporeo</item>
+        <item>Con Condizionamento Cinetico</item>
+    </string-array>
+</resources>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notifications">
+        <item>\u202Fتم الانتهاء من الدائرة!\u202C</item>
+        <item>\u202Fتم الانتهاء من التمرين!\u202C</item>
+    </string-array>
+    <plurals name="inputFieldError">
+        <item quantity="one">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+        <item quantity="other">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+        <item quantity="many">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+        <item quantity="few">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+        <item quantity="zero">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+        <item quantity="two">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
+    </plurals>
+    <plurals name="inputFieldErrorEmpty">
+        <item quantity="one">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+        <item quantity="other">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+        <item quantity="many">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+        <item quantity="few">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+        <item quantity="zero">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+        <item quantity="two">\u202Fيجب أن يكون الإدخال بين %1$d و %2$d أو فارغًا\u202C</item>
+    </plurals>
+
+    <string name="channelDescription">تحديثات أثناء التمرين</string>
+    <string name="tab_home">بيت</string>
+    <string name="tab_history">تاريخ</string>
+    <string name="tab_settings">الإعدادات</string>
+    <string name="workout0">قوة</string>
+    <string name="workout1">القوة والقدرة على التحمل</string>
+    <string name="workout2">جَلَد</string>
+    <string name="workout3">تكييف</string>
+    <string name="workoutNotificationTitle">تحديث التمرين</string>
+    <string name="exerciseProgressHint">\u202Fالتمرين %1$d من %2$d\u202C</string>
+    <string name="exerciseDurationMet">تم الوصول إلى الحد الأدنى من مدة التمرين</string>
+    <string name="cancel">ألغى</string>
+    <string name="go">ذهب</string>
+    <string name="finish">أكمل</string>
+    <string name="start">بدأ</string>
+    <string name="end">توقف</string>
+    <string name="weeklyWorkoutsHeader">التدريبات هذا الأسبوع</string>
+    <string name="customWorkoutsHeader">أضف تمرينا مخصصا</string>
+    <string name="workoutTypeTestMax">اختبر الأوزان القصوى</string>
+    <string name="homeAlertTitle">\u202Fأحسنت صنعا!\u202C</string>
+    <string name="homeAlertMessage">أحسنت صنعا في تحقيق هدف التمرين هذا الأسبوع</string>
+    <string name="historySegment1">٦ شهرا</string>
+    <string name="historySegment2">سنة واحدة</string>
+    <string name="historySegment3">سنتان</string>
+    <string name="chartHeaderTotalWorkouts">إجمالي التدريبات</string>
+    <string name="chartHeaderWorkoutType">وقت النشاط حسب النوع</string>
+    <string name="chartHeaderLifts">تقدم القوة</string>
+    <string name="chartEmptyText">لا توجد بيانات متاحة</string>
+    <string name="legend0">\u202Fمتوسط التدريبات (%.2f)\u202C</string>
+    <string name="legend1">\u202F%1$s (المتوسط: %2$s)\u202C</string>
+    <string name="legend2">\u202F%1$s (المتوسط: %2$.1f)\u202C</string>
+    <string name="hourMinFmt">\u202F%1$d س %2$d د\u202C</string>
+    <string name="minFmt">\u202F%d د\u202C</string>
+    <string name="planPickerTitle">تغيير خطة التمرين</string>
+    <string name="darkMode">مظهر داكن</string>
+    <string name="settingsSegment1">لا شيء</string>
+    <string name="settingsSegment2">تأسيس</string>
+    <string name="settingsSegment3">استمرار</string>
+    <string name="maxWeightFormat">\u202Fالحد الأقصى لوزن %s\u202C</string>
+    <string name="bodyWeightHint">وزن الجسم</string>
+    <string name="settingsSaveButtonTitle">حفظ الإعدادات</string>
+    <string name="settingsDeleteButtonTitle">حذف البيانات</string>
+    <string name="settingsAlertTitle">هل أنت متأكد؟</string>
+    <string name="settingsAlertMessageSave">سيؤدي ذلك إلى حفظ البيانات المقدمة</string>
+    <string name="settingsAlertMessageDelete">سيؤدي ذلك إلى حذف كل سجل التمرين</string>
+    <string name="setupWorkoutTitle">تكوين التمرين</string>
+    <string name="setupWorkoutPickerTitle">اختر التمرين</string>
+    <string name="sets">مجموعات الطعام</string>
+    <string name="reps">التكرارات (تكرار)</string>
+    <string name="setupWorkoutMaxWeight">النسبة المئوية القصوى للوزن</string>
+    <string name="setupWorkoutDuration">المدة بالدقائق</string>
+    <string name="updateMaxesTitle">توفير الوزن والتكرار</string>
+    <string name="stepperDescription">تغيير عدد التكرارات المكتملة</string>
+    <string name="exerciseHeader">\u202Fالمجموعة %1$d من %2$d\u202C</string>
+    <string name="exerciseRest">\u202Fالراحة: %d ث\u202C</string>
+    <string name="exerciseReps">\u202F%1$s %2$d مرات\u202C</string>
+    <string name="exerciseRepsWeight">\u202F%1$s %2$d مرات مع %3$.2f %4$s\u202C</string>
+    <string name="exerciseDurationMinutes">\u202F%1$s لمدة %2$.1f د\u202C</string>
+    <string name="exerciseDurationSeconds">\u202F%1$s لمدة %2$d ث\u202C</string>
+    <string name="exerciseDistance">\u202F%1$s لمسافة %2$d أو %3$d م\u202C</string>
+    <string name="circuitProgress">\u202Fالدائرة %1$d من %2$d\u202C</string>
+    <string name="circuitHeaderRounds">\u202Fالجولة %1$d من %2$d\u202C</string>
+    <string name="circuitHeaderAMRAP">\u202Fأكبر عدد ممكن من التكرار لمدة %d د\u202C</string>
+    <string name="circuitHeaderRoundsM">\u202Fالدائرة %1$d من %2$d - الجولة %3$d من %4$d\u202C</string>
+    <string name="circuitHeaderAMRAPM">\u202Fالدائرة %1$d من %2$d - أكبر عدد ممكن من التكرارات لمدة %3$d د\u202C</string>
+    <string name="sets1">المجموعة ١</string>
+    <string name="rounds1">الجولة ١</string>
+    <string name="sep">%1$s ،%2$s</string>
+
+    <string-array name="exNames">
+        <item>قرفص</item>
+        <item>سحب ما يصل</item>
+        <item>مكبس مقاعد البدلاء</item>
+        <item>الرفعة المميتة</item>
+        <item>رافعة شوكية أحادية الذراع</item>
+        <item>الحديد دفع الصحافة</item>
+        <item>أزمة الدراجات الهوائية</item>
+        <item>قفزة الصندوق</item>
+        <item>بوربي</item>
+        <item>قرقش</item>
+        <item>اضغط على مقعد الدمبل</item>
+        <item>رئتا الدمبل</item>
+        <item>دمبل بضغطة</item>
+        <item>صف الدمبل</item>
+        <item>الضغط الماسي</item>
+        <item>غَمَسَ</item>
+        <item>كأس القرفصاء</item>
+        <item>الوقوف على اليدين</item>
+        <item>معلق من الركبة إلى الكوع</item>
+        <item>رفع الساق المعلقة</item>
+        <item>فرط التمدد</item>
+        <item>صف مقلوب</item>
+        <item>القفز القرفصاء</item>
+        <item>جرس غلاية مزدوج نظيف ومكبس</item>
+        <item>الوزن الروسي الطابق الصحافة</item>
+        <item>خطف الوزن الروسي</item>
+        <item>أرجوحة الوزن الروسي</item>
+        <item>أرجوحة الوزن الروسي مزدوجة</item>
+        <item>انْدِفاع</item>
+        <item>رفع الساق الكذبة</item>
+        <item>العضلات إلى أعلى</item>
+        <item>سحب بليومترك</item>
+        <item>ضغط بليومترك</item>
+        <item>تمرين الضغط</item>
+        <item>صف رينيجيد</item>
+        <item>اركض أو صف</item>
+        <item>سبرينت أو صف</item>
+        <item>أرجوحة الوزن الروسي المرجحة</item>
+        <item>لفة عجلة البطن المرجحة</item>
+        <item>بيربي المرجح</item>
+        <item>تراجع مرجح</item>
+        <item>تمديد مفرط مرجح</item>
+        <item>هروف أو صف مرجح</item>
+        <item>متسلق الجبال المرجح</item>
+        <item>لوح مرجح</item>
+        <item>رفع اللوح الخشبي المرجح</item>
+        <item>سحب مرجح</item>
+        <item>الضغط المرجح للأعلى</item>
+        <item>سبرينت أو صف مرجح</item>
+        <item>القرفصاء المرجح</item>
+        <item>V-up المرجح</item>
+    </string-array>
+
+    <string-array name="wkNames0">
+        <item>القوة الرئيسية</item>
+        <item>القوة الثانوية</item>
+        <item>يوم الاختبار</item>
+    </string-array>
+    <string-array name="wkNames1">
+        <item>كيلوبايت ١</item>
+        <item>كيلوبايت ٢</item>
+        <item>سترة الوزن ١</item>
+        <item>كيلوبايت ٣</item>
+        <item>سترة الوزن ٢</item>
+        <item>الدمبل ١</item>
+        <item>كيلوبايت ٤</item>
+        <item>شفاء</item>
+    </string-array>
+    <string-array name="wkNames2">
+        <item>جَلَد</item>
+    </string-array>
+    <string-array name="wkNames3">
+        <item>سبرينت من ۱۰ إلى ١</item>
+        <item>تشغيل سريع لمدة ٥ مرات</item>
+        <item>إعادة تعيين ٦۰۰ متر</item>
+        <item>أسود على الأكسجين</item>
+        <item>أسود على الأكسجين ٢</item>
+        <item>تتبع الفواصل الزمنية</item>
+        <item>ديون الأكسجين ۱۰۱</item>
+        <item>سلالم سبرينت</item>
+        <item>آكل لحوم</item>
+        <item>أكلة اللحم ٢</item>
+        <item>القدرة اللاهوائية</item>
+        <item>لفات الجاموس</item>
+        <item>أكلة اللحم ٣</item>
+        <item>الشروط العامة ١</item>
+        <item>الشروط العامة ٢</item>
+        <item>الشروط العامة ٣</item>
+        <item>الشروط العامة ٤</item>
+        <item>الشروط العامة ٥</item>
+        <item>الشروط العامة ٦</item>
+        <item>الشروط العامة ٧</item>
+        <item>الشروط العامة ٨</item>
+        <item>الشروط العامة ٩</item>
+        <item>الشروط العامة ۱۰</item>
+        <item>الشروط العامة ۱۱</item>
+        <item>الشروط العامة ۱۲</item>
+        <item>القياسات المتعددة</item>
+        <item>تكييف حركي</item>
+    </string-array>
+</resources>

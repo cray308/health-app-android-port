@@ -1,6 +1,7 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.core.AppCoordinator;
 import com.example.healthAppAndroid.core.TextValidator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -60,9 +62,10 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         Button finishButton = view.findViewById(R.id.submitBtn);
         finishButton.setOnClickListener(view1 -> {
             int extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
-            int initWeight = (validator.getResults()[0] + extra) * 36;
+            float initWeight =
+              (validator.children[0].result * AppCoordinator.shared.toSavedMass + extra) * 36;
             float reps = 37f - value;
-            short weight = (short)(((initWeight / reps) + 0.5f) - extra);
+            short weight = (short)(Math.round(initWeight / reps) - extra);
             WorkoutActivity activity = (WorkoutActivity)getActivity();
             if (activity != null)
                 activity.finishedBottomSheet(this, index, weight);
@@ -70,9 +73,11 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         validator = new TextValidator(finishButton);
 
         TextValidator.InputView input = view.findViewById(R.id.input);
+        int kb = AppCoordinator.shared.metric
+                 ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
         input.field.setHint(getString(R.string.maxWeightFormat,
                                       getResources().getStringArray(R.array.exNames)[index]));
-        validator.addChild((short)0, (short)999, R.plurals.inputFieldError, input);
+        validator.addChild(0, 999, R.plurals.inputFieldError, kb, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) {
             dialog.setCancelable(false);

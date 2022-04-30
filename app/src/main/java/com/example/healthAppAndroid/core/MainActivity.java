@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.util.LocaleData;
+import android.icu.util.ULocale;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,11 +23,14 @@ import java.time.ZoneId;
 
 public final class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
+        LocaleData.MeasurementSystem sys = LocaleData.getMeasurementSystem(ULocale.getDefault());
+        boolean metric =
+          sys.equals(LocaleData.MeasurementSystem.SI) || sys.equals(LocaleData.MeasurementSystem.UK);
         if (AppCoordinator.shared != null) {
             super.onCreate(null);
             setContentView(R.layout.activity_main);
             AppColors.setColors(this);
-            AppCoordinator.shared = new AppCoordinator(this);
+            AppCoordinator.shared = new AppCoordinator(this, metric);
             return;
         }
 
@@ -70,9 +75,9 @@ public final class MainActivity extends AppCompatActivity {
 
         AppColors.setColors(this);
         Utils.init(this);
-        ExerciseManager.init(this, results[1]);
+        ExerciseManager.init(this, results[1], metric);
 
-        AppCoordinator.shared = new AppCoordinator(this, args);
+        AppCoordinator.shared = new AppCoordinator(this, args, metric);
         AsyncTask.execute(() -> PersistenceService.start(zoneId, weekStart, results[0], args));
     }
 }
