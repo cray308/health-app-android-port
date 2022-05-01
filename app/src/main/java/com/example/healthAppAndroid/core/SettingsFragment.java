@@ -86,9 +86,10 @@ public final class SettingsFragment extends Fragment {
         validator = new TextValidator(saveButton);
         int kb = AppCoordinator.shared.metric
                  ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
+        Locale l = Locale.getDefault();
         for (int i = 0; i < 4; ++i) {
             TextValidator.InputView v = view.findViewById(ids[i]);
-            v.field.setHint(getString(R.string.maxWeightFormat, exNames[i]));
+            v.field.setHint(getString(R.string.maxWeightFormat, exNames[i].toLowerCase(l)));
             validator.addChild(0, 999, R.plurals.inputFieldError, kb, v);
         }
         validator.addChild(1, 999, R.plurals.inputFieldErrorEmpty,

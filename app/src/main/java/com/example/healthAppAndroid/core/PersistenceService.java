@@ -159,7 +159,7 @@ public abstract class PersistenceService extends RoomDatabase {
         fetchHistory(zoneId, args, dao);
     }
 
-    private static final class DeleteDataTask implements Runnable {
+    static final class DeleteDataTask implements Runnable {
         public void run() {
             DAO dao = shared.dao();
             WeeklyData[] data = dao.getAllSorted();
@@ -182,14 +182,12 @@ public abstract class PersistenceService extends RoomDatabase {
         }
     }
 
-    static void deleteAppData() { new Thread(new DeleteDataTask()).start(); }
-
-    private static final class UpdateCurrentWeekTask implements Runnable {
+    static final class UpdateCurrentWeekTask implements Runnable {
         private final short duration;
         private final short[] lifts;
         private final byte type;
 
-        private UpdateCurrentWeekTask(byte type, short duration, short[] lifts) {
+        UpdateCurrentWeekTask(byte type, short duration, short[] lifts) {
             this.type = type;
             this.duration = duration;
             this.lifts = lifts;
@@ -219,9 +217,5 @@ public abstract class PersistenceService extends RoomDatabase {
 
             dao.updateWeeks(new WeeklyData[]{curr});
         }
-    }
-
-    static void updateCurrentWeek(byte type, short duration, short[] lifts) {
-        new Thread(new UpdateCurrentWeekTask(type, duration, lifts)).start();
     }
 }

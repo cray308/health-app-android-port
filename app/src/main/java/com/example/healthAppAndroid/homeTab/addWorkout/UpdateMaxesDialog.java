@@ -75,8 +75,8 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         TextValidator.InputView input = view.findViewById(R.id.input);
         int kb = AppCoordinator.shared.metric
                  ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
-        input.field.setHint(getString(R.string.maxWeightFormat,
-                                      getResources().getStringArray(R.array.exNames)[index]));
+        String name = getResources().getStringArray(R.array.exNames)[index].toLowerCase(l);
+        input.field.setHint(getString(R.string.maxWeightFormat, name));
         validator.addChild(0, 999, R.plurals.inputFieldError, kb, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) {

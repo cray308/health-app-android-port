@@ -49,15 +49,16 @@ public final class HistoryFragment extends Fragment {
         }
         didSelectSegment(selected);
     };
-    private final boolean setIndex;
+    private boolean setIndex = false;
 
-    public HistoryFragment(Object[][] args) {
+    public static HistoryFragment init(Object[][] args) {
+        HistoryFragment frag = new HistoryFragment();
         if (args != null) {
-            args[1][0] = new FetchHandler(this, args[0]);
-            setIndex = false;
+            args[1][0] = new FetchHandler(frag, args[0]);
         } else {
-            setIndex = true;
+            frag.setIndex = true;
         }
+        return frag;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {

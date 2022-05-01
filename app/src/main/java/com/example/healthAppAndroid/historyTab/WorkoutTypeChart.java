@@ -116,7 +116,7 @@ public final class WorkoutTypeChart extends ChartContainer {
         ValueFormatter formatter = new ValueFormatter(this);
         data.setValueFormatter(formatter);
         setupChartView();
-        chart.getAxisLeft().setValueFormatter(formatter);
+        axis.setValueFormatter(formatter);
         chart.setRenderer(new Renderer(chart));
     }
 

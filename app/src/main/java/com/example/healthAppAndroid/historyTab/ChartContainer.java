@@ -24,7 +24,7 @@ public abstract class ChartContainer extends LinearLayout {
     private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
     final LineData data = new LineData();
-    private YAxis axis;
+    YAxis axis;
 
     public ChartContainer(Context c, AttributeSet attrs) { super(c, attrs); }
 
@@ -32,13 +32,6 @@ public abstract class ChartContainer extends LinearLayout {
         super(c, attrs);
         inflate(c, id, this);
         chart = findViewById(R.id.chartView);
-        if (HistoryViewModel.ltr) {
-            axis = chart.getAxisLeft();
-            chart.getAxisRight().setEnabled(false);
-        } else {
-            axis = chart.getAxisRight();
-            chart.getAxisLeft().setEnabled(false);
-        }
         legendEntries[0] = findViewById(R.id.firstEntry);
         if (legendIds != null) {
             int count = legendIds.length;
@@ -80,6 +73,14 @@ public abstract class ChartContainer extends LinearLayout {
     void setupChartView() {
         chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
         chart.getDescription().setEnabled(false);
+        if (HistoryViewModel.ltr) {
+            axis = chart.getAxisLeft();
+            chart.getAxisRight().setEnabled(false);
+        } else {
+            axis = chart.getAxisRight();
+            chart.getAxisLeft().setEnabled(false);
+        }
+        axis.setEnabled(true);
         axis.setAxisMinimum(0);
         axis.setTextSize(10);
         axis.setTextColor(AppColors.labelNormal);

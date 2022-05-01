@@ -33,7 +33,7 @@ public final class AppCoordinator {
                || pr.contains("sdk") || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64")
                || pr.contains("vbox86p") || pr.contains("emulator") || pr.contains("simulator");
         fm = activity.getSupportFragmentManager();
-        children[1] = new HistoryFragment(args);
+        children[1] = HistoryFragment.init(args);
         metric = isMetric;
         toSavedMass = isMetric ? 2.204623f : 1;
 
@@ -74,7 +74,7 @@ public final class AppCoordinator {
     }
 
     void deleteAppData() {
-        PersistenceService.deleteAppData();
+        new Thread(new PersistenceService.DeleteDataTask()).start();
         if (AppUserData.shared.deleteSavedData())
             ((HomeFragment)children[0]).updateWorkoutsList((byte)0);
         ((HistoryFragment)children[1]).handleDataDeletion();
@@ -83,7 +83,7 @@ public final class AppCoordinator {
     public byte addWorkoutData(byte day, byte type, short duration, short[] weights) {
         short[] output = {0, 0, 0, 0};
         boolean[] updatedWeight = {false};
-        PersistenceService.updateCurrentWeek(type, duration, weights);
+        new Thread(new PersistenceService.UpdateCurrentWeekTask(type, duration, weights)).start();
         byte completed = AppUserData.shared.addWorkoutData(day, weights, output, updatedWeight);
         if (updatedWeight[0])
             ((SettingsFragment)children[2]).updateWeightFields(output);

@@ -31,12 +31,12 @@ public final class TotalWorkoutsChart extends ChartContainer {
 
     void updateChart(boolean isSmall, int index) {
         HistoryViewModel.TotalWorkoutsModel m = HistoryFragment.viewModel.totalWorkouts;
-        chart.getAxisLeft().removeAllLimitLines();
+        axis.removeAllLimitLines();
         LimitLine limitLine = new LimitLine(m.avgs[index]);
         limitLine.enableDashedLine(10, 10, 0);
         limitLine.setLineWidth(2);
         limitLine.setLineColor(lineColor);
-        chart.getAxisLeft().addLimitLine(limitLine);
+        axis.addLimitLine(limitLine);
         updateData(0, isSmall, m.entryRefs.get(index), 0, m.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));
         update(isSmall, m.maxes[index]);
