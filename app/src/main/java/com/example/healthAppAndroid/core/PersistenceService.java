@@ -86,24 +86,21 @@ public abstract class PersistenceService extends RoomDatabase {
         shared = Room.databaseBuilder(c, PersistenceService.class, DBName).build();
     }
 
-    private static void fetchHistory(ZoneId zoneId, Object[] args, DAO dao) {
-        WeekDataModel model = (WeekDataModel)args[0];
-        HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler)args[1];
-        if (model.arr != null) {
-            WeeklyData[] data = dao.getAllSorted();
-            int count = data.length;
-            if (count > 1) {
-                model.size = count - 1;
-                DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-                for (int i = 0; i < model.size; ++i) {
-                    model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
-                }
+    private static void fetchHistory(ZoneId zoneId, Object[][] args, DAO dao) {
+        HistoryFragment.FetchHandler block = (HistoryFragment.FetchHandler)args[1][0];
+        WeeklyData[] data = dao.getAllSorted();
+        WeekDataModel model = new WeekDataModel(data.length);
+        args[0][0] = model;
+        if (model.size != 0) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+            for (int i = 0; i < model.size; ++i) {
+                model.arr[i] = new WeekDataModel.Week(data[i], zoneId, formatter);
             }
         }
         new Handler(Looper.getMainLooper()).post(block::completion);
     }
 
-    static void start(ZoneId zoneId, long weekStart, int tzOffset, Object[] args) {
+    static void start(ZoneId zoneId, long weekStart, int tzOffset, Object[][] args) {
         final long weekSeconds = 604800;
         long endPt = weekStart - 63244800;
         DAO dao = shared.dao();

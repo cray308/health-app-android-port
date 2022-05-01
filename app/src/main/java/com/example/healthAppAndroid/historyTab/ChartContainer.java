@@ -24,6 +24,7 @@ public abstract class ChartContainer extends LinearLayout {
     private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
     final LineDataSet[] dataSets = {null, null, null, null, null};
     final LineData data = new LineData();
+    private YAxis axis;
 
     public ChartContainer(Context c, AttributeSet attrs) { super(c, attrs); }
 
@@ -31,6 +32,13 @@ public abstract class ChartContainer extends LinearLayout {
         super(c, attrs);
         inflate(c, id, this);
         chart = findViewById(R.id.chartView);
+        if (HistoryViewModel.ltr) {
+            axis = chart.getAxisLeft();
+            chart.getAxisRight().setEnabled(false);
+        } else {
+            axis = chart.getAxisRight();
+            chart.getAxisLeft().setEnabled(false);
+        }
         legendEntries[0] = findViewById(R.id.firstEntry);
         if (legendIds != null) {
             int count = legendIds.length;
@@ -54,7 +62,8 @@ public abstract class ChartContainer extends LinearLayout {
     static LineDataSet createDataSet(int color) {
         LineDataSet dataSet = createEmptyDataSet();
         dataSet.setColor(color);
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setAxisDependency(
+          HistoryViewModel.ltr ? YAxis.AxisDependency.LEFT : YAxis.AxisDependency.RIGHT);
         dataSet.setValueTextSize(10);
         dataSet.setValueTextColor(AppColors.labelNormal);
         dataSet.setCircleColor(color);
@@ -71,11 +80,9 @@ public abstract class ChartContainer extends LinearLayout {
     void setupChartView() {
         chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
         chart.getDescription().setEnabled(false);
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMinimum(0);
-        leftAxis.setTextSize(10);
-        leftAxis.setTextColor(AppColors.labelNormal);
-        chart.getAxisRight().setEnabled(false);
+        axis.setAxisMinimum(0);
+        axis.setTextSize(10);
+        axis.setTextColor(AppColors.labelNormal);
         chart.getLegend().setEnabled(false);
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -84,7 +91,7 @@ public abstract class ChartContainer extends LinearLayout {
         xAxis.setTextColor(AppColors.labelNormal);
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setLabelRotationAngle(45);
+        xAxis.setLabelRotationAngle(HistoryViewModel.ltr ? 45 : -45);
         xAxis.setValueFormatter(HistoryFragment.viewModel);
     }
 
@@ -106,7 +113,7 @@ public abstract class ChartContainer extends LinearLayout {
 
     void update(boolean isSmall, float axisMax) {
         chart.zoom(0.01f, 0.01f, 0, 0);
-        chart.getAxisLeft().setAxisMaximum(axisMax);
+        axis.setAxisMaximum(axisMax);
         data.setDrawValues(isSmall);
         chart.setData(data);
         data.notifyDataChanged();

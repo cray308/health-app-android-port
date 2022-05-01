@@ -35,13 +35,11 @@ public final class WeekDataModel {
     }
 
     public final Week[] arr;
-    public int size;
+    public final int size;
 
-    public WeekDataModel() {
-        Week[] weeks = null;
-        try {
-            weeks = new Week[105];
-        } catch (OutOfMemoryError ignored) {}
-        arr = weeks;
+    WeekDataModel(int count) {
+        size = (count > 1) ? count - 1 : 0;
+        if (size > 0) arr = new Week[size];
+        else arr = null;
     }
 }

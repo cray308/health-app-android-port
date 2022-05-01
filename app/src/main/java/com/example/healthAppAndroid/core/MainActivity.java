@@ -30,7 +30,7 @@ public final class MainActivity extends AppCompatActivity {
             super.onCreate(null);
             setContentView(R.layout.activity_main);
             AppColors.setColors(this);
-            AppCoordinator.shared = new AppCoordinator(this, metric);
+            AppCoordinator.shared = new AppCoordinator(this, null, metric);
             return;
         }
 
@@ -49,7 +49,7 @@ public final class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("AppDelPrefs", Context.MODE_PRIVATE);
         String hasLaunchedKey = "hasLaunched";
         int[] results = {0, 0};
-        Object[] args = {null, null};
+        Object[][] args = {new Object[]{null}, new Object[]{null}};
         boolean modern = Build.VERSION.SDK_INT > 28;
 
         if (!prefs.getBoolean(hasLaunchedKey, false)) {

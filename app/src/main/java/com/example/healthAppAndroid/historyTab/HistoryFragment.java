@@ -18,14 +18,15 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 public final class HistoryFragment extends Fragment {
     public static final class FetchHandler {
         private final HistoryFragment fragment;
-        private final WeekDataModel data;
+        private final Object[] dataArr;
 
-        private FetchHandler(HistoryFragment fragment, WeekDataModel data) {
+        private FetchHandler(HistoryFragment fragment, Object[] arr) {
             this.fragment = fragment;
-            this.data = data;
+            dataArr = arr;
         }
 
         public void completion() {
+            WeekDataModel data = (WeekDataModel)dataArr[0];
             if (data.size != 0)
                 viewModel.populateData(data);
             new android.os.Handler(Looper.getMainLooper()).post(
@@ -50,13 +51,13 @@ public final class HistoryFragment extends Fragment {
     };
     private final boolean setIndex;
 
-    public HistoryFragment() { setIndex = true; }
-
-    public HistoryFragment(Object[] results) {
-        WeekDataModel model = new WeekDataModel();
-        results[0] = model;
-        results[1] = new FetchHandler(this, model);
-        setIndex = false;
+    public HistoryFragment(Object[][] args) {
+        if (args != null) {
+            args[1][0] = new FetchHandler(this, args[0]);
+            setIndex = false;
+        } else {
+            setIndex = true;
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {

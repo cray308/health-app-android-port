@@ -3,14 +3,20 @@ package com.example.healthAppAndroid.historyTab;
 import android.content.Context;
 import android.content.res.Resources;
 
+import androidx.core.text.TextUtilsCompat;
+import androidx.core.view.ViewCompat;
+
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.core.AppCoordinator;
 import com.example.healthAppAndroid.core.WeekDataModel;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 final class HistoryViewModel extends IndexAxisValueFormatter {
     private String[] workoutNames;
@@ -46,8 +52,11 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     private String[] axisStrings;
     final int[] nEntries = {0, 0, 0};
     private final int[] refIndices = {0, 0, 0};
+    static boolean ltr = true;
 
     void setup(Resources res) {
+        ltr = TextUtilsCompat.getLayoutDirectionFromLocale(
+          Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR;
         workoutNames = new String[]{res.getString(R.string.workout0), res.getString(R.string.workout1),
                                     res.getString(R.string.workout2), res.getString(R.string.workout3)};
         String[] exNames = res.getStringArray(R.array.exNames);
@@ -55,14 +64,14 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     }
 
     void populateData(WeekDataModel results) {
-        refIndices[0] = results.size - 26;
-        refIndices[1] = results.size - 52;
-        refIndices[0] = Math.max(refIndices[0], 0);
-        refIndices[1] = Math.max(refIndices[1], 0);
+        int inc = ltr ? 1 : -1;
+        int[] refs = {results.size, results.size - 26, results.size - 52, 0};
+        refs[2] = Math.max(refs[2], 0);
+        refs[1] = Math.max(refs[1], 0);
 
-        nEntries[0] = results.size - refIndices[0];
-        nEntries[1] = results.size - refIndices[1];
-        nEntries[2] = results.size;
+        System.arraycopy(new int[]{
+          results.size - refs[1], results.size - refs[2], results.size}, 0, nEntries, 0, 3);
+        if (ltr) System.arraycopy(refs, 1, refIndices, 0, 3);
 
         axisStrings = new String[results.size];
         totalWorkouts.entries = new ArrayList<>(results.size);
@@ -74,24 +83,24 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
             lifts.entries.add(new ArrayList<>(results.size));
         }
 
-        int[] sectionIndices = {results.size, refIndices[0], refIndices[1], 0};
+        float mf = AppCoordinator.shared.metric ? 0.453592f : 1;
         int[] totalWorkoutsArr = {0, 0, 0}, maxWorkouts = {0, 0, 0}, innerLimits = {-1, 0, 1};
         int[] maxTime = {0, 0, 0}, maxWeight = {0, 0, 0};
         int[][] totalByType = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
         int[][] totalByExercise = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
 
-        for (int section = 3; section > 0; --section) {
+        for (int section = 3, index = ltr ? 0 : results.size - 1; section > 0; --section) {
             int jEnd = innerLimits[section - 1];
-            for (int i = sectionIndices[section]; i < sectionIndices[section - 1]; ++i) {
+            for (int i = refs[section]; i < refs[section - 1]; ++i, index += inc) {
                 WeekDataModel.Week e = results.arr[i];
-                axisStrings[i] = e.axisString;
+                axisStrings[index] = e.axisString;
 
                 for (int j = 2; j > jEnd; --j) {
                     totalWorkoutsArr[j] += e.totalWorkouts;
                     if (e.totalWorkouts > maxWorkouts[j])
                         maxWorkouts[j] = e.totalWorkouts;
                 }
-                totalWorkouts.entries.add(new Entry(i, e.totalWorkouts));
+                totalWorkouts.entries.add(new Entry(index, e.totalWorkouts));
 
                 for (int x = 0; x < 4; ++x) {
                     for (int j = 2; j > jEnd; --j) {
@@ -100,38 +109,49 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
                         if (e.weightArray[x] > maxWeight[j])
                             maxWeight[j] = e.weightArray[x];
                     }
-                    lifts.entries.get(x).add(new Entry(i, e.weightArray[x]));
+                    lifts.entries.get(x).add(new Entry(index, e.weightArray[x] * mf));
                 }
 
                 for (int j = 2; j > jEnd; --j) {
                     if (e.cumulativeDuration[3] > maxTime[j])
                         maxTime[j] = e.cumulativeDuration[3];
                 }
-                workoutTypes.entries.get(0).add(new Entry(i, 0));
+                workoutTypes.entries.get(0).add(new Entry(index, 0));
                 for (int x = 1; x < 5; ++x) {
-                    workoutTypes.entries.get(x).add(new Entry(i, e.cumulativeDuration[x - 1]));
+                    workoutTypes.entries.get(x).add(new Entry(index, e.cumulativeDuration[x - 1]));
                 }
+            }
+        }
+
+        if (!ltr) {
+            Comparator<Entry> c = Comparator.comparingInt(e -> (int)e.getX());
+            totalWorkouts.entries.sort(c);
+            workoutTypes.entries.get(0).sort(c);
+            for (int i = 0; i < 4; ++i) {
+                workoutTypes.entries.get(i + 1).sort(c);
+                lifts.entries.get(i).sort(c);
             }
         }
 
         totalWorkouts.entryRefs = new ArrayList<>(3);
         lifts.entryRefs = new ArrayList<>(3);
         workoutTypes.entryRefs = new ArrayList<>(3);
+        float[] invEntries = {1f / nEntries[0], 1f / nEntries[1], 1f / nEntries[2]};
 
         for (int i = 0; i < 3; ++i) {
             int refIdx = refIndices[i];
             int endIdx = refIdx + nEntries[i];
-            totalWorkouts.avgs[i] = (float)totalWorkoutsArr[i] / nEntries[i];
+            totalWorkouts.avgs[i] = totalWorkoutsArr[i] * invEntries[i];
             totalWorkouts.maxes[i] = maxWorkouts[i] < 7 ? 7f : 1.1f * maxWorkouts[i];
             workoutTypes.maxes[i] = 1.1f * maxTime[i];
-            lifts.maxes[i] = 1.1f * maxWeight[i];
+            lifts.maxes[i] = maxWeight[i] * mf * 1.1f;
             totalWorkouts.entryRefs.add(totalWorkouts.entries.subList(refIdx, endIdx));
             lifts.entryRefs.add(new ArrayList<>(4));
             workoutTypes.entryRefs.add(new ArrayList<>(5));
 
             for (int j = 0; j < 4; ++j) {
                 workoutTypes.avgs[i][j] = totalByType[i][j] / nEntries[i];
-                lifts.avgs[i][j] = (float)totalByExercise[i][j] / nEntries[i];
+                lifts.avgs[i][j] = totalByExercise[i][j] * mf * invEntries[i];
                 lifts.entryRefs.get(i).add(lifts.entries.get(j).subList(refIdx, endIdx));
                 workoutTypes.entryRefs.get(i).add(
                   workoutTypes.entries.get(j).subList(refIdx, endIdx));

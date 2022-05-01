@@ -23,36 +23,20 @@ public final class AppCoordinator {
 
     public static AppCoordinator shared;
 
-    private static boolean isOnEmulator() {
+    AppCoordinator(FragmentActivity activity, Object[][] args, boolean isMetric) {
         String fp = Build.FINGERPRINT, hw = Build.HARDWARE, pr = Build.PRODUCT, m = Build.MODEL;
         String gen = "generic", gSDK = "google_sdk";
-        return (Build.BRAND.startsWith(gen) && Build.DEVICE.startsWith(gen)) || fp.startsWith(gen)
+        onEmulator = (Build.BRAND.startsWith(gen) && Build.DEVICE.startsWith(gen)) || fp.startsWith(gen)
                || fp.startsWith("unknown") || hw.contains("goldfish") || hw.contains("ranchu")
                || m.contains(gSDK) || m.contains("Emulator") || m.contains("Android SDK built for x86")
                || Build.MANUFACTURER.contains("Genymotion") || pr.contains("sdk_google") || pr.contains(gSDK)
                || pr.contains("sdk") || pr.contains("sdk_x86") || pr.contains("sdk_gphone64_arm64")
                || pr.contains("vbox86p") || pr.contains("emulator") || pr.contains("simulator");
-    }
-
-    AppCoordinator(FragmentActivity activity, boolean isMetric) {
-        onEmulator = isOnEmulator();
         fm = activity.getSupportFragmentManager();
-        children[1] = new HistoryFragment();
+        children[1] = new HistoryFragment(args);
         metric = isMetric;
         toSavedMass = isMetric ? 2.204623f : 1;
-        init(activity, 2);
-    }
 
-    AppCoordinator(FragmentActivity activity, Object[] results, boolean isMetric) {
-        onEmulator = isOnEmulator();
-        fm = activity.getSupportFragmentManager();
-        children[1] = new HistoryFragment(results);
-        metric = isMetric;
-        toSavedMass = isMetric ? 2.204623f : 1;
-        init(activity, 0);
-    }
-
-    private void init(FragmentActivity activity, int activeIndex) {
         ((NavigationBarView)activity.findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
             int index = 0;
             int id = item.getItemId();
@@ -67,6 +51,7 @@ public final class AppCoordinator {
             return true;
         });
 
+        int activeIndex = args == null ? 2 : 0;
         for (int i = 0; i < 3; ++i) {
             FragmentTransaction t = fm.beginTransaction().add(
               R.id.container, children[i], String.valueOf(i + 1));
