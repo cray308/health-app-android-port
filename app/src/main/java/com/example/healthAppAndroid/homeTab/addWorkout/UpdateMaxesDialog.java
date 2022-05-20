@@ -1,7 +1,6 @@
 package com.example.healthAppAndroid.homeTab.addWorkout;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.Locale;
 
 public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
-    private static final String key = "UpdateMaxesDialog.Index";
+    private static final String key = "UpdateMaxesKey";
     private TextValidator validator;
     private int index;
     private byte value = 1;
@@ -36,8 +35,7 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null)
-            index = args.getInt(key, 0);
+        if (args != null) index = args.getInt(key, 0);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
@@ -62,19 +60,17 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         Button finishButton = view.findViewById(R.id.submitBtn);
         finishButton.setOnClickListener(view1 -> {
             int extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
-            float initWeight =
-              (validator.children[0].result * AppCoordinator.shared.toSavedMass + extra) * 36;
+            float mf = AppCoordinator.shared.toSavedMass;
+            float initWeight = (validator.children[0].result * mf + extra) * 36;
             float reps = 37f - value;
             short weight = (short)(Math.round(initWeight / reps) - extra);
             WorkoutActivity activity = (WorkoutActivity)getActivity();
-            if (activity != null)
-                activity.finishedBottomSheet(this, index, weight);
+            if (activity != null) activity.finishedBottomSheet(this, index, weight);
         });
         validator = new TextValidator(finishButton);
 
         TextValidator.InputView input = view.findViewById(R.id.input);
-        int kb = AppCoordinator.shared.metric
-                 ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
+        int kb = AppCoordinator.shared.metric ? 8192 : 0;
         String name = getResources().getStringArray(R.array.exNames)[index].toLowerCase(l);
         input.field.setHint(getString(R.string.maxWeightFormat, name));
         validator.addChild(0, 999, R.plurals.inputFieldError, kb, input);

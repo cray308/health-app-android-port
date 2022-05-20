@@ -8,7 +8,7 @@
         <attr name="hideSeparator" format="boolean"/>
         <attr name="headerText" format="string"/>
     </declare-styleable>
-    <declare-styleable name="HistoryChartLegendEntry">
+    <declare-styleable name="LegendEntry">
         <attr name="formColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -17,8 +17,7 @@ public final class ExerciseView extends StatusButton {
         entry = e;
         button.setId(tag);
         button.setOnClickListener(action);
-        if (e.headerStr.str.toString().isEmpty())
-            headerLabel.setVisibility(GONE);
+        if (e.headerStr.str.toString().isEmpty()) headerLabel.setVisibility(GONE);
         configure();
     }
 
@@ -38,8 +37,7 @@ public final class ExerciseView extends StatusButton {
                 break;
 
             case ExerciseEntry.State.active:
-                if (entry.type == ExerciseEntry.Type.duration)
-                    userInteractionEnabled = false;
+                if (entry.type == ExerciseEntry.Type.duration) userInteractionEnabled = false;
             case ExerciseEntry.State.resting:
                 enableButton(true);
                 checkbox.setBackgroundColor(AppColors.orange);
@@ -52,8 +50,7 @@ public final class ExerciseView extends StatusButton {
     }
 
     private void enableButton(boolean enabled) {
-        if (userInteractionEnabled)
-            button.setEnabled(enabled);
+        if (userInteractionEnabled) button.setEnabled(enabled);
         button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
     }
 }

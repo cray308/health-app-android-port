@@ -40,9 +40,7 @@ import nl.dionsegijn.konfetti.models.Size;
 public final class HomeFragment extends Fragment {
     private View weeklyWkContainer;
     private LinearLayout weeklyWorkoutStack;
-    private HeaderView customWorkoutsHeader;
-    private KonfettiView confettiView;
-    private int numWorkouts = 0;
+    private View customDiv;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context c, Intent intent) {
@@ -52,16 +50,18 @@ public final class HomeFragment extends Fragment {
 
             int totalCompleted = 0;
             for (int i = 0; i < 7; ++i) {
-                if (((1 << i) & completed) != 0)
-                    ++totalCompleted;
+                if (((1 << i) & completed) != 0) ++totalCompleted;
             }
 
             updateWorkoutsList(completed);
-            if (numWorkouts == totalCompleted)
+            if (weeklyWorkoutStack.getChildCount() == totalCompleted)
                 new Handler().postDelayed(this::showConfetti, 2500);
         }
 
         private void showConfetti() {
+            View view = getView();
+            if (view == null) return;
+            KonfettiView confettiView = view.findViewById(R.id.confettiView);
             confettiView.setVisibility(View.VISIBLE);
             confettiView.build()
                         .addColors(AppColors.red, AppColors.blue, AppColors.green, AppColors.orange)
@@ -78,8 +78,7 @@ public final class HomeFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                   .setTitle(getString(R.string.homeAlertTitle))
                   .setMessage(getString(R.string.homeAlertMessage))
-                  .setPositiveButton(
-                    getString(com.google.android.material.R.string.mtrl_picker_confirm), null);
+                  .setPositiveButton(getString(com.google.android.material.R.string.mtrl_picker_confirm), null);
                 builder.create().show();
             }, 5500);
         }
@@ -102,8 +101,7 @@ public final class HomeFragment extends Fragment {
         weeklyWkContainer = view.findViewById(R.id.weeklyWorkoutsContainer);
         weeklyWkContainer.setVisibility(View.GONE);
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
-        customWorkoutsHeader = view.findViewById(R.id.customWorkoutsHeader);
-        confettiView = view.findViewById(R.id.confettiView);
+        customDiv = ((HeaderView)view.findViewById(R.id.customWorkoutsHeader)).divider;
         createWorkoutsList(AppUserData.shared.currentPlan);
     }
 
@@ -112,18 +110,15 @@ public final class HomeFragment extends Fragment {
         return --tag;
     }
 
-    private static void setTag(View v, int tag) {
-        v.setId(tag + 1);
-    }
+    private static void setTag(View v, int tag) { v.setId(tag + 1); }
 
     public void createWorkoutsList(byte plan) {
         weeklyWorkoutStack.removeAllViews();
-        numWorkouts = 0;
         Context c = getContext();
 
         if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()) {
             weeklyWkContainer.setVisibility(View.GONE);
-            customWorkoutsHeader.divider.setVisibility(View.GONE);
+            customDiv.setVisibility(View.GONE);
             return;
         }
 
@@ -140,17 +135,15 @@ public final class HomeFragment extends Fragment {
             btn.button.setText(workoutNames[i]);
             weeklyWorkoutStack.addView(btn);
             btn.updateAccessibility();
-            numWorkouts += 1;
         }
         weeklyWkContainer.setVisibility(View.VISIBLE);
-        customWorkoutsHeader.divider.setVisibility(View.VISIBLE);
+        customDiv.setVisibility(View.VISIBLE);
         updateWorkoutsList(AppUserData.shared.completedWorkouts);
     }
 
     public void updateWorkoutsList(byte completed) {
-        if (numWorkouts == 0) return;
-
-        for (int i = 0; i < numWorkouts; ++i) {
+        int count = weeklyWorkoutStack.getChildCount();
+        for (int i = 0; i < count; ++i) {
             StatusButton v = (StatusButton)weeklyWorkoutStack.getChildAt(i);
             boolean enabled = (completed & (1 << getTag(v.button))) == 0;
             v.button.setEnabled(enabled);
@@ -172,17 +165,14 @@ public final class HomeFragment extends Fragment {
             return;
         }
 
-        SetupWorkoutDialog.init(getContext(), --index).show(
-          getParentFragmentManager(), "SetupWorkout");
+        SetupWorkoutDialog.init(--index).show(getParentFragmentManager(), "SetupWorkout");
     };
 
     private final View.OnClickListener dayWorkoutListener = view ->
-      navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(
-        getContext(), getTag(view), AppUserData.shared.currentPlan));
+      navigateToAddWorkout(null, ExerciseManager.getWeeklyWorkout(getContext(), getTag(view)));
 
     void navigateToAddWorkout(BottomSheetDialogFragment dialog, Parcelable params) {
-        if (dialog != null)
-            dialog.dismiss();
+        if (dialog != null) dialog.dismiss();
 
         FragmentActivity activity = getActivity();
         Context c = getContext();

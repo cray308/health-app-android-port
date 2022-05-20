@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +29,7 @@ public final class WorkoutActivity extends AppCompatActivity {
         private static final byte finishExercise = 2;
     }
 
-    private final static String bundleKey = "WorkoutActivityKey";
+    private final static String key = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
     public static final String userInfo = "totalWorkouts";
     private Workout workout;
@@ -41,7 +39,7 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     public static void start(FragmentActivity parent, Parcelable params) {
         Intent intent = new Intent(parent, WorkoutActivity.class);
-        intent.putExtra(bundleKey, params);
+        intent.putExtra(key, params);
         parent.startActivity(intent);
     }
 
@@ -49,14 +47,12 @@ public final class WorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
         Bundle args = getIntent().getExtras();
-        if (args != null)
-            workout = ExerciseManager.getWorkoutFromLibrary(this, args.getParcelable(bundleKey));
+        if (args != null) workout = ExerciseManager.getWorkout(this, args.getParcelable(key));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
-        if (bar != null)
-            bar.setDisplayHomeAsUpEnabled(true);
+        if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
         ((TextView)toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
         toolbar.findViewById(R.id.startStopButton).setOnClickListener(view -> {
             Button btn = (Button)view;
@@ -75,16 +71,17 @@ public final class WorkoutActivity extends AppCompatActivity {
                 } else {
                     nextView = firstContainer.viewsArr[0].button;
                 }
-                nextView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+                nextView.sendAccessibilityEvent(8);
             } else {
                 NotificationService.cleanup(this);
                 boolean longEnough = workout.setDuration();
                 if (workout.isCompleted()) {
                     handleFinishedWorkout(true, longEnough);
                 } else {
-                    if (longEnough)
+                    if (longEnough) {
                         AppCoordinator.shared.addWorkoutData(
                           (byte)-1, workout.type, workout.duration, null);
+                    }
                     sendBroadcast((byte)0);
                     finish();
                 }
@@ -97,8 +94,7 @@ public final class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i < count; ++i) {
             groupsStack.addView(new ExerciseContainer(this, workout.activities[i], i, tapHandler));
         }
-        groupsStack.getChildAt(count - 1).setLayoutParams(new LinearLayout.LayoutParams(
-          ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        groupsStack.getChildAt(count - 1).setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
 
         firstContainer = (ExerciseContainer)groupsStack.getChildAt(0);
         firstContainer.headerView.divider.setVisibility(View.GONE);
@@ -113,9 +109,10 @@ public final class WorkoutActivity extends AppCompatActivity {
             if (workout.isCompleted()) {
                 handleFinishedWorkout(false, longEnough);
             } else {
-                if (longEnough)
+                if (longEnough) {
                     AppCoordinator.shared.addWorkoutData(
                       (byte)-1, workout.type, workout.duration, null);
+                }
                 sendBroadcast((byte)0);
             }
         } else {
@@ -183,8 +180,8 @@ public final class WorkoutActivity extends AppCompatActivity {
                 nextView = firstContainer.headerView.headerLabel;
             case Workout.Transition.finishedCircuit:
                 if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
-                    String newNum = String.format(Locale.getDefault(),
-                                                  "%d", workout.group.completedReps + 1);
+                    Locale l = Locale.getDefault();
+                    String newNum = String.format(l, "%d", workout.group.completedReps + 1);
                     workout.group.headerStr.replace(newNum);
                     workout.group.headerStr.length = newNum.length();
                     firstContainer.headerView.headerLabel.setText(workout.group.headerStr.str);
@@ -194,8 +191,7 @@ public final class WorkoutActivity extends AppCompatActivity {
                 for (int i = 0; i < nExercises; ++i) {
                     firstContainer.viewsArr[i].configure();
                 }
-                if (nextView == null)
-                    nextView = firstContainer.viewsArr[0].button;
+                if (nextView == null) nextView = firstContainer.viewsArr[0].button;
                 break;
 
             case Workout.Transition.finishedExercise:
@@ -204,14 +200,13 @@ public final class WorkoutActivity extends AppCompatActivity {
 
             default:
                 if (workout.testMax) {
-                    UpdateMaxesDialog.init(exerciseIdx).show(
-                      getSupportFragmentManager(), "UpdateMaxes");
+                    UpdateMaxesDialog dialog = UpdateMaxesDialog.init(exerciseIdx);
+                    dialog.show(getSupportFragmentManager(), "UpdateMaxes");
                     return;
                 }
                 break;
         }
-        if (nextView != null)
-            nextView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+        if (nextView != null) nextView.sendAccessibilityEvent(8);
     }
 
     void finishedGroup(int group) { handleTap(group, 0, Event.finishGroup); }
@@ -226,8 +221,7 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     private void handleFinishedWorkout(boolean close, boolean longEnough) {
         byte completed = 0;
-        if (workout.testMax)
-            longEnough = true;
+        if (workout.testMax) longEnough = true;
 
         if (longEnough) {
             completed = AppCoordinator.shared.addWorkoutData(
@@ -235,8 +229,7 @@ public final class WorkoutActivity extends AppCompatActivity {
         }
 
         sendBroadcast(completed);
-        if (close)
-            finish();
+        if (close) finish();
     }
 
     void finishedBottomSheet(BottomSheetDialogFragment dialog, int index, short weight) {

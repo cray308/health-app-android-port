@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import androidx.core.text.TextUtilsCompat;
-import androidx.core.view.ViewCompat;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppCoordinator;
@@ -55,8 +54,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
     static boolean ltr = true;
 
     void setup(Resources res) {
-        ltr = TextUtilsCompat.getLayoutDirectionFromLocale(
-          Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR;
+        ltr = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == 0;
         workoutNames = new String[]{res.getString(R.string.workout0), res.getString(R.string.workout1),
                                     res.getString(R.string.workout2), res.getString(R.string.workout3)};
         String[] exNames = res.getStringArray(R.array.exNames);
@@ -69,8 +67,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
         refs[2] = Math.max(refs[2], 0);
         refs[1] = Math.max(refs[1], 0);
 
-        System.arraycopy(new int[]{
-          results.size - refs[1], results.size - refs[2], results.size}, 0, nEntries, 0, 3);
+        int[] _num = {results.size - refs[1], results.size - refs[2], results.size};
+        System.arraycopy(_num, 0, nEntries, 0, 3);
         if (ltr) System.arraycopy(refs, 1, refIndices, 0, 3);
 
         axisStrings = new String[results.size];
@@ -97,8 +95,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
 
                 for (int j = 2; j > jEnd; --j) {
                     totalWorkoutsArr[j] += e.totalWorkouts;
-                    if (e.totalWorkouts > maxWorkouts[j])
-                        maxWorkouts[j] = e.totalWorkouts;
+                    if (e.totalWorkouts > maxWorkouts[j]) maxWorkouts[j] = e.totalWorkouts;
                 }
                 totalWorkouts.entries.add(new Entry(index, e.totalWorkouts));
 
@@ -106,15 +103,13 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
                     for (int j = 2; j > jEnd; --j) {
                         totalByType[j][x] += e.durationByType[x];
                         totalByExercise[j][x] += e.weightArray[x];
-                        if (e.weightArray[x] > maxWeight[j])
-                            maxWeight[j] = e.weightArray[x];
+                        if (e.weightArray[x] > maxWeight[j]) maxWeight[j] = e.weightArray[x];
                     }
                     lifts.entries.get(x).add(new Entry(index, e.weightArray[x] * mf));
                 }
 
                 for (int j = 2; j > jEnd; --j) {
-                    if (e.cumulativeDuration[3] > maxTime[j])
-                        maxTime[j] = e.cumulativeDuration[3];
+                    if (e.cumulativeDuration[3] > maxTime[j]) maxTime[j] = e.cumulativeDuration[3];
                 }
                 workoutTypes.entries.get(0).add(new Entry(index, 0));
                 for (int x = 1; x < 5; ++x) {
@@ -153,8 +148,8 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
                 workoutTypes.avgs[i][j] = totalByType[i][j] / nEntries[i];
                 lifts.avgs[i][j] = totalByExercise[i][j] * mf * invEntries[i];
                 lifts.entryRefs.get(i).add(lifts.entries.get(j).subList(refIdx, endIdx));
-                workoutTypes.entryRefs.get(i).add(
-                  workoutTypes.entries.get(j).subList(refIdx, endIdx));
+                List<Entry> sublist = workoutTypes.entries.get(j).subList(refIdx, endIdx);
+                workoutTypes.entryRefs.get(i).add(sublist);
             }
             workoutTypes.entryRefs.get(i).add(workoutTypes.entries.get(4).subList(refIdx, endIdx));
         }

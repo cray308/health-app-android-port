@@ -31,22 +31,21 @@ final class ExerciseEntry {
         private final short customReps;
         short customSets;
         float weight = -1;
-        private final byte workoutType;
+        private final byte type;
 
         Params(Circuit.Params params) {
             one = params.one;
             oneCount = params.oneCount;
             customSets = params.customSets;
             customReps = params.customReps;
-            workoutType = params.workoutType;
+            type = params.type;
         }
     }
 
     static void setupData(Context c, boolean metric) {
         setsSub = c.getString(R.string.sets1);
-        MeasureUnit unit = metric ? MeasureUnit.KILOGRAM : MeasureUnit.POUND;
-        weightUnit = MeasureFormat.getInstance(
-          Locale.getDefault(), MeasureFormat.FormatWidth.NARROW).getUnitDisplayName(unit);
+        weightUnit = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.NARROW)
+                                  .getUnitDisplayName(metric ? MeasureUnit.KILOGRAM : MeasureUnit.POUND);
     }
 
     private static String setsSub;
@@ -67,30 +66,26 @@ final class ExerciseEntry {
         String _rest = null;
         try {
             _type = (byte)dict.getInt(ExerciseManager.Keys.type);
-            if (_reps == 0)
-                _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
-            if (AppCoordinator.shared.onEmulator && _type == Type.duration)
-                _reps = (short)(params.workoutType == WorkoutType.HIC ? 15 : 120);
+            if (_reps == 0) _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
+            if (AppCoordinator.onEmulator() && _type == Type.duration) _reps = (short)(params.type == WorkoutType.HIC ? 15 : 120);
 
             int rest = dict.getInt("B");
-            if (rest != 0)
-                _rest = c.getString(R.string.exerciseRest, rest);
+            if (rest != 0) _rest = c.getString(R.string.exerciseRest, rest);
 
             if (sets > 1) {
                 String h = c.getString(R.string.exerciseHeader, 1, sets);
                 headerStr.str.append(h);
                 int subIdx = h.indexOf(setsSub);
-                String subhead = h.substring(subIdx, subIdx + setsSub.length());
-                int numIdx = subhead.indexOf(params.one);
+                int numIdx = h.substring(subIdx, subIdx + setsSub.length()).indexOf(params.one);
                 headerStr.index = subIdx + numIdx;
                 headerStr.length = params.oneCount;
             }
 
             String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
             if (_type == Type.reps) {
-                if (params.workoutType == 0) {
-                    title = c.getString(
-                      R.string.exerciseRepsWeight, name, _reps, params.weight, weightUnit);
+                if (params.type == 0) {
+                    title = c.getString(R.string.exerciseRepsWeight,
+                                        name, _reps, params.weight, weightUnit);
                 } else {
                     title = c.getString(R.string.exerciseReps, name, _reps);
                 }
@@ -114,10 +109,7 @@ final class ExerciseEntry {
         switch (state) {
             case State.disabled:
                 ++state;
-                if (type == Type.duration) {
-                    NotificationService.scheduleAlarm(
-                      c, reps, NotificationService.Type.Exercise, group, index);
-                }
+                if (type == Type.duration) NotificationService.scheduleAlarm(c, reps, 0, group, index);
                 break;
 
             case State.active:
@@ -134,10 +126,8 @@ final class ExerciseEntry {
                     String newNum = String.format(Locale.getDefault(), "%d", completedSets + 1);
                     headerStr.replace(newNum);
                     headerStr.length = newNum.length();
-                    if (type == Type.duration) {
-                        NotificationService.scheduleAlarm(
-                          c, reps, NotificationService.Type.Exercise, group, index);
-                    }
+                    if (type == Type.duration)
+                        NotificationService.scheduleAlarm(c, reps, 0, group, index);
                 }
             default:
         }

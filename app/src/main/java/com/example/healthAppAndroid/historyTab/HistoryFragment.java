@@ -27,14 +27,13 @@ public final class HistoryFragment extends Fragment {
 
         public void completion() {
             WeekDataModel data = (WeekDataModel)dataArr[0];
-            if (data.size != 0)
-                viewModel.populateData(data);
+            if (data.size != 0) fragment.viewModel.populateData(data);
             new android.os.Handler(Looper.getMainLooper()).post(
               () -> fragment.rangePicker.check(R.id.buttonLeft));
         }
     }
 
-    static final HistoryViewModel viewModel = new HistoryViewModel();
+    private final HistoryViewModel viewModel = new HistoryViewModel();
     private MaterialButtonToggleGroup rangePicker;
     private TotalWorkoutsChart totalWorkoutsChart;
     private WorkoutTypeChart workoutTypeChart;
@@ -49,15 +48,10 @@ public final class HistoryFragment extends Fragment {
         }
         didSelectSegment(selected);
     };
-    private boolean setIndex = false;
 
     public static HistoryFragment init(Object[][] args) {
         HistoryFragment frag = new HistoryFragment();
-        if (args != null) {
-            args[1][0] = new FetchHandler(frag, args[0]);
-        } else {
-            frag.setIndex = true;
-        }
+        args[1][0] = new FetchHandler(frag, args[0]);
         return frag;
     }
 
@@ -75,10 +69,9 @@ public final class HistoryFragment extends Fragment {
         liftingChart = view.findViewById(R.id.liftContainer);
         viewModel.setup(getResources());
 
-        totalWorkoutsChart.setup();
-        workoutTypeChart.setup();
-        liftingChart.setup();
-        if (setIndex) rangePicker.check(R.id.buttonLeft);
+        totalWorkoutsChart.setup(viewModel);
+        workoutTypeChart.setup(viewModel);
+        liftingChart.setup(viewModel);
     }
 
     private void didSelectSegment(int index) {

@@ -31,7 +31,7 @@ public final class AppUserData {
     public static AppUserData shared;
 
     private static SharedPreferences getDict(Context c) {
-        return c.getSharedPreferences("HealthAppPrefs", Context.MODE_PRIVATE);
+        return c.getSharedPreferences("HealthAppPrefs", 0);
     }
 
     AppUserData(Context c, long start, int offset, boolean modern) {
@@ -55,7 +55,15 @@ public final class AppUserData {
         editor.apply();
     }
 
-    AppUserData(Context c, int[] output, long start, int offset, boolean modern) {
+    static void init(Context c, int[] output, long start, int offset, boolean modern) {
+        if (shared == null) {
+            shared = new AppUserData(c, output, start, offset, modern);
+        } else {
+            output[1] = (int)((shared.weekStart - shared.planStart) / weekSeconds);
+        }
+    }
+
+    private AppUserData(Context c, int[] output, long start, int offset, boolean modern) {
         byte changes = 0;
         int[] planLengths = {8, 13};
         prefs = getDict(c);
@@ -107,18 +115,12 @@ public final class AppUserData {
 
         if (changes != 0) {
             SharedPreferences.Editor editor = prefs.edit();
-            if ((changes & 1) != 0)
-                editor.putLong(Keys.weekStart, start);
-            if ((changes & 2) != 0)
-                editor.putLong(Keys.planStart, planStart);
-            if ((changes & 4) != 0)
-                editor.putInt(Keys.tzOffset, offset);
-            if ((changes & 8) != 0)
-                editor.putInt(Keys.completedWorkouts, currentPlan);
-            if ((changes & 16) != 0)
-                editor.putInt(Keys.completedWorkouts, completedWorkouts);
-            if ((changes & 32) != 0)
-                editor.putInt(Keys.darkMode, darkMode);
+            if ((changes & 1) != 0) editor.putLong(Keys.weekStart, start);
+            if ((changes & 2) != 0) editor.putLong(Keys.planStart, planStart);
+            if ((changes & 4) != 0) editor.putInt(Keys.tzOffset, offset);
+            if ((changes & 8) != 0) editor.putInt(Keys.currentPlan, currentPlan);
+            if ((changes & 16) != 0) editor.putInt(Keys.completedWorkouts, completedWorkouts);
+            if ((changes & 32) != 0) editor.putInt(Keys.darkMode, darkMode);
             editor.apply();
         }
 
@@ -137,8 +139,7 @@ public final class AppUserData {
         return false;
     }
 
-    private boolean updateWeights(short[] newLifts,
-                                  short[] output, SharedPreferences.Editor editor) {
+    private boolean updateWeights(short[] newLifts, short[] output, SharedPreferences.Editor editor) {
         boolean madeChange = false;
         for (int i = 0; i < 4; ++i) {
             short old = liftArray[i];
@@ -159,16 +160,14 @@ public final class AppUserData {
         SharedPreferences.Editor editor = prefs.edit();
         byte completed = 0;
         int changes = 0;
-        if (weights != null && updateWeights(weights, output, editor))
-            changes = 1;
+        if (weights != null && updateWeights(weights, output, editor)) changes = 1;
         if (day >= 0) {
             changes += 2;
             completedWorkouts |= (1 << day);
             completed = completedWorkouts;
             editor.putInt(Keys.completedWorkouts, completedWorkouts);
         }
-        if (changes != 0)
-            editor.apply();
+        if (changes != 0) editor.apply();
         updated[0] = (changes & 1) != 0;
         return completed;
     }
@@ -180,7 +179,7 @@ public final class AppUserData {
             currentPlan = plan;
             editor.putInt(Keys.currentPlan, plan);
             if (plan >= 0) {
-                if (AppCoordinator.shared.onEmulator) {
+                if (AppCoordinator.onEmulator()) {
                     planStart = weekStart;
                     ExerciseManager.setWeekStart(0);
                 } else {
@@ -203,8 +202,7 @@ public final class AppUserData {
             editor.putInt(Keys.bodyWeight, newWeight);
         }
 
-        if (!updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) && changes != 0)
-            editor.apply();
+        if (updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) || changes != 0) editor.apply();
         return changes;
     }
 }

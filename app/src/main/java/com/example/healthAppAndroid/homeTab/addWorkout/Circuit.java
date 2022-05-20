@@ -27,9 +27,9 @@ final class Circuit {
         final short customReps;
         private final short customCircuitReps;
         private final float[] weights = {-1, -1, -1, -1};
-        int location;
-        private final int nActivities;
-        final byte workoutType;
+        int index;
+        private final int size;
+        final byte type;
 
         Params(WorkoutParams params, boolean[] isTestDay, int length) {
             short exSets = 1, exReps = 0, circuitReps = 0;
@@ -66,8 +66,8 @@ final class Circuit {
             customSets = exSets;
             customReps = exReps;
             customCircuitReps = circuitReps;
-            nActivities = length;
-            workoutType = params.type;
+            size = length;
+            type = params.type;
         }
     }
 
@@ -84,28 +84,25 @@ final class Circuit {
     Circuit(Context c, JSONObject dict, String[] exNames, Params params) {
         short _reps = params.customCircuitReps;
         byte _type = 0;
-        boolean multiple = params.nActivities > 1;
+        boolean multiple = params.size > 1;
 
         try {
             _type = (byte)dict.getInt(ExerciseManager.Keys.type);
-            ExerciseEntry.Params exerciseParams = new ExerciseEntry.Params(params);
+            ExerciseEntry.Params eParams = new ExerciseEntry.Params(params);
 
-            if (_reps == 0)
-                _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
-            if (AppCoordinator.shared.onEmulator && _type == Type.AMRAP)
-                _reps = (short)(params.nActivities > 1 ? 1 : 2);
+            if (_reps == 0) _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
+            if (AppCoordinator.onEmulator() && _type == Type.AMRAP) _reps = (short)(params.size > 1 ? 1 : 2);
 
             JSONArray foundExercises = dict.getJSONArray("E");
             int nExercises = foundExercises.length();
-            if (params.workoutType == WorkoutType.HIC && _type == 0 && nExercises == 1) {
-                exerciseParams.customSets = _reps;
+            if (params.type == WorkoutType.HIC && _type == 0 && nExercises == 1) {
+                eParams.customSets = _reps;
                 _reps = 1;
             }
             if (_type == Type.AMRAP) {
                 String h;
                 if (multiple) {
-                    h = c.getString(R.string.circuitHeaderAMRAPM,
-                                    params.location, params.nActivities, _reps);
+                    h = c.getString(R.string.circuitHeaderAMRAPM, params.index, params.size, _reps);
                 } else {
                     h = c.getString(R.string.circuitHeaderAMRAP, _reps);
                 }
@@ -113,28 +110,24 @@ final class Circuit {
             } else if (_reps > 1) {
                 String h;
                 if (multiple) {
-                    h = c.getString(R.string.circuitHeaderRoundsM,
-                                    params.location, params.nActivities, 1, _reps);
+                    h = c.getString(R.string.circuitHeaderRoundsM, params.index, params.size, 1, _reps);
                 } else {
                     h = c.getString(R.string.circuitHeaderRounds, 1, _reps);
                 }
                 headerStr.str.append(h);
                 int subIdx = h.indexOf(rounds1);
-                String subhead = h.substring(subIdx, subIdx + rounds1.length());
-                int numIdx = subhead.indexOf(params.one);
+                int numIdx = h.substring(subIdx, subIdx + rounds1.length()).indexOf(params.one);
                 headerStr.index = subIdx + numIdx;
                 headerStr.length = params.oneCount;
             } else if (multiple) {
-                headerStr.str.append(
-                  c.getString(R.string.circuitProgress, params.location, params.nActivities));
+                headerStr.str.append(c.getString(R.string.circuitProgress, params.index, params.size));
             }
 
             exercises = new ExerciseEntry[nExercises];
             for (int i = 0; i < nExercises; ++i) {
                 JSONObject ex = foundExercises.getJSONObject(i);
-                if (params.workoutType == WorkoutType.strength)
-                    exerciseParams.weight = params.weights[i];
-                ExerciseEntry e = new ExerciseEntry(c, ex, exNames, exerciseParams);
+                if (params.type == WorkoutType.strength) eParams.weight = params.weights[i];
+                ExerciseEntry e = new ExerciseEntry(c, ex, exNames, eParams);
                 exercises[i] = e;
                 if (_type == Type.decrement && e.type == ExerciseEntry.Type.reps) {
                     String ten = String.format(params.l, "%d", 10);
@@ -143,8 +136,7 @@ final class Circuit {
                 }
             }
 
-            if (_type == Type.decrement)
-                completedReps = exercises[0].reps;
+            if (_type == Type.decrement) completedReps = exercises[0].reps;
         } catch (JSONException ignored) {}
         type = _type;
         reps = _reps;

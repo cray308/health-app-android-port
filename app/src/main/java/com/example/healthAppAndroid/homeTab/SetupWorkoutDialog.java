@@ -2,7 +2,6 @@ package com.example.healthAppAndroid.homeTab;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,19 +27,15 @@ import java.util.List;
 
 public final class SetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
-    private static final String namesKey = "SetupWorkout.Names";
-    private static final String typeKey = "SetupWorkout.Type";
+    private static final String key = "SetupWorkoutKey";
 
     private final WorkoutParams output = new WorkoutParams((byte)-1);
     private TextValidator validator;
-    private String[] names;
-    private byte type;
 
-    static SetupWorkoutDialog init(Context c, byte type) {
+    static SetupWorkoutDialog init(byte type) {
         SetupWorkoutDialog fragment = new SetupWorkoutDialog();
         Bundle args = new Bundle();
-        args.putStringArray(namesKey, ExerciseManager.getWorkoutNamesForType(c, type));
-        args.putByte(typeKey, type);
+        args.putByte(key, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,11 +43,7 @@ public final class SetupWorkoutDialog
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
-            names = args.getStringArray(namesKey);
-            type = args.getByte(typeKey);
-            output.type = type;
-        }
+        if (args != null) output.type = args.getByte(key);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
@@ -61,6 +52,8 @@ public final class SetupWorkoutDialog
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Context c = getContext();
+        if (c == null) return;
         view.findViewById(R.id.cancelBtn).setOnClickListener(view1 -> dismiss());
 
         Button submitButton = view.findViewById(R.id.submitBtn);
@@ -80,56 +73,49 @@ public final class SetupWorkoutDialog
             List<Fragment> fragments = getParentFragmentManager().getFragments();
             HomeFragment home = null;
             for (Fragment fragment : fragments) {
-                if ("1".equals(fragment.getTag()))
-                    home = (HomeFragment)fragment;
+                if ("1".equals(fragment.getTag())) home = (HomeFragment)fragment;
             }
 
-            if (home != null)
-                home.navigateToAddWorkout(this, output);
+            if (home != null) home.navigateToAddWorkout(this, output);
         });
 
         validator = new TextValidator(submitButton);
         Spinner picker = view.findViewById(R.id.workoutPicker);
-        LinearLayout inputViewStack = view.findViewById(R.id.textFieldStack);
-        Context c = getContext();
-
         picker.setOnItemSelectedListener(this);
+        String[] names = ExerciseManager.getWorkoutNamesForType(c, output.type);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item,
                                                           names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         picker.setAdapter(adapter);
         picker.setSelection(0);
 
-        int[] maxes = {5, 5, 100};
-        int[] minArr = {1, 1, 1};
-        String[] titles = {getString(R.string.sets), getString(R.string.reps), null};
+        int[] maxes = {5, 5, 100}, minArr = {1, 1, 1}, titleKeys = {R.string.sets, R.string.reps, -1};
 
-        if (type == WorkoutType.strength) {
-            titles[2] = getString(R.string.setupWorkoutMaxWeight);
-        } else if (type == WorkoutType.SE) {
+        if (output.type == WorkoutType.strength) {
+            titleKeys[2] = R.string.setupWorkoutMaxWeight;
+        } else if (output.type == WorkoutType.SE) {
             maxes[0] = 3;
             maxes[1] = 50;
-        } else if (type == WorkoutType.endurance) {
-            titles[0] = null;
-            titles[1] = getString(R.string.setupWorkoutDuration);
+        } else if (output.type == WorkoutType.endurance) {
+            titleKeys[0] = -1;
+            titleKeys[1] = R.string.setupWorkoutDuration;
             maxes[1] = 180;
             minArr[1] = 15;
         } else {
-            titles[0] = titles[1] = null;
+            titleKeys[0] = titleKeys[1] = -1;
             validator.enableButton();
         }
 
+        LinearLayout inputViewStack = view.findViewById(R.id.textFieldStack);
         for (int i = 0; i < 3; ++i) {
-            if (titles[i] == null) continue;
+            if (titleKeys[i] == -1) continue;
             TextValidator.InputView v = new TextValidator.InputView(c);
-            v.field.setHint(titles[i]);
-            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError,
-                               InputType.TYPE_NUMBER_VARIATION_NORMAL, v);
+            v.field.setHint(getString(titleKeys[i]));
+            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError, 0, v);
             inputViewStack.addView(v);
         }
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
-        if (dialog != null)
-            dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (dialog != null) dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

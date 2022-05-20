@@ -22,16 +22,14 @@ public final class ExerciseContainer extends LinearLayout {
         viewsArr = new ExerciseView[size];
         String headerStr = g.headerStr.str.toString();
         headerView.headerLabel.setText(headerStr);
-        if (headerStr.isEmpty())
-            headerView.headerLabel.setVisibility(GONE);
+        if (headerStr.isEmpty()) headerView.headerLabel.setVisibility(GONE);
         LinearLayout vStack = findViewById(R.id.mainStack);
 
         boolean addHint = size > 1;
         for (int i = 0; i < size; ++i) {
             int tag = (idx << 8) | (i + 1);
             ExerciseView v = new ExerciseView(c, g.exercises[i], tag, action);
-            if (addHint)
-                v.button.setHint(c.getString(R.string.exerciseProgressHint, i + 1, size));
+            if (addHint) v.button.setHint(c.getString(R.string.exerciseProgressHint, i + 1, size));
             vStack.addView(v);
             viewsArr[i] = v;
         }

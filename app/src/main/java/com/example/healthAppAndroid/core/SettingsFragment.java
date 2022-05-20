@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +30,6 @@ public final class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, null);
 
-        String[] exNames = getResources().getStringArray(R.array.exNames);
-        int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
         MaterialButtonToggleGroup picker = view.findViewById(R.id.planPicker);
         selected = AppUserData.shared.currentPlan + 1;
         picker.check(segmentIds[selected]);
@@ -66,8 +63,7 @@ public final class SettingsFragment extends Fragment {
                   for (int i = 0; i < 5; ++i)
                       results[i] = (short)Math.round(validator.children[i].result * mf);
                   byte dm = -1;
-                  if (switchView != null)
-                      dm = (byte)(switchView.isChecked() ? 1 : 0);
+                  if (switchView != null) dm = (byte)(switchView.isChecked() ? 1 : 0);
                   AppCoordinator.shared.updateUserInfo((byte)(selected - 1), dm, results);
               });
             builder.create().show();
@@ -78,14 +74,15 @@ public final class SettingsFragment extends Fragment {
               .setTitle(getString(R.string.settingsAlertTitle))
               .setMessage(getString(R.string.settingsAlertMessageDelete))
               .setNegativeButton(getString(R.string.cancel), null)
-              .setNeutralButton(getString(androidx.appcompat.R.string.abc_menu_delete_shortcut_label),
-                                (dialog, i) -> AppCoordinator.shared.deleteAppData());
+              .setNeutralButton(getString(androidx.appcompat.R.string.abc_menu_delete_shortcut_label), (dialog, i) ->
+                AppCoordinator.shared.deleteAppData());
             builder.create().show();
         });
 
         validator = new TextValidator(saveButton);
-        int kb = AppCoordinator.shared.metric
-                 ? InputType.TYPE_NUMBER_FLAG_DECIMAL : InputType.TYPE_NUMBER_VARIATION_NORMAL;
+        String[] exNames = getResources().getStringArray(R.array.exNames);
+        int[] ids = {R.id.inputFirst, R.id.inputSecond, R.id.inputThird, R.id.inputFourth};
+        int kb = AppCoordinator.shared.metric ? 8192 : 0;
         Locale l = Locale.getDefault();
         for (int i = 0; i < 4; ++i) {
             TextValidator.InputView v = view.findViewById(ids[i]);
@@ -101,37 +98,34 @@ public final class SettingsFragment extends Fragment {
         if (weight > 0) {
             if (AppCoordinator.shared.metric) {
                 float fWeight = weight * 0.453592f;
-                validator.children[4].result = fWeight;
                 validator.children[4].textField.setText(String.format(Locale.US, "%.2f", fWeight));
+                validator.children[4].result = fWeight;
             } else {
-                validator.children[4].result = weight;
                 validator.children[4].textField.setText(String.format(Locale.US, "%d", weight));
+                validator.children[4].result = weight;
             }
         }
         updateWeightFields(AppUserData.shared.liftArray);
     }
 
     void updateWeightFields(short[] lifts) {
-        Locale l = Locale.US;
         if (AppCoordinator.shared.metric) {
             for (int i = 0; i < 4; ++i) {
                 float value = lifts[i] * 0.453592f;
-                validator.children[i].result = value;
+                validator.children[i].textField.setText(String.format(Locale.US, "%.2f", value));
                 validator.children[i].valid = true;
                 validator.children[i].field.setError(null);
-                validator.children[i].textField.setText(String.format(l, "%.2f", value));
+                validator.children[i].result = value;
             }
         } else {
             for (int i = 0; i < 4; ++i) {
-                short value = lifts[i];
-                validator.children[i].result = value;
+                validator.children[i].textField.setText(String.format(Locale.US, "%d", lifts[i]));
                 validator.children[i].valid = true;
                 validator.children[i].field.setError(null);
-                validator.children[i].textField.setText(String.format(l, "%d", value));
+                validator.children[i].result = lifts[i];
             }
         }
-        if (validator.children[4].valid)
-            validator.enableButton();
+        if (validator.children[4].valid) validator.enableButton();
     }
 
     public void onHiddenChanged(boolean hidden) {

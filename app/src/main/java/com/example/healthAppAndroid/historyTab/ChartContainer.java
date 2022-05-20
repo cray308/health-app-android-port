@@ -42,15 +42,12 @@ public abstract class ChartContainer extends LinearLayout {
     }
 
     static int[] getChartColors(Context c) {
-        return new int[]{ContextCompat.getColor(c, R.color.chartBlue),
-                         ContextCompat.getColor(c, R.color.chartGreen),
-                         ContextCompat.getColor(c, R.color.chartOrange),
-                         ContextCompat.getColor(c, R.color.chartPink)};
+        return new int[]{
+          ContextCompat.getColor(c, R.color.chartBlue), ContextCompat.getColor(c, R.color.chartGreen),
+          ContextCompat.getColor(c, R.color.chartOrange), ContextCompat.getColor(c, R.color.chartPink)};
     }
 
-    static LineDataSet createEmptyDataSet() {
-        return new LineDataSet(Collections.emptyList(), null);
-    }
+    static LineDataSet createEmptyDataSet() { return new LineDataSet(Collections.emptyList(), null); }
 
     static LineDataSet createDataSet(int color) {
         LineDataSet dataSet = createEmptyDataSet();
@@ -70,7 +67,7 @@ public abstract class ChartContainer extends LinearLayout {
             data.addDataSet(sets[i]);
     }
 
-    void setupChartView() {
+    void setupChartView(HistoryViewModel m) {
         chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
         chart.getDescription().setEnabled(false);
         if (HistoryViewModel.ltr) {
@@ -93,14 +90,13 @@ public abstract class ChartContainer extends LinearLayout {
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setLabelRotationAngle(HistoryViewModel.ltr ? 45 : -45);
-        xAxis.setValueFormatter(HistoryFragment.viewModel);
+        xAxis.setValueFormatter(m);
     }
 
     void disable() {
         findViewById(R.id.legendContainer).setVisibility(View.GONE);
         for (int i = 0; i < 5; ++i) {
-            if (dataSets[i] != null)
-                dataSets[i].setValues(null);
+            if (dataSets[i] != null) dataSets[i].setValues(null);
         }
         chart.setData(null);
         chart.notifyDataSetChanged();

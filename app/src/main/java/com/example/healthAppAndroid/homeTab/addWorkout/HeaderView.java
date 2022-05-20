@@ -28,8 +28,7 @@ public final class HeaderView extends LinearLayout {
             a.recycle();
         }
 
-        if (hideDivider)
-            divider.setVisibility(GONE);
+        if (hideDivider) divider.setVisibility(GONE);
         headerLabel.setText(headerText);
     }
 }

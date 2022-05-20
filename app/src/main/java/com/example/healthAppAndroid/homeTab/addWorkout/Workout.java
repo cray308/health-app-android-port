@@ -7,7 +7,6 @@ import com.example.healthAppAndroid.core.AppCoordinator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.time.Instant;
 
@@ -41,9 +40,8 @@ final class Workout {
 
             activities = new Circuit[nActivities];
             for (int i = 0; i < nActivities; ++i) {
-                JSONObject act = acts.getJSONObject(i);
-                cParams.location = i + 1;
-                activities[i] = new Circuit(c, act, exNames, cParams);
+                cParams.index = i + 1;
+                activities[i] = new Circuit(c, acts.getJSONObject(i), exNames, cParams);
             }
         } catch (JSONException ignored) {}
 
@@ -59,10 +57,8 @@ final class Workout {
             e.completedSets = 0;
         }
 
-        if (group.type == Circuit.Type.AMRAP && startTimer) {
-            NotificationService.scheduleAlarm(c, 60L * group.reps,
-                                              NotificationService.Type.Circuit, index, 0);
-        }
+        if (group.type == Circuit.Type.AMRAP && startTimer)
+            NotificationService.scheduleAlarm(c, 60L * group.reps, 1, index, 0);
         group.exercises[0].cycle(c, index, 0);
     }
 
@@ -92,16 +88,14 @@ final class Workout {
 
     boolean setDuration() {
         duration = (short)(((int)((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
-        if (AppCoordinator.shared.onEmulator) duration *= 10;
+        if (AppCoordinator.onEmulator()) duration *= 10;
         return duration >= 15;
     }
 
     boolean isCompleted() {
         int groupIndex = group.index;
-        if (index != activities.length - 1 || groupIndex != group.exercises.length - 1)
-            return false;
-        if (type == WorkoutType.endurance)
-            return duration >= (short)(activities[0].exercises[0].reps / 60);
+        if (index != activities.length - 1 || groupIndex != group.exercises.length - 1) return false;
+        if (type == WorkoutType.endurance) return duration >= activities[0].exercises[0].reps / 60;
 
         if (group.type == Circuit.Type.rounds && group.completedReps == group.reps - 1) {
             ExerciseEntry e = group.exercises[groupIndex];

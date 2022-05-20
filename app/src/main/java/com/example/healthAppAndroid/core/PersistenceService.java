@@ -75,15 +75,15 @@ public abstract class PersistenceService extends RoomDatabase {
 
     static void create(Context c) {
         if (BuildConfig.DEBUG) {
-            shared = Room.databaseBuilder(
-              c, PersistenceService.class, DBName).createFromAsset("test.db").build();
+            shared = Room.databaseBuilder(c, PersistenceService.class, DBName)
+                         .createFromAsset("test.db").build();
         } else {
             init(c);
         }
     }
 
     static void init(Context c) {
-        shared = Room.databaseBuilder(c, PersistenceService.class, DBName).build();
+        if (shared == null) shared = Room.databaseBuilder(c, PersistenceService.class, DBName).build();
     }
 
     private static void fetchHistory(ZoneId zoneId, Object[][] args, DAO dao) {
@@ -135,8 +135,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
 
         for (WeeklyData d : data) {
-            if (d.start < endPt)
-                oldEntries[oldCount++] = d;
+            if (d.start < endPt) oldEntries[oldCount++] = d;
         }
 
         for (start = last.start + weekSeconds; start < weekStart; start += weekSeconds) {
@@ -194,8 +193,7 @@ public abstract class PersistenceService extends RoomDatabase {
         }
 
         public void run() {
-            PersistenceService service = shared;
-            DAO dao = service.dao();
+            DAO dao = shared.dao();
             WeeklyData curr = dao.findCurrentWeek();
             curr.totalWorkouts += 1;
             if (type == WorkoutType.strength) {

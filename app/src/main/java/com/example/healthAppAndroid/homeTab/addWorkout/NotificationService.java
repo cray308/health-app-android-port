@@ -19,17 +19,9 @@ import com.example.healthAppAndroid.R;
 import java.util.Locale;
 
 public abstract class NotificationService {
-    static abstract class Type {
-        static final byte Exercise = 0;
-        static final byte Circuit = 1;
-    }
-
     private static final String ChannelId = "HealthAppAndroid_channel";
     private static String[] messages;
     private static String contentTitle;
-    private static final String[] baseFilters = {
-      "com.healthAppAndroid.workoutTimer.exercise", "com.healthAppAndroid.workoutTimer.circuit"
-    };
     private static final String[] filters = {null, null};
     private static NotificationManager notificationMgr;
     private static AlarmManager alarmMgr;
@@ -37,7 +29,6 @@ public abstract class NotificationService {
     private static PendingIntent circuitIntent;
     private static PendingIntent exerciseIntent;
     private static final int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
-    private static final int defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
     private static int color;
     private static int groupId = 0;
     private static int exerciseGroup = 0;
@@ -46,14 +37,13 @@ public abstract class NotificationService {
     private static short filterId = 1;
 
     public static void setupAppNotifications(Context c) {
-        NotificationManager manager =
-          (NotificationManager)c.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(
           ChannelId, "workout_timer_channel", NotificationManager.IMPORTANCE_HIGH);
         channel.setDescription(c.getString(R.string.channelDescription));
         channel.setShowBadge(true);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        manager.createNotificationChannel(channel);
+        channel.setLockscreenVisibility(1);
+        NotificationManager m = (NotificationManager)c.getSystemService(Context.NOTIFICATION_SERVICE);
+        m.createNotificationChannel(channel);
     }
 
     static void init(Context c) {
@@ -65,24 +55,25 @@ public abstract class NotificationService {
     }
 
     static void setup(Context outerContext) {
-        receivers[Type.Exercise] = new BroadcastReceiver() {
+        receivers[0] = new BroadcastReceiver() {
             public void onReceive(Context c, Intent intent) {
                 exerciseIntent = null;
-                notificationMgr.notify(identifier++, createNotification(c, Type.Exercise));
+                notificationMgr.notify(identifier++, createNotification(c, 0));
                 ((WorkoutActivity)c).finishedExercise(exerciseGroup, exerciseIndex);
             }
         };
-        receivers[Type.Circuit] = new BroadcastReceiver() {
+        receivers[1] = new BroadcastReceiver() {
             public void onReceive(Context c, Intent intent) {
                 if (exerciseIntent != null) {
                     alarmMgr.cancel(exerciseIntent);
                     exerciseIntent = null;
                 }
                 circuitIntent = null;
-                notificationMgr.notify(identifier++, createNotification(c, Type.Circuit));
+                notificationMgr.notify(identifier++, createNotification(c, 1));
                 ((WorkoutActivity)c).finishedGroup(groupId);
             }
         };
+        String[] baseFilters = {"HAA.workoutTimer.exercise", "HAA.workoutTimer.circuit"};
         short id = filterId++;
         for (int i = 0; i < 2; ++i) {
             filters[i] = String.format(Locale.US, "%s.%d", baseFilters[i], id);
@@ -106,11 +97,11 @@ public abstract class NotificationService {
         notificationMgr.cancelAll();
     }
 
-    static void scheduleAlarm(Context c, long secondsFromNow, byte type, int group, int index) {
+    static void scheduleAlarm(Context c, long secondsFromNow, int type, int group, int index) {
         secondsFromNow = SystemClock.elapsedRealtime() + (secondsFromNow * 1000);
-        PendingIntent pIntent = PendingIntent.getBroadcast(
-          c, 0, new Intent(filters[type]), PendingIntent.FLAG_IMMUTABLE);
-        if (type == Type.Circuit) {
+        Intent _p = new Intent(filters[type]);
+        PendingIntent pIntent = PendingIntent.getBroadcast(c, 0, _p, PendingIntent.FLAG_IMMUTABLE);
+        if (type == 1) {
             secondsFromNow += 1000;
             groupId = group;
             circuitIntent = pIntent;
@@ -122,15 +113,15 @@ public abstract class NotificationService {
         alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, secondsFromNow, pIntent);
     }
 
-    private static Notification createNotification(Context c, byte type) {
+    private static Notification createNotification(Context c, int type) {
         Intent intent = new Intent(c, WorkoutActivity.class);
         intent.setAction("timerAction");
         return new NotificationCompat.Builder(c, ChannelId)
           .setAutoCancel(true)
-          .setDefaults(defaults)
+          .setDefaults(3)
           .setSmallIcon(R.drawable.ic_notif)
           .setColor(color)
-          .setPriority(NotificationManager.IMPORTANCE_HIGH)
+          .setPriority(4)
           .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
           .setContentIntent(PendingIntent.getActivity(c, 0, intent, flags))
           .setContentTitle(contentTitle)

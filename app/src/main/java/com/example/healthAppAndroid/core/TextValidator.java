@@ -3,7 +3,6 @@ package com.example.healthAppAndroid.core;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -62,9 +61,8 @@ public final class TextValidator {
             emptyInputAllowed = resId == R.plurals.inputFieldErrorEmpty;
             delegate = validator;
             textField.addTextChangedListener(this);
-            textField.setInputType(InputType.TYPE_CLASS_NUMBER | type);
-            if (type == InputType.TYPE_NUMBER_FLAG_DECIMAL)
-                textField.setFilters(new InputFilter[]{filter});
+            textField.setInputType(2 | type);
+            if (type == 8192) textField.setFilters(new InputFilter[]{filter});
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -92,7 +90,7 @@ public final class TextValidator {
 
             field.setError(null);
             valid = true;
-            result = (short)res;
+            result = res;
             for (int i = 0; i < delegate.count; ++i) {
                 if (!delegate.children[i].valid) {
                     disableButton();

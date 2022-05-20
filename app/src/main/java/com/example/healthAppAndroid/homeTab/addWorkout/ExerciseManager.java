@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
@@ -38,9 +39,7 @@ public abstract class ExerciseManager {
         private JSONArray getCurrentWeekForPlan(int plan) {
             JSONArray res;
             try {
-                JSONArray plans = root.getJSONArray("P");
-                JSONArray weeks = plans.getJSONArray(plan);
-                res = weeks.getJSONArray(weekInPlan);
+                res = root.getJSONArray("P").getJSONArray(plan).getJSONArray(weekInPlan);
             } catch (JSONException ignored) {
                 res = new JSONArray();
             }
@@ -71,8 +70,8 @@ public abstract class ExerciseManager {
     private static DictWrapper createRootAndLibDict(Context c) {
         DictWrapper container = null;
         try {
-            InputStreamReader input = new InputStreamReader(
-              c.getAssets().open("workoutData.json"), StandardCharsets.UTF_8);
+            InputStream stream = c.getAssets().open("workoutData.json");
+            InputStreamReader input = new InputStreamReader(stream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(input);
             StringBuilder contents = new StringBuilder(11000);
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -87,8 +86,7 @@ public abstract class ExerciseManager {
 
     public static String[] getWeeklyWorkoutNames(Context c, byte plan) {
         String[] names = {null, null, null, null, null, null, null};
-        DictWrapper data = createRootAndLibDict(c);
-        JSONArray currWeek = data.getCurrentWeekForPlan(plan);
+        JSONArray currWeek = createRootAndLibDict(c).getCurrentWeekForPlan(plan);
 
         Resources res = c.getResources();
         String[][] wNames = {res.getStringArray(titleKeys[0]), res.getStringArray(titleKeys[1]),
@@ -105,10 +103,10 @@ public abstract class ExerciseManager {
         return names;
     }
 
-    public static WorkoutParams getWeeklyWorkout(Context c, int index, byte plan) {
+    public static WorkoutParams getWeeklyWorkout(Context c, int index) {
         WorkoutParams params = new WorkoutParams((byte)index);
         DictWrapper data = createRootAndLibDict(c);
-        JSONArray currWeek = data.getCurrentWeekForPlan(plan);
+        JSONArray currWeek = data.getCurrentWeekForPlan(AppUserData.shared.currentPlan);
 
         try {
             JSONObject day = currWeek.getJSONObject(index);
@@ -127,10 +125,9 @@ public abstract class ExerciseManager {
         return results;
     }
 
-    static Workout getWorkoutFromLibrary(Context c, WorkoutParams params) {
+    static Workout getWorkout(Context c, WorkoutParams params) {
         Workout w;
-        DictWrapper data = createRootAndLibDict(c);
-        JSONArray libArr = data.getLibraryArrayForType(params.type);
+        JSONArray libArr = createRootAndLibDict(c).getLibraryArrayForType(params.type);
 
         try {
             w = new Workout(c, libArr.getJSONArray(params.index), params);

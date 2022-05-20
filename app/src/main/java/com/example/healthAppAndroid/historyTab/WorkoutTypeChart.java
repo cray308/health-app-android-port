@@ -3,7 +3,6 @@ package com.example.healthAppAndroid.historyTab;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -51,23 +50,18 @@ public final class WorkoutTypeChart extends ChartContainer {
 
         protected void drawLinearFill(Canvas c, ILineDataSet set, Transformer trans, XBounds bounds) {
             Path filled = mGenerateFilledPathBuffer;
-            int startIndex = bounds.min, endIndex = bounds.range + bounds.min, indexInterval = 128;
-            int currStart, currEnd, i = 0;
+            int startIndex = bounds.min, endIndex = bounds.range + bounds.min;
+            int color = set.getFillColor(), alpha = set.getFillAlpha(), currStart, currEnd, i = 0;
 
             do {
-                currStart = startIndex + (i * indexInterval);
-                currEnd = currStart + indexInterval;
+                currStart = startIndex + (i << 7);
+                currEnd = currStart + 128;
                 currEnd = Math.min(currEnd, endIndex);
 
                 if (currStart <= currEnd) {
                     createFilledPath(set, currStart, currEnd, filled);
                     trans.pathValueToPixel(filled);
-                    Drawable drawable = set.getFillDrawable();
-                    if (drawable != null) {
-                        drawFilledPath(c, filled, drawable);
-                    } else {
-                        drawFilledPath(c, filled, set.getFillColor(), set.getFillAlpha());
-                    }
+                    drawFilledPath(c, filled, color, alpha);
                 }
                 ++i;
             } while (currStart <= currEnd);
@@ -95,13 +89,16 @@ public final class WorkoutTypeChart extends ChartContainer {
         }
     }
 
+    private HistoryViewModel.WorkoutTypeModel m;
+
     public WorkoutTypeChart(Context c, AttributeSet attrs) {
         super(c, attrs, R.layout.workout_type_chart, new int[]{
           R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
         });
     }
 
-    void setup() {
+    void setup(HistoryViewModel model) {
+        m = model.workoutTypes;
         int[] colors = getChartColors(getContext());
         dataSets[0] = createEmptyDataSet();
         for (int i = 1; i < 5; ++i) {
@@ -115,13 +112,12 @@ public final class WorkoutTypeChart extends ChartContainer {
         setupChartData(orderedSets, 4);
         ValueFormatter formatter = new ValueFormatter(this);
         data.setValueFormatter(formatter);
-        setupChartView();
+        setupChartView(model);
         axis.setValueFormatter(formatter);
         chart.setRenderer(new Renderer(chart));
     }
 
     void updateChart(boolean isSmall, int index) {
-        HistoryViewModel.WorkoutTypeModel m = HistoryFragment.viewModel.workoutTypes;
         dataSets[0].setValues(m.entryRefs.get(index).get(0));
         for (int i = 1; i < 5; ++i) {
             updateData(i, isSmall, m.entryRefs.get(index).get(i), i - 1, m.legendLabels[i - 1]);
