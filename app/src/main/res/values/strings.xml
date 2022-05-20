@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">HealthAppAndroid</string>
     <string-array name="notifications">
-        <item>Finished circuit!</item>
         <item>Finished exercise!</item>
+        <item>Finished circuit!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">Input must be between %1$d and %2$d</item>

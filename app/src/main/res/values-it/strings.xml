@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Circuito finito!</item>
         <item>Esercizio finito!</item>
+        <item>Circuito finito!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">L’ingresso deve essere compreso tra %1$d e %2$d</item>

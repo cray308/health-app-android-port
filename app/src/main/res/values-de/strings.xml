@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Fertige Schaltung!</item>
         <item>Fertige Übung!</item>
+        <item>Fertige Schaltung!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">Die Eingabe muss zwischen %1$d und %2$d liegen</item>

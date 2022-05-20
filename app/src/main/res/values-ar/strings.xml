@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>\u202Fتم الانتهاء من الدائرة!\u202C</item>
         <item>\u202Fتم الانتهاء من التمرين!\u202C</item>
+        <item>\u202Fتم الانتهاء من الدائرة!\u202C</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>

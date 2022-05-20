@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Готовая схема!</item>
         <item>Закончил упражнение!</item>
+        <item>Готовая схема!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">Вход должен быть в диапазоне от %1$d до %2$d</item>
