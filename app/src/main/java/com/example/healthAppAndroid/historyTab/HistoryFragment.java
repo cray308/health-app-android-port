@@ -4,100 +4,87 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.WeekDataModel;
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.example.healthAppAndroid.core.PersistenceManager;
+import com.example.healthAppAndroid.core.SegmentedControl;
 
-public final class HistoryFragment extends Fragment {
-    public static final class FetchHandler {
+import java.util.Locale;
+
+public final class HistoryFragment extends Fragment implements SegmentedControl.Delegate {
+    interface HistoryChart {
+        void disable();
+        void updateChart(boolean isSmall, int index);
+        void setup(HistoryModel historyModel, int[] chartColors, int labelColor,
+                   String defaultText, boolean ltr);
+    }
+
+    public static final class Block {
         private final HistoryFragment fragment;
-        private final Object[] dataArr;
 
-        private FetchHandler(HistoryFragment fragment, Object[] arr) {
-            this.fragment = fragment;
-            dataArr = arr;
-        }
+        public Block(HistoryFragment fragment) { this.fragment = fragment; }
 
-        public void completion() {
-            WeekDataModel data = (WeekDataModel)dataArr[0];
-            if (data.size != 0) fragment.viewModel.populateData(data);
-            new android.os.Handler(Looper.getMainLooper()).post(
-              () -> fragment.rangePicker.check(R.id.buttonLeft));
+        public void completion(PersistenceManager.WeeklyData[] weeks, String[] axisStrings) {
+            if (weeks != null) fragment.model.populate(weeks, axisStrings);
+            fragment.rangeControl.setSelectedIndex(0);
         }
     }
 
-    private final HistoryViewModel viewModel = new HistoryViewModel();
-    private MaterialButtonToggleGroup rangePicker;
-    private TotalWorkoutsChart totalWorkoutsChart;
-    private WorkoutTypeChart workoutTypeChart;
-    private LiftingChart liftingChart;
-    private final MaterialButtonToggleGroup.OnButtonCheckedListener listener = (group, checkedId, isChecked) -> {
-        if (!isChecked) return;
-        int selected = 0;
-        if (checkedId == R.id.buttonMid) {
-            selected = 1;
-        } else if (checkedId == R.id.buttonRight) {
-            selected = 2;
-        }
-        didSelectSegment(selected);
-    };
+    private final HistoryModel model = new HistoryModel();
+    private SegmentedControl rangeControl;
+    private final HistoryChart[] charts = {null, null, null};
 
-    public static HistoryFragment init(Object[][] args) {
-        HistoryFragment frag = new HistoryFragment();
-        args[1][0] = new FetchHandler(frag, args[0]);
-        return frag;
-    }
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, null);
+        Context context = getContext();
+        if (context == null) return;
 
-        rangePicker = view.findViewById(R.id.rangePicker);
-        rangePicker.addOnButtonCheckedListener(listener);
-        totalWorkoutsChart = view.findViewById(R.id.totalWorkoutsContainer);
-        workoutTypeChart = view.findViewById(R.id.workoutTypeContainer);
-        liftingChart = view.findViewById(R.id.liftContainer);
-        viewModel.setup(getResources());
+        rangeControl = view.findViewById(R.id.rangeControl);
+        rangeControl.delegate = this;
+        charts[0] = view.findViewById(R.id.totalWorkoutsChart);
+        charts[1] = view.findViewById(R.id.workoutTypeChart);
+        charts[2] = view.findViewById(R.id.liftChart);
 
-        totalWorkoutsChart.setup(viewModel);
-        workoutTypeChart.setup(viewModel);
-        liftingChart.setup(viewModel);
+        int labelColor = ContextCompat.getColor(context, R.color.label);
+        int[] chartColors = {
+          ContextCompat.getColor(context, R.color.chartBlue),
+          ContextCompat.getColor(context, R.color.chartGreen),
+          ContextCompat.getColor(context, R.color.chartOrange),
+          ContextCompat.getColor(context, R.color.chartPink)
+        };
+        String defaultText = getString(R.string.chartEmptyText);
+        boolean ltr = HistoryModel.isLtr(Locale.getDefault());
+        for (HistoryChart v : charts) { v.setup(model, chartColors, labelColor, defaultText, ltr); }
     }
 
-    private void didSelectSegment(int index) {
-        int count = viewModel.nEntries[index];
+    public void selectedIndexChanged(int index) {
+        int count = model.nEntries[index];
         if (count == 0) {
-            totalWorkoutsChart.disable();
-            workoutTypeChart.disable();
-            liftingChart.disable();
-            rangePicker.removeOnButtonCheckedListener(listener);
+            for (HistoryChart v : charts) { v.disable(); }
+            rangeControl.delegate = null;
             return;
         }
 
-        Context c = getContext();
-        if (c == null) return;
-
-        viewModel.formatDataForTimeRange(c, index);
+        Context context = getContext();
+        if (context != null) model.formatDataForTimeRange(context, index);
         boolean isSmall = count < 7;
-        totalWorkoutsChart.updateChart(isSmall, index);
-        workoutTypeChart.updateChart(isSmall, index);
-        liftingChart.updateChart(isSmall, index);
+        for (HistoryChart v : charts) { v.updateChart(isSmall, index); }
     }
 
-    public void handleDataDeletion() {
-        if (viewModel.nEntries[2] != 0) {
-            viewModel.clearData();
-            rangePicker.check(R.id.buttonLeft);
+    public void clearData() {
+        if (model.nEntries[2] != 0) {
+            model.clear();
+            rangeControl.setSelectedIndex(0);
         }
     }
 }

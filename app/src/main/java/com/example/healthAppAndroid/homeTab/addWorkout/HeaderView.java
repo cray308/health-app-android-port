@@ -11,24 +11,21 @@ import com.example.healthAppAndroid.R;
 
 public final class HeaderView extends LinearLayout {
     public final View divider;
-    public final TextView headerLabel;
+    final TextView header;
 
-    public HeaderView(Context c, AttributeSet attrs) {
-        super(c, attrs);
-        inflate(c, R.layout.header_view, this);
+    public HeaderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        inflate(context, R.layout.header_view, this);
         divider = findViewById(R.id.divider);
-        headerLabel = findViewById(R.id.headerLabel);
-        boolean hideDivider;
-        String headerText;
-        TypedArray a = c.getTheme().obtainStyledAttributes(attrs, R.styleable.HeaderView, 0, 0);
+        header = findViewById(R.id.header);
+        TypedArray arr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.HeaderView,
+                                                                   0, 0);
         try {
-            hideDivider = a.getBoolean(R.styleable.HeaderView_hideSeparator, false);
-            headerText = a.getString(R.styleable.HeaderView_headerText);
+            if (arr.getBoolean(R.styleable.HeaderView_hideSeparator, false))
+                divider.setVisibility(GONE);
+            header.setText(arr.getString(R.styleable.HeaderView_headerText));
         } finally {
-            a.recycle();
+            arr.recycle();
         }
-
-        if (hideDivider) divider.setVisibility(GONE);
-        headerLabel.setText(headerText);
     }
 }

@@ -9,35 +9,34 @@ import com.example.healthAppAndroid.R;
 import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.components.LimitLine;
 
-public final class TotalWorkoutsChart extends ChartContainer {
-    private HistoryViewModel.TotalWorkoutsModel m;
-    private final int lineColor;
+public final class TotalWorkoutsChart extends ChartContainer implements HistoryFragment.HistoryChart {
+    private HistoryModel.TotalWorkoutsModel model;
 
-    public TotalWorkoutsChart(Context c, AttributeSet attrs) {
-        super(c, attrs, R.layout.total_workouts_chart, null);
-        lineColor = ContextCompat.getColor(c, R.color.chartLimit);
+    public TotalWorkoutsChart(Context context, AttributeSet attrs) {
+        super(context, attrs, R.layout.total_workouts_chart, null);
     }
 
-    void setup(HistoryViewModel model) {
-        m = model.totalWorkouts;
-        Context c = getContext();
-        dataSets[0] = createDataSet(ContextCompat.getColor(c, R.color.chartRed));
-        dataSets[0].setFillDrawable(ContextCompat.getDrawable(c, R.drawable.chart_gradient));
-        dataSets[0].setDrawFilled(true);
-        dataSets[0].setFillAlpha(191);
-        setupChartData(dataSets, 1);
-        setupChartView(model);
+    public void setup(HistoryModel historyModel, int[] chartColors, int labelColor,
+                      String defaultText, boolean ltr) {
+        model = historyModel.totals;
+        Context context = getContext();
+        sets[0] = createDataSet(ContextCompat.getColor(context, R.color.chartRed), labelColor, ltr);
+        sets[0].setFillDrawable(ContextCompat.getDrawable(context, R.drawable.chart_gradient));
+        sets[0].setDrawFilled(true);
+        sets[0].setFillAlpha(FillAlpha);
+        setupChartData(sets);
+        setupChartView(historyModel, labelColor, defaultText, ltr);
     }
 
-    void updateChart(boolean isSmall, int index) {
-        axis.removeAllLimitLines();
-        LimitLine limitLine = new LimitLine(m.avgs[index]);
+    public void updateChart(boolean isSmall, int index) {
+        yAxis.removeAllLimitLines();
+        LimitLine limitLine = new LimitLine(model.avgs[index]);
         limitLine.enableDashedLine(10, 10, 0);
         limitLine.setLineWidth(2);
-        limitLine.setLineColor(lineColor);
-        axis.addLimitLine(limitLine);
-        updateData(0, isSmall, m.entryRefs.get(index), 0, m.legendLabel);
+        limitLine.setLineColor(ContextCompat.getColor(getContext(), R.color.chartLimit));
+        yAxis.addLimitLine(limitLine);
+        updateData(0, isSmall, model.refs.get(index), 0, model.legendLabel);
         data.setValueFormatter(new DefaultValueFormatter(2));
-        update(isSmall, m.maxes[index]);
+        update(isSmall, model.maxes[index]);
     }
 }

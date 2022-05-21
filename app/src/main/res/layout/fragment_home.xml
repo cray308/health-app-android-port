@@ -9,7 +9,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             android:paddingBottom="16dp">
 
             <LinearLayout
-                android:id="@+id/weeklyWorkoutsContainer"
+                android:id="@+id/planContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -30,73 +31,61 @@
                 <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:headerText="@string/weeklyWorkoutsHeader"
+                    app:headerText="@string/homeHeader0"
                     app:hideSeparator="true" />
 
                 <LinearLayout
-                    android:id="@+id/weeklyWorkoutsStack"
+                    android:id="@+id/planStack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/customContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
-                    android:id="@+id/customWorkoutsHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:headerText="@string/customWorkoutsHeader" />
+                    app:headerText="@string/homeHeader1" />
 
-                <com.example.healthAppAndroid.homeTab.StatusButton
-                    android:id="@+id/customButton1"
+                <com.example.healthAppAndroid.homeTab.StatusView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:buttonLabel="@string/workoutTypeTestMax"
+                    app:buttonText="@string/homeTestMax"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.homeTab.StatusButton
-                    android:id="@+id/customButton2"
+                <com.example.healthAppAndroid.homeTab.StatusView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    app:buttonLabel="@string/workout0"
+                    app:buttonText="@string/workout0"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.homeTab.StatusButton
-                    android:id="@+id/customButton3"
+                <com.example.healthAppAndroid.homeTab.StatusView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    app:buttonLabel="@string/workout1"
+                    app:buttonText="@string/workout1"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.homeTab.StatusButton
-                    android:id="@+id/customButton4"
+                <com.example.healthAppAndroid.homeTab.StatusView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    app:buttonLabel="@string/workout2"
+                    app:buttonText="@string/workout2"
                     app:hideCheckbox="true" />
 
-                <com.example.healthAppAndroid.homeTab.StatusButton
-                    android:id="@+id/customButton5"
+                <com.example.healthAppAndroid.homeTab.StatusView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    app:buttonLabel="@string/workout3"
+                    app:buttonText="@string/workout3"
                     app:hideCheckbox="true" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <nl.dionsegijn.konfetti.KonfettiView
-        android:id="@+id/confettiView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#CC8E8E8E"
-        android:visibility="gone" />
 </FrameLayout>

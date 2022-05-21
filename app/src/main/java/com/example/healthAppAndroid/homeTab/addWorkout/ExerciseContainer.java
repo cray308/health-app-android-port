@@ -8,30 +8,30 @@ import com.example.healthAppAndroid.R;
 
 public final class ExerciseContainer extends LinearLayout {
     final HeaderView headerView;
-    ExerciseView[] viewsArr;
+    ExerciseView[] views;
 
-    public ExerciseContainer(Context c) {
-        super(c);
-        inflate(c, R.layout.exercise_container, this);
+    private ExerciseContainer(Context context) {
+        super(context);
+        inflate(context, R.layout.exercise_container, this);
         headerView = findViewById(R.id.headerView);
     }
 
-    ExerciseContainer(Context c, Circuit g, int idx, View.OnClickListener action) {
-        this(c);
-        int size = g.exercises.length;
-        viewsArr = new ExerciseView[size];
-        String headerStr = g.headerStr.str.toString();
-        headerView.headerLabel.setText(headerStr);
-        if (headerStr.isEmpty()) headerView.headerLabel.setVisibility(GONE);
-        LinearLayout vStack = findViewById(R.id.mainStack);
+    ExerciseContainer(Context context, Circuit circuit, int index, View.OnClickListener action) {
+        this(context);
+        int size = circuit.exercises.length;
+        views = new ExerciseView[size];
+        headerView.header.setText(circuit.header.str);
+        if (circuit.header.str.toString().isEmpty()) headerView.header.setVisibility(GONE);
+        LinearLayout stack = findViewById(R.id.stack);
 
         boolean addHint = size > 1;
         for (int i = 0; i < size; ++i) {
-            int tag = (idx << 8) | (i + 1);
-            ExerciseView v = new ExerciseView(c, g.exercises[i], tag, action);
-            if (addHint) v.button.setHint(c.getString(R.string.exerciseProgressHint, i + 1, size));
-            vStack.addView(v);
-            viewsArr[i] = v;
+            int tag = (index << 8) | (i + 1);
+            ExerciseView view = new ExerciseView(context, circuit.exercises[i], tag, action);
+            if (addHint)
+                view.button.setHint(context.getString(R.string.exerciseProgress, i + 1, size));
+            stack.addView(view);
+            views[i] = view;
         }
     }
 }

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">HealthAppAndroid</string>
     <string-array name="notifications">
-        <item>Finished exercise!</item>
         <item>Finished circuit!</item>
+        <item>Finished exercise!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">Input must be between %1$d and %2$d</item>
@@ -22,44 +22,43 @@
     <string name="workout2">Endurance</string>
     <string name="workout3">Conditioning</string>
     <string name="workoutNotificationTitle">Workout Update</string>
-    <string name="exerciseProgressHint">Exercise %1$d of %2$d</string>
-    <string name="exerciseDurationMet">Minimum exercise duration met</string>
+    <string name="exerciseProgress">Exercise %1$d of %2$d</string>
+    <string name="exerciseDuration">Minimum exercise duration met</string>
     <string name="cancel">Cancel</string>
     <string name="go">Go</string>
-    <string name="finish">Finish</string>
     <string name="start">Start</string>
     <string name="end">End</string>
-    <string name="weeklyWorkoutsHeader">Workouts This Week</string>
-    <string name="customWorkoutsHeader">Add Custom Workout</string>
-    <string name="workoutTypeTestMax">Test Max</string>
-    <string name="homeAlertTitle">Nicely done!</string>
+    <string name="homeHeader0">Workouts This Week</string>
+    <string name="homeHeader1">Add Custom Workout</string>
+    <string name="homeTestMax">Test Max</string>
+    <string name="homeAlert">Nicely done!</string>
     <string name="homeAlertMessage">Great job meeting your workout goal this week.</string>
     <string name="historySegment1">6 Months</string>
     <string name="historySegment2">1 Year</string>
     <string name="historySegment3">2 Years</string>
-    <string name="chartHeaderTotalWorkouts">Total Workouts</string>
-    <string name="chartHeaderWorkoutType">Activity Time By Type</string>
-    <string name="chartHeaderLifts">Lift Progress</string>
+    <string name="chartHeader0">Total Workouts</string>
+    <string name="chartHeader1">Activity Time By Type</string>
+    <string name="chartHeader2">Lift Progress</string>
     <string name="chartEmptyText">No data is available</string>
     <string name="legend0">Avg workouts (%.2f)</string>
     <string name="legend1">%1$s (Avg: %2$s)</string>
     <string name="legend2">%1$s (Avg: %2$.1f)</string>
     <string name="hourMinFmt">%1$dh %2$dm</string>
     <string name="minFmt">%dm</string>
-    <string name="planPickerTitle">Change workout plan</string>
+    <string name="planPicker">Change workout plan</string>
     <string name="darkMode">Dark mode</string>
     <string name="settingsSegment1">None</string>
     <string name="settingsSegment2">Foundation</string>
     <string name="settingsSegment3">Continuation</string>
-    <string name="maxWeightFormat">Max %s weight</string>
-    <string name="bodyWeightHint">Body weight</string>
-    <string name="settingsSaveButtonTitle">Save settings</string>
-    <string name="settingsDeleteButtonTitle">Delete data</string>
-    <string name="settingsAlertTitle">Are you sure?</string>
-    <string name="settingsAlertMessageSave">This will save the currently entered data.</string>
-    <string name="settingsAlertMessageDelete">This will delete all workout history.</string>
+    <string name="maxWeight">Max %s weight</string>
+    <string name="bodyWeight">Body weight</string>
+    <string name="settingsSave">Save settings</string>
+    <string name="settingsDelete">Delete data</string>
+    <string name="settingsAlert">Are you sure?</string>
+    <string name="settingsMsgSave">This will save the currently entered data.</string>
+    <string name="settingsMsgDelete">This will delete all workout history.</string>
     <string name="setupWorkoutTitle">Set up Workout</string>
-    <string name="setupWorkoutPickerTitle">Choose workout</string>
+    <string name="setupWorkoutPicker">Choose workout</string>
     <string name="sets">Sets</string>
     <string name="reps">Reps</string>
     <string name="setupWorkoutMaxWeight">Max weight percentage</string>
@@ -68,19 +67,19 @@
     <string name="stepperDescription">Change the number of reps completed</string>
     <string name="exerciseHeader">Set %1$d of %2$d</string>
     <string name="exerciseRest">Rest: %d s</string>
-    <string name="exerciseReps">%1$s x %2$d</string>
-    <string name="exerciseRepsWeight">%1$s x %2$d \@ %3$.2f %4$s</string>
-    <string name="exerciseDurationMinutes">%1$s for %2$.1f min</string>
-    <string name="exerciseDurationSeconds">%1$s for %2$d s</string>
-    <string name="exerciseDistance">%1$s %2$d/%3$d m</string>
+    <string name="exReps">%1$s x %2$d</string>
+    <string name="exWeight">%1$s x %2$d \@ %3$.2f %4$s</string>
+    <string name="exMinutes">%1$s for %2$.1f min</string>
+    <string name="exSeconds">%1$s for %2$d s</string>
+    <string name="exDistance">%1$s %2$d/%3$d m</string>
     <string name="circuitProgress">Circuit %1$d of %2$d</string>
-    <string name="circuitHeaderRounds">Round %1$d of %2$d</string>
-    <string name="circuitHeaderAMRAP">AMRAP %d min</string>
-    <string name="circuitHeaderRoundsM">Circuit %1$d of %2$d - Round %3$d of %4$d</string>
-    <string name="circuitHeaderAMRAPM">Circuit %1$d of %2$d - AMRAP %3$d min</string>
+    <string name="circuitRounds">Round %1$d of %2$d</string>
+    <string name="circuitAMRAP">AMRAP %d min</string>
+    <string name="circuitRoundsM">Circuit %1$d of %2$d - Round %3$d of %4$d</string>
+    <string name="circuitAMRAPM">Circuit %1$d of %2$d - AMRAP %3$d min</string>
     <string name="sets1">Set 1</string>
     <string name="rounds1">Round 1</string>
-    <string name="sep">%1$s, %2$s</string>
+    <string name="separator">%1$s, %2$s</string>
 
     <string-array name="exNames">
         <item>Squat</item>
@@ -182,4 +181,6 @@
         <item>BW Plyo</item>
         <item>Kinetic Conditioning</item>
     </string-array>
+    <string name="save">Save</string>
+    <string name="ok">OK</string>
 </resources>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>\u202Fتم الانتهاء من التمرين!\u202C</item>
         <item>\u202Fتم الانتهاء من الدائرة!\u202C</item>
+        <item>\u202Fتم الانتهاء من التمرين!\u202C</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">\u202Fيجب أن تكون المدخلات بين %1$d و%2$d\u202C</item>
@@ -30,44 +30,43 @@
     <string name="workout2">جَلَد</string>
     <string name="workout3">تكييف</string>
     <string name="workoutNotificationTitle">تحديث التمرين</string>
-    <string name="exerciseProgressHint">\u202Fالتمرين %1$d من %2$d\u202C</string>
-    <string name="exerciseDurationMet">تم الوصول إلى الحد الأدنى من مدة التمرين</string>
+    <string name="exerciseProgress">\u202Fالتمرين %1$d من %2$d\u202C</string>
+    <string name="exerciseDuration">تم الوصول إلى الحد الأدنى من مدة التمرين</string>
     <string name="cancel">ألغى</string>
     <string name="go">ذهب</string>
-    <string name="finish">أكمل</string>
     <string name="start">بدأ</string>
     <string name="end">توقف</string>
-    <string name="weeklyWorkoutsHeader">التدريبات هذا الأسبوع</string>
-    <string name="customWorkoutsHeader">أضف تمرينا مخصصا</string>
-    <string name="workoutTypeTestMax">اختبر الأوزان القصوى</string>
-    <string name="homeAlertTitle">\u202Fأحسنت صنعا!\u202C</string>
+    <string name="homeHeader0">التدريبات هذا الأسبوع</string>
+    <string name="homeHeader1">أضف تمرينا مخصصا</string>
+    <string name="homeTestMax">اختبر الأوزان القصوى</string>
+    <string name="homeAlert">\u202Fأحسنت صنعا!\u202C</string>
     <string name="homeAlertMessage">أحسنت صنعا في تحقيق هدف التمرين هذا الأسبوع</string>
     <string name="historySegment1">٦ شهرا</string>
     <string name="historySegment2">سنة واحدة</string>
     <string name="historySegment3">سنتان</string>
-    <string name="chartHeaderTotalWorkouts">إجمالي التدريبات</string>
-    <string name="chartHeaderWorkoutType">وقت النشاط حسب النوع</string>
-    <string name="chartHeaderLifts">تقدم القوة</string>
+    <string name="chartHeader0">إجمالي التدريبات</string>
+    <string name="chartHeader1">وقت النشاط حسب النوع</string>
+    <string name="chartHeader2">تقدم القوة</string>
     <string name="chartEmptyText">لا توجد بيانات متاحة</string>
     <string name="legend0">\u202Fمتوسط التدريبات (%.2f)\u202C</string>
     <string name="legend1">\u202F%1$s (المتوسط: %2$s)\u202C</string>
     <string name="legend2">\u202F%1$s (المتوسط: %2$.1f)\u202C</string>
     <string name="hourMinFmt">\u202F%1$d س %2$d د\u202C</string>
     <string name="minFmt">\u202F%d د\u202C</string>
-    <string name="planPickerTitle">تغيير خطة التمرين</string>
+    <string name="planPicker">تغيير خطة التمرين</string>
     <string name="darkMode">مظهر داكن</string>
     <string name="settingsSegment1">لا شيء</string>
     <string name="settingsSegment2">تأسيس</string>
     <string name="settingsSegment3">استمرار</string>
-    <string name="maxWeightFormat">\u202Fالحد الأقصى لوزن %s\u202C</string>
-    <string name="bodyWeightHint">وزن الجسم</string>
-    <string name="settingsSaveButtonTitle">حفظ الإعدادات</string>
-    <string name="settingsDeleteButtonTitle">حذف البيانات</string>
-    <string name="settingsAlertTitle">هل أنت متأكد؟</string>
-    <string name="settingsAlertMessageSave">سيؤدي ذلك إلى حفظ البيانات المقدمة</string>
-    <string name="settingsAlertMessageDelete">سيؤدي ذلك إلى حذف كل سجل التمرين</string>
+    <string name="maxWeight">\u202Fالحد الأقصى لوزن %s\u202C</string>
+    <string name="bodyWeight">وزن الجسم</string>
+    <string name="settingsSave">حفظ الإعدادات</string>
+    <string name="settingsDelete">حذف البيانات</string>
+    <string name="settingsAlert">هل أنت متأكد؟</string>
+    <string name="settingsMsgSave">سيؤدي ذلك إلى حفظ البيانات المقدمة</string>
+    <string name="settingsMsgDelete">سيؤدي ذلك إلى حذف كل سجل التمرين</string>
     <string name="setupWorkoutTitle">تكوين التمرين</string>
-    <string name="setupWorkoutPickerTitle">اختر التمرين</string>
+    <string name="setupWorkoutPicker">اختر التمرين</string>
     <string name="sets">مجموعات الطعام</string>
     <string name="reps">التكرارات (تكرار)</string>
     <string name="setupWorkoutMaxWeight">النسبة المئوية القصوى للوزن</string>
@@ -76,19 +75,19 @@
     <string name="stepperDescription">تغيير عدد التكرارات المكتملة</string>
     <string name="exerciseHeader">\u202Fالمجموعة %1$d من %2$d\u202C</string>
     <string name="exerciseRest">\u202Fالراحة: %d ث\u202C</string>
-    <string name="exerciseReps">\u202F%1$s %2$d مرات\u202C</string>
-    <string name="exerciseRepsWeight">\u202F%1$s %2$d مرات مع %3$.2f %4$s\u202C</string>
-    <string name="exerciseDurationMinutes">\u202F%1$s لمدة %2$.1f د\u202C</string>
-    <string name="exerciseDurationSeconds">\u202F%1$s لمدة %2$d ث\u202C</string>
-    <string name="exerciseDistance">\u202F%1$s لمسافة %2$d أو %3$d م\u202C</string>
+    <string name="exReps">\u202F%1$s %2$d مرات\u202C</string>
+    <string name="exWeight">\u202F%1$s %2$d مرات مع %3$.2f %4$s\u202C</string>
+    <string name="exMinutes">\u202F%1$s لمدة %2$.1f د\u202C</string>
+    <string name="exSeconds">\u202F%1$s لمدة %2$d ث\u202C</string>
+    <string name="exDistance">\u202F%1$s لمسافة %2$d أو %3$d م\u202C</string>
     <string name="circuitProgress">\u202Fالدائرة %1$d من %2$d\u202C</string>
-    <string name="circuitHeaderRounds">\u202Fالجولة %1$d من %2$d\u202C</string>
-    <string name="circuitHeaderAMRAP">\u202Fأكبر عدد ممكن من التكرار لمدة %d د\u202C</string>
-    <string name="circuitHeaderRoundsM">\u202Fالدائرة %1$d من %2$d - الجولة %3$d من %4$d\u202C</string>
-    <string name="circuitHeaderAMRAPM">\u202Fالدائرة %1$d من %2$d - أكبر عدد ممكن من التكرارات لمدة %3$d د\u202C</string>
+    <string name="circuitRounds">\u202Fالجولة %1$d من %2$d\u202C</string>
+    <string name="circuitAMRAP">\u202Fأكبر عدد ممكن من التكرار لمدة %d د\u202C</string>
+    <string name="circuitRoundsM">\u202Fالدائرة %1$d من %2$d - الجولة %3$d من %4$d\u202C</string>
+    <string name="circuitAMRAPM">\u202Fالدائرة %1$d من %2$d - أكبر عدد ممكن من التكرارات لمدة %3$d د\u202C</string>
     <string name="sets1">المجموعة ١</string>
     <string name="rounds1">الجولة ١</string>
-    <string name="sep">%1$s ،%2$s</string>
+    <string name="separator">%1$s ،%2$s</string>
 
     <string-array name="exNames">
         <item>قرفص</item>
@@ -191,4 +190,6 @@
         <item>القياسات المتعددة</item>
         <item>تكييف حركي</item>
     </string-array>
+    <string name="save">حفظ</string>
+    <string name="ok">حسنًا</string>
 </resources>

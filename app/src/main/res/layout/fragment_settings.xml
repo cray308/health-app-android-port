@@ -19,54 +19,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/planPickerTitle"
+            android:text="@string/planPicker"
             android:textColor="@color/label"
             android:textSize="15sp" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/planPicker"
+        <com.example.healthAppAndroid.core.SegmentedControl
+            android:id="@+id/planControl"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonLeft"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:autoSizeMaxTextSize="13sp"
-                android:autoSizeMinTextSize="4sp"
-                android:autoSizeTextType="uniform"
-                android:maxLines="1"
-                android:text="@string/settingsSegment1" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonMid"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:autoSizeMaxTextSize="13sp"
-                android:autoSizeMinTextSize="4sp"
-                android:autoSizeTextType="uniform"
-                android:maxLines="1"
-                android:text="@string/settingsSegment2" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonRight"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:autoSizeMaxTextSize="13sp"
-                android:autoSizeMinTextSize="4sp"
-                android:autoSizeTextType="uniform"
-                android:maxLines="1"
-                android:text="@string/settingsSegment3" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+            app:centerTitle="@string/settingsSegment2"
+            app:leftTitle="@string/settingsSegment1"
+            app:rightTitle="@string/settingsSegment3" />
 
         <LinearLayout
             android:id="@+id/switchContainer"
@@ -94,42 +58,50 @@
                 android:layout_weight="1" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <view
-            android:id="@+id/inputWeight"
-            class="com.example.healthAppAndroid.core.TextValidator$InputView"
+        <LinearLayout
+            android:id="@+id/fieldStack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:orientation="vertical">
 
-        <view
-            android:id="@+id/inputFirst"
-            class="com.example.healthAppAndroid.core.TextValidator$InputView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <view
+                class="com.example.healthAppAndroid.core.TextValidator$InputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:min="1"
+                app:errorId="@plurals/inputFieldErrorEmpty"
+                app:index="-1" />
 
-        <view
-            android:id="@+id/inputSecond"
-            class="com.example.healthAppAndroid.core.TextValidator$InputView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <view
+                class="com.example.healthAppAndroid.core.TextValidator$InputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:index="0" />
 
-        <view
-            android:id="@+id/inputThird"
-            class="com.example.healthAppAndroid.core.TextValidator$InputView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <view
+                class="com.example.healthAppAndroid.core.TextValidator$InputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:index="1" />
 
-        <view
-            android:id="@+id/inputFourth"
-            class="com.example.healthAppAndroid.core.TextValidator$InputView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <view
+                class="com.example.healthAppAndroid.core.TextValidator$InputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:index="2" />
+
+            <view
+                class="com.example.healthAppAndroid.core.TextValidator$InputView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:index="3" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/saveButton"
@@ -137,8 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
-            android:text="@string/settingsSaveButtonTitle"
-            android:textColor="@color/systemBlue"
+            android:text="@string/settingsSave"
+            android:textColor="@color/blue_button_color"
             android:textSize="17sp" />
 
         <Button
@@ -147,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
-            android:text="@string/settingsDeleteButtonTitle"
+            android:text="@string/settingsDelete"
             android:textColor="@color/systemRed"
             android:textSize="17sp" />
     </LinearLayout>

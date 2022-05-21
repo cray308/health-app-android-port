@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Exercice terminé!</item>
         <item>Circuit terminé!</item>
+        <item>Exercice terminé!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">L’entrée doit être comprise entre %1$d et %2$d</item>
+        <item quantity="many">L’entrée doit être comprise entre %1$d et %2$d</item>
         <item quantity="other">L’entrée doit être comprise entre %1$d et %2$d</item>
     </plurals>
     <plurals name="inputFieldErrorEmpty">
         <item quantity="one">L’entrée doit être comprise entre %1$d et %2$d, ou vide</item>
+        <item quantity="many">L’entrée doit être comprise entre %1$d et %2$d, ou vide</item>
         <item quantity="other">L’entrée doit être comprise entre %1$d et %2$d, ou vide</item>
     </plurals>
 
@@ -22,44 +24,43 @@
     <string name="workout2">Endurance</string>
     <string name="workout3">Conditionnement</string>
     <string name="workoutNotificationTitle">Mise à Jour de l’Entraînement</string>
-    <string name="exerciseProgressHint">Exercice %1$d sur %2$d</string>
-    <string name="exerciseDurationMet">La durée minimale de l’exercice a été atteinte</string>
+    <string name="exerciseProgress">Exercice %1$d sur %2$d</string>
+    <string name="exerciseDuration">La durée minimale de l’exercice a été atteinte</string>
     <string name="cancel">Annuler</string>
     <string name="go">Aller</string>
-    <string name="finish">Fin</string>
     <string name="start">Début</string>
     <string name="end">Arrêt</string>
-    <string name="weeklyWorkoutsHeader">Entraînements Cette Semaine</string>
-    <string name="customWorkoutsHeader">Ajouter un Entraînement Personnalisé</string>
-    <string name="workoutTypeTestMax">Poids Maximums d’Essai</string>
-    <string name="homeAlertTitle">Bien fait!</string>
+    <string name="homeHeader0">Entraînements Cette Semaine</string>
+    <string name="homeHeader1">Ajouter un Entraînement Personnalisé</string>
+    <string name="homeTestMax">Poids Maximums d’Essai</string>
+    <string name="homeAlert">Bien fait!</string>
     <string name="homeAlertMessage">Excellent travail pour atteindre votre objectif d’entraînement cette semaine.</string>
     <string name="historySegment1">6 mois</string>
     <string name="historySegment2">1 an</string>
     <string name="historySegment3">2 ans</string>
-    <string name="chartHeaderTotalWorkouts">Total des Entraînements</string>
-    <string name="chartHeaderWorkoutType">Temps d’Activité par Type</string>
-    <string name="chartHeaderLifts">Progrès Forts</string>
+    <string name="chartHeader0">Total des Entraînements</string>
+    <string name="chartHeader1">Temps d’Activité par Type</string>
+    <string name="chartHeader2">Progrès Forts</string>
     <string name="chartEmptyText">Aucune donnée n’est disponible</string>
     <string name="legend0">Entraînements moyens (%.2f)</string>
     <string name="legend1">%1$s (Moyenne: %2$s)</string>
     <string name="legend2">%1$s (Moyenne: %2$.1f)</string>
     <string name="hourMinFmt">%1$dh %2$dm</string>
     <string name="minFmt">%dm</string>
-    <string name="planPickerTitle">Modifier le plan d’entraînement</string>
+    <string name="planPicker">Modifier le plan d’entraînement</string>
     <string name="darkMode">Apparence sombre</string>
     <string name="settingsSegment1">Aucuns</string>
     <string name="settingsSegment2">Fondations</string>
     <string name="settingsSegment3">Continuation</string>
-    <string name="maxWeightFormat">Poids maximal du %s</string>
-    <string name="bodyWeightHint">Poids</string>
-    <string name="settingsSaveButtonTitle">Enregistrer les paramètres</string>
-    <string name="settingsDeleteButtonTitle">Supprimer les données</string>
-    <string name="settingsAlertTitle">Es-tu sûr ?</string>
-    <string name="settingsAlertMessageSave">Cela enregistrera les données fournies.</string>
-    <string name="settingsAlertMessageDelete">Cela supprimera tout l’historique de l’entraînement.</string>
+    <string name="maxWeight">Poids maximal du %s</string>
+    <string name="bodyWeight">Poids</string>
+    <string name="settingsSave">Enregistrer les paramètres</string>
+    <string name="settingsDelete">Supprimer les données</string>
+    <string name="settingsAlert">Es-tu sûr ?</string>
+    <string name="settingsMsgSave">Cela enregistrera les données fournies.</string>
+    <string name="settingsMsgDelete">Cela supprimera tout l’historique de l’entraînement.</string>
     <string name="setupWorkoutTitle">Configurer l’Entraînement</string>
-    <string name="setupWorkoutPickerTitle">Choisissez l’entraînement</string>
+    <string name="setupWorkoutPicker">Choisissez l’entraînement</string>
     <string name="sets">Ensembles</string>
     <string name="reps">Répétitions</string>
     <string name="setupWorkoutMaxWeight">Pourcentage de poids maximal</string>
@@ -68,19 +69,19 @@
     <string name="stepperDescription">Modifier le nombre de répétitions terminées</string>
     <string name="exerciseHeader">Ensemble %1$d sur %2$d</string>
     <string name="exerciseRest">Repos: %d s</string>
-    <string name="exerciseReps">%1$s x %2$d</string>
-    <string name="exerciseRepsWeight">%1$s x %2$d avec %3$.2f %4$s</string>
-    <string name="exerciseDurationMinutes">%1$s pendant %2$.1f min</string>
-    <string name="exerciseDurationSeconds">%1$s pendant %2$d s</string>
-    <string name="exerciseDistance">%1$s %2$d ou %3$d m</string>
+    <string name="exReps">%1$s x %2$d</string>
+    <string name="exWeight">%1$s x %2$d avec %3$.2f %4$s</string>
+    <string name="exMinutes">%1$s pendant %2$.1f min</string>
+    <string name="exSeconds">%1$s pendant %2$d s</string>
+    <string name="exDistance">%1$s %2$d ou %3$d m</string>
     <string name="circuitProgress">Circuit %1$d sur %2$d</string>
-    <string name="circuitHeaderRounds">Tour %1$d sur %2$d</string>
-    <string name="circuitHeaderAMRAP">ADRQP pendant %d min</string>
-    <string name="circuitHeaderRoundsM">Circuit %1$d sur %2$d - Tour %3$d sur %4$d</string>
-    <string name="circuitHeaderAMRAPM">Circuit %1$d sur %2$d - ADRQP pendant %3$d min</string>
+    <string name="circuitRounds">Tour %1$d sur %2$d</string>
+    <string name="circuitAMRAP">ADRQP pendant %d min</string>
+    <string name="circuitRoundsM">Circuit %1$d sur %2$d - Tour %3$d sur %4$d</string>
+    <string name="circuitAMRAPM">Circuit %1$d sur %2$d - ADRQP pendant %3$d min</string>
     <string name="sets1">Ensemble 1</string>
     <string name="rounds1">Tour 1</string>
-    <string name="sep">%1$s, %2$s</string>
+    <string name="separator">%1$s, %2$s</string>
 
     <string-array name="exNames">
         <item>Position accroupie</item>
@@ -183,4 +184,6 @@
         <item>Plyométrie du Poids Corporel</item>
         <item>Conditionnement Cinétique</item>
     </string-array>
+    <string name="save">Enregistrer</string>
+    <string name="ok">OK</string>
 </resources>

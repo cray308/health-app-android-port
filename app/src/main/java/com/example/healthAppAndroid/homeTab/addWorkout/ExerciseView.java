@@ -3,54 +3,68 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 import android.content.Context;
 import android.view.View;
 
-import com.example.healthAppAndroid.core.AppColors;
-import com.example.healthAppAndroid.homeTab.StatusButton;
+import androidx.core.content.ContextCompat;
 
-public final class ExerciseView extends StatusButton {
+import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.homeTab.StatusView;
+
+public final class ExerciseView extends StatusView {
+    Exercise exercise;
     boolean userInteractionEnabled = true;
-    ExerciseEntry entry;
 
-    public ExerciseView(Context c) { super(c); }
+    private ExerciseView(Context context) { super(context); }
 
-    ExerciseView(Context c, ExerciseEntry e, int tag, View.OnClickListener action) {
-        super(c);
-        entry = e;
+    ExerciseView(Context context, Exercise exercise, int tag, View.OnClickListener action) {
+        this(context);
+        this.exercise = exercise;
         button.setId(tag);
         button.setOnClickListener(action);
-        if (e.headerStr.str.toString().isEmpty()) headerLabel.setVisibility(GONE);
+        header.setText(exercise.header.str);
+        if (exercise.header.str.toString().isEmpty()) header.setVisibility(GONE);
+        button.setText(exercise.title.str);
+        enableButton(false);
         configure();
     }
 
     void configure() {
-        headerLabel.setText(entry.headerStr.str);
-        if (entry.state == ExerciseEntry.State.resting) {
-            button.setText(entry.restStr);
-        } else {
-            button.setText(entry.titleStr.str);
-        }
-        updateAccessibility();
-
-        switch (entry.state) {
-            case ExerciseEntry.State.disabled:
-                checkbox.setBackgroundColor(AppColors.gray);
-                enableButton(false);
+        Context context = getContext();
+        switch (exercise.state) {
+            case Exercise.State.disabled:
+                box.setBackgroundColor(ContextCompat.getColor(context, R.color.systemGray));
                 break;
 
-            case ExerciseEntry.State.active:
-                if (entry.type == ExerciseEntry.Type.duration) userInteractionEnabled = false;
-            case ExerciseEntry.State.resting:
+            case Exercise.State.active:
                 enableButton(true);
-                checkbox.setBackgroundColor(AppColors.orange);
+                box.setBackgroundColor(ContextCompat.getColor(context, R.color.systemOrange));
+            case Exercise.State.activeCont:
+                if (exercise.type == Exercise.Type.duration) {
+                    userInteractionEnabled = false;
+                    button.setEnabled(false);
+                }
+                if (exercise.completedSets != 0) {
+                    button.setText(exercise.title.str);
+                    header.setText(exercise.header.str);
+                    updateAccessibility(exercise.header.str, exercise.title.str);
+                }
+                break;
+
+            case Exercise.State.resting:
+                button.setText(exercise.rest);
+                if (exercise.sets > 1) updateAccessibility(exercise.header.str, exercise.rest);
                 break;
 
             default:
                 enableButton(false);
-                checkbox.setBackgroundColor(AppColors.green);
+                if (exercise.rest != null) {
+                    button.setText(exercise.title.str);
+                    if (exercise.sets > 1)
+                        updateAccessibility(exercise.header.str, exercise.title.str);
+                }
+                box.setBackgroundColor(ContextCompat.getColor(context, R.color.systemGreen));
         }
     }
 
     private void enableButton(boolean enabled) {
-        if (userInteractionEnabled) button.setEnabled(enabled);
-        button.setTextColor(enabled ? AppColors.labelNormal : AppColors.labelDisabled);
+        button.setEnabled(enabled && userInteractionEnabled);
     }
 }

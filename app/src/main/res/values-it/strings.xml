@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Esercizio finito!</item>
         <item>Circuito finito!</item>
+        <item>Esercizio finito!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">L’ingresso deve essere compreso tra %1$d e %2$d</item>
@@ -22,44 +22,43 @@
     <string name="workout2">Sopportazione</string>
     <string name="workout3">Condizionamento</string>
     <string name="workoutNotificationTitle">Aggiornamento Allenamento</string>
-    <string name="exerciseProgressHint">Esercizio %1$d di %2$d</string>
-    <string name="exerciseDurationMet">È stata raggiunta la durata minima dell’esercizio</string>
+    <string name="exerciseProgress">Esercizio %1$d di %2$d</string>
+    <string name="exerciseDuration">È stata raggiunta la durata minima dell’esercizio</string>
     <string name="cancel">Annulla</string>
     <string name="go">Andare</string>
-    <string name="finish">Fine</string>
     <string name="start">Inizio</string>
     <string name="end">Arresto</string>
-    <string name="weeklyWorkoutsHeader">Allenamenti Questa Settimana</string>
-    <string name="customWorkoutsHeader">Aggiungi Allenamento Personalizzato</string>
-    <string name="workoutTypeTestMax">Testa i Pesi Massimi</string>
-    <string name="homeAlertTitle">Ben fatto!</string>
+    <string name="homeHeader0">Allenamenti Questa Settimana</string>
+    <string name="homeHeader1">Aggiungi Allenamento Personalizzato</string>
+    <string name="homeTestMax">Testa i Pesi Massimi</string>
+    <string name="homeAlert">Ben fatto!</string>
     <string name="homeAlertMessage">Ottimo lavoro per raggiungere il tuo obiettivo di allenamento questa settimana.</string>
     <string name="historySegment1">6 mesi</string>
     <string name="historySegment2">1 anno</string>
     <string name="historySegment3">2 anni</string>
-    <string name="chartHeaderTotalWorkouts">Allenamenti Totali</string>
-    <string name="chartHeaderWorkoutType">Tempo di Attività per Tipo</string>
-    <string name="chartHeaderLifts">Progresso della Forza</string>
+    <string name="chartHeader0">Allenamenti Totali</string>
+    <string name="chartHeader1">Tempo di Attività per Tipo</string>
+    <string name="chartHeader2">Progresso della Forza</string>
     <string name="chartEmptyText">Nessun dato è disponibile</string>
     <string name="legend0">Allenamenti medi (%.2f)</string>
     <string name="legend1">%1$s (Media: %2$s)</string>
     <string name="legend2">%1$s (Media: %2$.1f)</string>
     <string name="hourMinFmt">%1$do %2$dm</string>
     <string name="minFmt">%dm</string>
-    <string name="planPickerTitle">Cambia piano di allenamento</string>
+    <string name="planPicker">Cambia piano di allenamento</string>
     <string name="darkMode">Aspetto scuro</string>
     <string name="settingsSegment1">Nessuno</string>
     <string name="settingsSegment2">Fondamenta</string>
     <string name="settingsSegment3">Continuazione</string>
-    <string name="maxWeightFormat">Peso massimo %s</string>
-    <string name="bodyWeightHint">Peso corporeo</string>
-    <string name="settingsSaveButtonTitle">Salva impostazioni</string>
-    <string name="settingsDeleteButtonTitle">Elimina i dati</string>
-    <string name="settingsAlertTitle">Sei sicuro?</string>
-    <string name="settingsAlertMessageSave">Questo salverà i dati forniti.</string>
-    <string name="settingsAlertMessageDelete">Questo eliminerà tutta la cronologia degli allenamenti.</string>
+    <string name="maxWeight">Peso massimo %s</string>
+    <string name="bodyWeight">Peso corporeo</string>
+    <string name="settingsSave">Salva impostazioni</string>
+    <string name="settingsDelete">Elimina i dati</string>
+    <string name="settingsAlert">Sei sicuro?</string>
+    <string name="settingsMsgSave">Questo salverà i dati forniti.</string>
+    <string name="settingsMsgDelete">Questo eliminerà tutta la cronologia degli allenamenti.</string>
     <string name="setupWorkoutTitle">Configura l’Allenamento</string>
-    <string name="setupWorkoutPickerTitle">Scegli l’allenamento</string>
+    <string name="setupWorkoutPicker">Scegli l’allenamento</string>
     <string name="sets">Imposta</string>
     <string name="reps">Ripetizioni</string>
     <string name="setupWorkoutMaxWeight">Percentuale massima di peso</string>
@@ -68,19 +67,19 @@
     <string name="stepperDescription">Cambia il numero di ripetizioni completate</string>
     <string name="exerciseHeader">Serie %1$d di %2$d</string>
     <string name="exerciseRest">Riposo: %d s</string>
-    <string name="exerciseReps">%1$s x %2$d</string>
-    <string name="exerciseRepsWeight">%1$s x %2$d con %3$.2f %4$s</string>
-    <string name="exerciseDurationMinutes">%1$s per %2$.1f min</string>
-    <string name="exerciseDurationSeconds">%1$s per %2$d s</string>
-    <string name="exerciseDistance">%1$s %2$d o %3$d m</string>
+    <string name="exReps">%1$s x %2$d</string>
+    <string name="exWeight">%1$s x %2$d con %3$.2f %4$s</string>
+    <string name="exMinutes">%1$s per %2$.1f min</string>
+    <string name="exSeconds">%1$s per %2$d s</string>
+    <string name="exDistance">%1$s %2$d o %3$d m</string>
     <string name="circuitProgress">Circuito %1$d di %2$d</string>
-    <string name="circuitHeaderRounds">Giro %1$d di %2$d</string>
-    <string name="circuitHeaderAMRAP">QPRP per %d min</string>
-    <string name="circuitHeaderRoundsM">Circuito %1$d di %2$d - Giro %3$d di %4$d</string>
-    <string name="circuitHeaderAMRAPM">Circuito %1$d di %2$d - QPRP per %3$d min</string>
+    <string name="circuitRounds">Giro %1$d di %2$d</string>
+    <string name="circuitAMRAP">QPRP per %d min</string>
+    <string name="circuitRoundsM">Circuito %1$d di %2$d - Giro %3$d di %4$d</string>
+    <string name="circuitAMRAPM">Circuito %1$d di %2$d - QPRP per %3$d min</string>
     <string name="sets1">Serie 1</string>
     <string name="rounds1">Giro 1</string>
-    <string name="sep">%1$s, %2$s</string>
+    <string name="separator">%1$s, %2$s</string>
 
     <string-array name="exNames">
         <item>Accovacciarsi</item>
@@ -183,4 +182,6 @@
         <item>Pliometria del Peso Corporeo</item>
         <item>Con Condizionamento Cinetico</item>
     </string-array>
+    <string name="save">Salva</string>
+    <string name="ok">OK</string>
 </resources>

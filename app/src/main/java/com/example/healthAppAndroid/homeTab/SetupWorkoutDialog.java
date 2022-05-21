@@ -12,115 +12,116 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.example.healthAppAndroid.R;
+import com.example.healthAppAndroid.core.MainActivity;
 import com.example.healthAppAndroid.core.TextValidator;
+import com.example.healthAppAndroid.core.UserData;
 import com.example.healthAppAndroid.homeTab.addWorkout.ExerciseManager;
-import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutParams;
-import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutType;
+import com.example.healthAppAndroid.homeTab.addWorkout.Workout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.util.List;
-
 public final class SetupWorkoutDialog
   extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
-    private static final String key = "SetupWorkoutKey";
+    private static abstract class Index {
+        private static final int sets = 0;
+        private static final int reps = 1;
+        private static final int weight = 2;
+    }
 
-    private final WorkoutParams output = new WorkoutParams((byte)-1);
-    private TextValidator validator;
+    private static final String BundleKey = "SetupWorkoutKey";
 
     static SetupWorkoutDialog init(byte type) {
         SetupWorkoutDialog fragment = new SetupWorkoutDialog();
         Bundle args = new Bundle();
-        args.putByte(key, type);
+        args.putByte(BundleKey, type);
         fragment.setArguments(args);
         return fragment;
     }
 
+    private final Workout.Params params = new Workout.Params((byte)-1);
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) output.type = args.getByte(key);
+        if (args != null) params.type = args.getByte(BundleKey);
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         return inflater.inflate(R.layout.setup_workout_modal, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Context c = getContext();
-        if (c == null) return;
-        view.findViewById(R.id.cancelBtn).setOnClickListener(view1 -> dismiss());
+        Context context = getContext();
+        if (context == null) return;
 
-        Button submitButton = view.findViewById(R.id.submitBtn);
+        view.findViewById(R.id.cancelButton).setOnClickListener(view1 -> dismiss());
+
+        Button submitButton = view.findViewById(R.id.submitButton);
+        TextValidator validator = new TextValidator(submitButton);
         submitButton.setOnClickListener(view2 -> {
-            switch (output.type) {
-                case WorkoutType.strength:
-                    output.weight = (short)validator.children[2].result;
-                case WorkoutType.SE:
-                    output.sets = (short)validator.children[0].result;
-                    output.reps = (short)validator.children[1].result;
+            switch (params.type) {
+                case Workout.Type.strength:
+                    params.weight = (int)validator.children[Index.weight].result;
+                case Workout.Type.SE:
+                    params.sets = (int)validator.children[Index.sets].result;
+                    params.reps = (int)validator.children[Index.reps].result;
                     break;
 
-                case WorkoutType.endurance:
-                    output.reps = (short)validator.children[0].result;
+                case Workout.Type.endurance:
+                    params.reps = (int)validator.children[0].result;
                 default:
             }
-            List<Fragment> fragments = getParentFragmentManager().getFragments();
-            HomeFragment home = null;
-            for (Fragment fragment : fragments) {
-                if ("1".equals(fragment.getTag())) home = (HomeFragment)fragment;
-            }
-
-            if (home != null) home.navigateToAddWorkout(this, output);
+            UserData data = MainActivity.userData;
+            params.bodyWeight = data.weightToUse();
+            params.lifts = data.lifts;
+            HomeFragment fragment = (HomeFragment)getParentFragmentManager().findFragmentByTag("1");
+            if (fragment != null) fragment.navigateToWorkout(this, params);
         });
 
-        validator = new TextValidator(submitButton);
-        Spinner picker = view.findViewById(R.id.workoutPicker);
-        picker.setOnItemSelectedListener(this);
-        String[] names = ExerciseManager.getWorkoutNamesForType(c, output.type);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(c, android.R.layout.simple_spinner_item,
-                                                          names);
+        Spinner spinner = view.findViewById(R.id.workoutSpinner);
+        spinner.setOnItemSelectedListener(this);
+        String[] names = ExerciseManager.workoutNamesForType(context, params.type);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+          context, android.R.layout.simple_spinner_item, names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        picker.setAdapter(adapter);
-        picker.setSelection(0);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
 
-        int[] maxes = {5, 5, 100}, minArr = {1, 1, 1}, titleKeys = {R.string.sets, R.string.reps, -1};
+        int[] maxes = {5, 5, 100}, min = {1, 1, 1}, titleKeys = {R.string.sets, R.string.reps, -1};
 
-        if (output.type == WorkoutType.strength) {
-            titleKeys[2] = R.string.setupWorkoutMaxWeight;
-        } else if (output.type == WorkoutType.SE) {
-            maxes[0] = 3;
-            maxes[1] = 50;
-        } else if (output.type == WorkoutType.endurance) {
-            titleKeys[0] = -1;
-            titleKeys[1] = R.string.setupWorkoutDuration;
-            maxes[1] = 180;
-            minArr[1] = 15;
+        if (params.type == Workout.Type.strength) {
+            titleKeys[Index.weight] = R.string.setupWorkoutMaxWeight;
+        } else if (params.type == Workout.Type.SE) {
+            maxes[Index.sets] = 3;
+            maxes[Index.reps] = 50;
+        } else if (params.type == Workout.Type.endurance) {
+            titleKeys[Index.sets] = -1;
+            titleKeys[Index.reps] = R.string.setupWorkoutDuration;
+            maxes[Index.reps] = 180;
+            min[Index.reps] = Workout.minDuration;
         } else {
             titleKeys[0] = titleKeys[1] = -1;
-            validator.enableButton();
+            submitButton.setEnabled(true);
         }
 
-        LinearLayout inputViewStack = view.findViewById(R.id.textFieldStack);
+        LinearLayout stack = view.findViewById(R.id.fieldStack);
         for (int i = 0; i < 3; ++i) {
             if (titleKeys[i] == -1) continue;
-            TextValidator.InputView v = new TextValidator.InputView(c);
-            v.field.setHint(getString(titleKeys[i]));
-            validator.addChild(minArr[i], maxes[i], R.plurals.inputFieldError, 0, v);
-            inputViewStack.addView(v);
+            TextValidator.InputView iv = new TextValidator.InputView(context);
+            validator.addChild(iv, getString(titleKeys[i]), min[i], maxes[i]);
+            stack.addView(iv);
         }
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        output.index = i;
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        params.index = position;
     }
 
-    public void onNothingSelected(AdapterView<?> adapterView) {}
+    public void onNothingSelected(AdapterView<?> parent) {}
 }

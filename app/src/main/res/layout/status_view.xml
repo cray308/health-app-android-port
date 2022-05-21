@@ -8,7 +8,7 @@
     android:paddingBottom="4dp">
 
     <TextView
-        android:id="@+id/headerLabel"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -32,6 +32,7 @@
             android:autoSizeMinTextSize="8sp"
             android:autoSizeTextType="uniform"
             android:maxLines="1"
+            android:textColor="@color/black_button_color"
             android:textStyle="bold"
             tools:ignore="SpeakableTextPresentCheck" />
 

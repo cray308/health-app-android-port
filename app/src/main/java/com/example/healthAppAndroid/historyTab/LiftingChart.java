@@ -5,30 +5,30 @@ import android.util.AttributeSet;
 
 import com.example.healthAppAndroid.R;
 
-public final class LiftingChart extends ChartContainer {
-    private HistoryViewModel.LiftModel m;
+public final class LiftingChart extends ChartContainer implements HistoryFragment.HistoryChart {
+    private HistoryModel.LiftModel model;
 
-    public LiftingChart(Context c, AttributeSet attrs) {
-        super(c, attrs, R.layout.lift_chart, new int[]{
+    public LiftingChart(Context context, AttributeSet attrs) {
+        super(context, attrs, R.layout.lift_chart, new int[]{
           R.id.secondEntry, R.id.thirdEntry, R.id.fourthEntry
         });
     }
 
-    void setup(HistoryViewModel model) {
-        m = model.lifts;
-        int[] colors = getChartColors(getContext());
+    public void setup(HistoryModel historyModel, int[] chartColors, int labelColor,
+                      String defaultText, boolean ltr) {
+        model = historyModel.lifts;
         for (int i = 0; i < 4; ++i) {
-            dataSets[i] = createDataSet(colors[i]);
-            dataSets[i].setLineWidth(2);
+            sets[i] = createDataSet(chartColors[i], labelColor, ltr);
+            sets[i].setLineWidth(2);
         }
-        setupChartData(dataSets, 4);
-        setupChartView(model);
+        setupChartData(sets);
+        setupChartView(historyModel, labelColor, defaultText, ltr);
     }
 
-    void updateChart(boolean isSmall, int index) {
+    public void updateChart(boolean isSmall, int index) {
         for (int i = 0; i < 4; ++i) {
-            updateData(i, isSmall, m.entryRefs.get(index).get(i), i, m.legendLabels[i]);
+            updateData(i, isSmall, model.refs.get(index).get(i), i, model.legendLabels[i]);
         }
-        update(isSmall, m.maxes[index]);
+        update(isSmall, model.maxes[index]);
     }
 }

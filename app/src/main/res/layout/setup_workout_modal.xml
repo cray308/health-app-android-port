@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <android.widget.Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/cancelButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -45,7 +45,7 @@
             android:textStyle="bold" />
 
         <android.widget.Button
-            android:id="@+id/submitBtn"
+            android:id="@+id/submitButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             android:maxLines="1"
             android:text="@string/go"
             android:textAllCaps="false"
-            android:textColor="@color/secondaryLabel"
+            android:textColor="@color/blue_button_color"
             app:iconTint="@null" />
     </LinearLayout>
 
@@ -75,20 +75,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:screenReaderFocusable="false"
-            android:text="@string/setupWorkoutPickerTitle"
+            android:text="@string/setupWorkoutPicker"
             android:textColor="@color/label"
             android:textSize="15sp" />
 
         <Spinner
-            android:id="@+id/workoutPicker"
+            android:id="@+id/workoutSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
-            android:contentDescription="@string/setupWorkoutPickerTitle"
+            android:contentDescription="@string/setupWorkoutPicker"
             tools:ignore="DuplicateSpeakableTextCheck" />
 
         <LinearLayout
-            android:id="@+id/textFieldStack"
+            android:id="@+id/fieldStack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

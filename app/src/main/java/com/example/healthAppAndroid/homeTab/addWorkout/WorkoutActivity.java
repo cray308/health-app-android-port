@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,92 +14,124 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppColors;
-import com.example.healthAppAndroid.core.AppCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.Instant;
 import java.util.Locale;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public final class WorkoutActivity extends AppCompatActivity {
     private static abstract class Event {
-        private static final byte finishGroup = 1;
-        private static final byte finishExercise = 2;
+        private static final int finishCircuit = 1;
+        private static final int finishExercise = 2;
     }
 
-    private final static String key = "WorkoutActivityKey";
+    private static final class Notification {
+        private final int section;
+        private final int row;
+        private final int event;
+
+        private Notification(int section, int row, int event) {
+            this.section = section;
+            this.row = row;
+            this.event = event;
+        }
+    }
+
+    private static final String BundleKey = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
-    public static final String userInfo = "totalWorkouts";
-    private Workout workout;
-    private LinearLayout groupsStack;
-    private ExerciseContainer firstContainer;
-    private final short[] weights = {0, 0, 0, 0};
+    public static final String outputKey = "WorkoutOutput";
 
     public static void start(FragmentActivity parent, Parcelable params) {
-        Intent intent = new Intent(parent, WorkoutActivity.class);
-        intent.putExtra(key, params);
-        parent.startActivity(intent);
+        parent.startActivity(new Intent(parent, WorkoutActivity.class).putExtra(BundleKey, params));
     }
+
+    private Workout workout;
+    private LinearLayout stack;
+    private final Queue<Notification> queue = new PriorityQueue<>(8, (n1, n2) -> {
+        if (n1.event > n2.event) return 1;
+        return n1.event == n2.event ? 0 : -1;
+    });
+    private final int[] weights = {0, 0, 0, 0};
+    private boolean isActive = true;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
-        Bundle args = getIntent().getExtras();
-        if (args != null) workout = ExerciseManager.getWorkout(this, args.getParcelable(key));
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar bar = getSupportActionBar();
-        if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
-        ((TextView)toolbar.findViewById(R.id.titleLabel)).setText(workout.title);
+        Bundle args = getIntent().getExtras();
+        if (args != null) {
+            Workout.Params params = args.getParcelable(BundleKey);
+            workout = ExerciseManager.workout(this, params);
+            String[] wNames = getResources().getStringArray(ExerciseManager.TitleKeys[workout.type]);
+            ((TextView)toolbar.findViewById(R.id.titleLabel)).setText(wNames[params.index]);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         toolbar.findViewById(R.id.startStopButton).setOnClickListener(view -> {
-            Button btn = (Button)view;
-            if (btn.getText().equals(getString(R.string.start))) {
-                btn.setText(getString(R.string.end));
-                btn.setTextColor(AppColors.red);
+            Button button = (Button)view;
+            if (button.getText().equals(getString(R.string.start))) {
+                button.setText(getString(R.string.end));
+                button.setTextColor(ContextCompat.getColor(this, R.color.systemRed));
                 workout.startTime = Instant.now().getEpochSecond();
-                workout.startGroup(this, true);
-                int nExercises = workout.group.exercises.length;
-                for (int i = 0; i < nExercises; ++i) {
-                    firstContainer.viewsArr[i].configure();
-                }
-                View nextView;
-                if (!workout.group.headerStr.str.toString().isEmpty()) {
-                    nextView = firstContainer.headerView.headerLabel;
-                } else {
-                    nextView = firstContainer.viewsArr[0].button;
-                }
-                nextView.sendAccessibilityEvent(8);
+                workout.circuits[0].start(this, 0, true);
+                ExerciseContainer container = (ExerciseContainer)stack.getChildAt(0);
+                ExerciseView ev = container.views[0];
+                ev.configure();
+                View nextView = workout.circuits[0].header.str.toString().isEmpty()
+                                ? ev.button : container.headerView.header;
+                nextView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
             } else {
                 NotificationService.cleanup(this);
-                boolean longEnough = workout.setDuration();
                 if (workout.isCompleted()) {
-                    handleFinishedWorkout(true, longEnough);
+                    handleFinishedWorkout(true);
                 } else {
-                    if (longEnough) {
-                        AppCoordinator.shared.addWorkoutData(
-                          (byte)-1, workout.type, workout.duration, null);
-                    }
-                    sendBroadcast((byte)0);
+                    sendBroadcast(new Workout.Output((byte)-1, workout.type, workout.duration, null));
                     finish();
                 }
             }
         });
-        groupsStack = findViewById(R.id.workoutGroupsStack);
-        NotificationService.setup(this);
 
-        int count = workout.activities.length;
+        View.OnClickListener tapListener = view -> {
+            int tag = view.getId();
+            handleEvent(((tag & 0xff00) >> 8), ((tag & 0xff) - 1), 0);
+        };
+
+        stack = findViewById(R.id.stack);
+        int count = workout.circuits.length;
         for (int i = 0; i < count; ++i) {
-            groupsStack.addView(new ExerciseContainer(this, workout.activities[i], i, tapHandler));
+            stack.addView(new ExerciseContainer(this, workout.circuits[i], i, tapListener));
         }
-        groupsStack.getChildAt(count - 1).setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        stack.getChildAt(count - 1).setLayoutParams(new LinearLayout.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        firstContainer = (ExerciseContainer)groupsStack.getChildAt(0);
-        firstContainer.headerView.divider.setVisibility(View.GONE);
+        ((ExerciseContainer)stack.getChildAt(0)).headerView.divider.setVisibility(View.GONE);
+        NotificationService.setup(this);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        isActive = true;
+
+        boolean empty = queue.isEmpty();
+        while (!empty) {
+            Notification note = queue.remove();
+            handleEvent(note.section, note.row, note.event);
+            empty = queue.isEmpty();
+        }
+    }
+
+    protected void onStop() {
+        super.onStop();
+        isActive = false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -105,136 +139,128 @@ public final class WorkoutActivity extends AppCompatActivity {
 
         NotificationService.cleanup(this);
         if (workout.startTime != 0) {
-            boolean longEnough = workout.setDuration();
             if (workout.isCompleted()) {
-                handleFinishedWorkout(false, longEnough);
+                handleFinishedWorkout(false);
             } else {
-                if (longEnough) {
-                    AppCoordinator.shared.addWorkoutData(
-                      (byte)-1, workout.type, workout.duration, null);
-                }
-                sendBroadcast((byte)0);
+                sendBroadcast(new Workout.Output((byte)-1, workout.type, workout.duration, null));
             }
         } else {
-            sendBroadcast((byte)0);
+            sendBroadcast(new Workout.Output((byte)-1, (byte)0, 0, null));
         }
         onBackPressed();
         return true;
     }
 
-    private final View.OnClickListener tapHandler = view -> {
-        int tag = view.getId();
-        int groupIdx = ((tag & 0xff00) >> 8), exerciseIdx = ((tag & 0xff) - 1);
-        handleTap(groupIdx, exerciseIdx, 0);
-    };
+    private void handleEvent(int section, int row, int event) {
+        Circuit circuit = workout.circuits[section];
+        if (row != circuit.index && event != Event.finishCircuit) return;
 
-    private void handleTap(int groupIdx, int exerciseIdx, int option) {
-        if (groupIdx != workout.index ||
-            (exerciseIdx != workout.group.index && option != Event.finishGroup)) {
-            return;
-        }
-
-        ExerciseView v = firstContainer.viewsArr[exerciseIdx];
-        View nextView = null;
-        int transition = Workout.Transition.noChange;
-        switch (option) {
-            case Event.finishGroup:
-                transition = Workout.Transition.finishedCircuitDeleteFirst;
-                if (++workout.index == workout.activities.length) {
-                    transition = Workout.Transition.completedWorkout;
-                    break;
-                }
-                workout.group = workout.activities[workout.index];
-                workout.startGroup(this, true);
+        ExerciseContainer container = (ExerciseContainer)stack.getChildAt(0);
+        ExerciseView ev = container.views[row];
+        View next = null;
+        int transition = 0;
+        switch (event) {
+            case Event.finishCircuit:
+                transition = workout.increment(this);
                 break;
 
             case Event.finishExercise:
-                v.userInteractionEnabled = true;
-                v.button.setEnabled(true);
-                if (workout.type == WorkoutType.endurance) {
-                    v.headerLabel.setTextColor(AppColors.green);
-                    v.headerLabel.setText(getString(R.string.exerciseDurationMet));
-                    v.headerLabel.setVisibility(View.VISIBLE);
-                    v.updateAccessibility();
-                    nextView = v.button;
+                ev.userInteractionEnabled = true;
+                ev.button.setEnabled(true);
+                if (workout.type == Workout.Type.endurance) {
+                    ev.header.setTextColor(ContextCompat.getColor(this, R.color.systemGreen));
+                    String durationMsg = getString(R.string.exerciseDuration);
+                    ev.header.setText(durationMsg);
+                    ev.header.setVisibility(View.VISIBLE);
+                    ev.updateAccessibility(durationMsg, ev.exercise.title.str);
+                    next = ev.button;
                     break;
                 }
-
             default:
-                boolean exerciseDone = v.entry.cycle(this, groupIdx, exerciseIdx);
-                v.configure();
-                transition = workout.findTransition(this, exerciseDone);
+                boolean exerciseDone = ev.exercise.cycle(this, section, row);
+                ev.configure();
+                if (exerciseDone) {
+                    transition = circuit.increment(this, section);
+                    if (transition == Workout.Transition.finishedCircuitDeleteFirst)
+                        transition = workout.increment(this);
+                }
                 break;
         }
 
         switch (transition) {
             case Workout.Transition.completedWorkout:
                 NotificationService.cleanup(this);
-                handleFinishedWorkout(true, workout.setDuration());
+                workout.setDuration();
+                handleFinishedWorkout(true);
                 return;
 
             case Workout.Transition.finishedCircuitDeleteFirst:
-                firstContainer = (ExerciseContainer)groupsStack.getChildAt(1);
-                groupsStack.removeViewAt(0);
-                firstContainer.headerView.divider.setVisibility(View.GONE);
-                nextView = firstContainer.headerView.headerLabel;
+                circuit = workout.circuits[section + 1];
+                container = (ExerciseContainer)stack.getChildAt(1);
+                stack.removeViewAt(0);
+                container.headerView.divider.setVisibility(View.GONE);
+                next = container.headerView.header;
             case Workout.Transition.finishedCircuit:
-                if (workout.group.reps > 1 && workout.group.type == Circuit.Type.rounds) {
-                    Locale l = Locale.getDefault();
-                    String newNum = String.format(l, "%d", workout.group.completedReps + 1);
-                    workout.group.headerStr.replace(newNum);
-                    workout.group.headerStr.length = newNum.length();
-                    firstContainer.headerView.headerLabel.setText(workout.group.headerStr.str);
-                    nextView = firstContainer.headerView.headerLabel;
+                if (circuit.reps > 1 && circuit.type == Circuit.Type.rounds) {
+                    Locale locale = Locale.getDefault();
+                    circuit.header.replace(String.format(locale, "%d", circuit.completedReps + 1));
+                    container.headerView.header.setText(circuit.header.str);
+                    next = container.headerView.header;
                 }
-                int nExercises = workout.group.exercises.length;
-                for (int i = 0; i < nExercises; ++i) {
-                    firstContainer.viewsArr[i].configure();
+
+                for (ExerciseView v : container.views) {
+                    if (circuit.type == Circuit.Type.decrement)
+                        v.button.setText(v.exercise.title.str);
+                    v.configure();
                 }
-                if (nextView == null) nextView = firstContainer.viewsArr[0].button;
+                if (next == null) next = container.views[0].button;
                 break;
 
             case Workout.Transition.finishedExercise:
-                firstContainer.viewsArr[workout.group.index].configure();
+                ev = container.views[circuit.index];
+                ev.configure();
+                next = ev.button;
                 break;
 
             default:
                 if (workout.testMax) {
-                    UpdateMaxesDialog dialog = UpdateMaxesDialog.init(exerciseIdx);
+                    UpdateMaxesDialog dialog = UpdateMaxesDialog.init(row, workout.bodyWeight);
                     dialog.show(getSupportFragmentManager(), "UpdateMaxes");
                     return;
                 }
                 break;
         }
-        if (nextView != null) nextView.sendAccessibilityEvent(8);
+        if (next != null) next.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
     }
 
-    void finishedGroup(int group) { handleTap(group, 0, Event.finishGroup); }
+    void receivedNote(int section, int row, int type) {
+        int event = type + 1;
+        if (!isActive) {
+            queue.add(new Notification(section, row, event));
+            return;
+        }
 
-    void finishedExercise(int group, int index) { handleTap(group, index, Event.finishExercise); }
+        handleEvent(section, row, event);
+    }
 
-    private void sendBroadcast(byte completed) {
-        Intent intent = new Intent(notification);
-        intent.putExtra(userInfo, completed);
+    private void sendBroadcast(Parcelable data) {
+        Intent intent = new Intent(notification).putExtra(outputKey, data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void handleFinishedWorkout(boolean close, boolean longEnough) {
-        byte completed = 0;
-        if (workout.testMax) longEnough = true;
-
-        if (longEnough) {
-            completed = AppCoordinator.shared.addWorkoutData(
-              workout.day, workout.type, workout.duration, weights[0] > 0 ? weights : null);
+    private void handleFinishedWorkout(boolean close) {
+        int[] lifts = null;
+        if (weights[3] != 0) {
+            lifts = weights;
+            workout.duration = Math.max(workout.duration, Workout.minDuration);
         }
-
-        sendBroadcast(completed);
+        sendBroadcast(new Workout.Output(workout.day, workout.type, workout.duration, lifts));
         if (close) finish();
     }
 
-    void finishedBottomSheet(BottomSheetDialogFragment dialog, int index, short weight) {
+    void finishedBottomSheet(BottomSheetDialogFragment dialog, int index, int weight) {
         dialog.dismiss();
         weights[index] = weight;
-        handleTap(0, index, 0);
+        handleEvent(0, index, 0);
     }
 }

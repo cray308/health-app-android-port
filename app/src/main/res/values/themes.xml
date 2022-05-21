@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="android:insetTop">0dp</item>
@@ -19,7 +19,7 @@
         <item name="colorSurface">#FFF2F2F7</item>
         <item name="android:colorBackground">@null</item>
         <item name="android:windowBackground">@color/primaryBG</item>
-        <item name="android:statusBarColor" tools:targetApi="l">#FDFBFB</item>
+        <item name="android:statusBarColor">#FDFBFB</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#FF1C1C1E</item>
     </style>

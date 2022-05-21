@@ -5,10 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.core.content.ContextCompat;
-
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppColors;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -20,18 +17,34 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ChartContainer extends LinearLayout {
-    LineChart chart;
-    private final HistoryChartLegendEntry[] legendEntries = {null, null, null, null};
-    final LineDataSet[] dataSets = {null, null, null, null, null};
+    static final int FillAlpha = 191;
+
+    static LineDataSet createEmptyDataSet() {
+        return new LineDataSet(Collections.emptyList(), null);
+    }
+
+    static LineDataSet createDataSet(int chartColor, int labelColor, boolean ltr) {
+        LineDataSet dataSet = createEmptyDataSet();
+        dataSet.setColor(chartColor);
+        dataSet.setAxisDependency(ltr ? YAxis.AxisDependency.LEFT : YAxis.AxisDependency.RIGHT);
+        dataSet.setValueTextSize(10);
+        dataSet.setValueTextColor(labelColor);
+        dataSet.setCircleColor(chartColor);
+        dataSet.setDrawCircleHole(false);
+        dataSet.setCircleRadius(2);
+        return dataSet;
+    }
+
+    final LineChart chart;
+    private final HistoryLegendEntry[] legendEntries = {null, null, null, null};
+    final LineDataSet[] sets = {null, null, null, null, null};
     final LineData data = new LineData();
-    YAxis axis;
+    YAxis yAxis;
 
-    public ChartContainer(Context c, AttributeSet attrs) { super(c, attrs); }
-
-    ChartContainer(Context c, AttributeSet attrs, int id, int[] legendIds) {
-        super(c, attrs);
-        inflate(c, id, this);
-        chart = findViewById(R.id.chartView);
+    ChartContainer(Context context, AttributeSet attrs, int id, int[] legendIds) {
+        super(context, attrs);
+        inflate(context, id, this);
+        chart = findViewById(R.id.chart);
         legendEntries[0] = findViewById(R.id.firstEntry);
         if (legendIds != null) {
             int count = legendIds.length;
@@ -41,76 +54,51 @@ public abstract class ChartContainer extends LinearLayout {
         }
     }
 
-    static int[] getChartColors(Context c) {
-        return new int[]{
-          ContextCompat.getColor(c, R.color.chartBlue), ContextCompat.getColor(c, R.color.chartGreen),
-          ContextCompat.getColor(c, R.color.chartOrange), ContextCompat.getColor(c, R.color.chartPink)};
-    }
+    void setupChartData(LineDataSet[] sets) { for (LineDataSet s : sets) { data.addDataSet(s); } }
 
-    static LineDataSet createEmptyDataSet() { return new LineDataSet(Collections.emptyList(), null); }
-
-    static LineDataSet createDataSet(int color) {
-        LineDataSet dataSet = createEmptyDataSet();
-        dataSet.setColor(color);
-        dataSet.setAxisDependency(
-          HistoryViewModel.ltr ? YAxis.AxisDependency.LEFT : YAxis.AxisDependency.RIGHT);
-        dataSet.setValueTextSize(10);
-        dataSet.setValueTextColor(AppColors.labelNormal);
-        dataSet.setCircleColor(color);
-        dataSet.setDrawCircleHole(false);
-        dataSet.setCircleRadius(2);
-        return dataSet;
-    }
-
-    void setupChartData(LineDataSet[] sets, int count) {
-        for (int i = 0; i < count; ++i)
-            data.addDataSet(sets[i]);
-    }
-
-    void setupChartView(HistoryViewModel m) {
-        chart.setNoDataText(chart.getContext().getString(R.string.chartEmptyText));
+    void setupChartView(HistoryModel model, int labelColor, String defaultText, boolean ltr) {
+        chart.setNoDataText(defaultText);
         chart.getDescription().setEnabled(false);
-        if (HistoryViewModel.ltr) {
-            axis = chart.getAxisLeft();
+        if (ltr) {
+            yAxis = chart.getAxisLeft();
             chart.getAxisRight().setEnabled(false);
         } else {
-            axis = chart.getAxisRight();
+            yAxis = chart.getAxisRight();
             chart.getAxisLeft().setEnabled(false);
         }
-        axis.setEnabled(true);
-        axis.setAxisMinimum(0);
-        axis.setTextSize(10);
-        axis.setTextColor(AppColors.labelNormal);
+        yAxis.setEnabled(true);
+        yAxis.setAxisMinimum(0);
+        yAxis.setTextSize(10);
+        yAxis.setTextColor(labelColor);
         chart.getLegend().setEnabled(false);
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGridLineWidth(0.5f);
         xAxis.setTextSize(10);
-        xAxis.setTextColor(AppColors.labelNormal);
+        xAxis.setTextColor(labelColor);
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setLabelRotationAngle(HistoryViewModel.ltr ? 45 : -45);
-        xAxis.setValueFormatter(m);
+        xAxis.setLabelRotationAngle(ltr ? 45 : -45);
+        xAxis.setValueFormatter(model);
     }
 
-    void disable() {
-        findViewById(R.id.legendContainer).setVisibility(View.GONE);
-        for (int i = 0; i < 5; ++i) {
-            if (dataSets[i] != null) dataSets[i].setValues(null);
-        }
+    public void disable() {
+        findViewById(R.id.legendStack).setVisibility(View.GONE);
+        for (LineDataSet s : sets) { if (s != null) s.setValues(null); }
         chart.setData(null);
         chart.notifyDataSetChanged();
     }
 
-    void updateData(int index, boolean isSmall, List<Entry> entries, int iLegend, CharSequence text) {
-        dataSets[index].setDrawCircles(isSmall);
-        dataSets[index].setValues(entries);
-        legendEntries[iLegend].label.setText(text);
+    void updateData(int index, boolean isSmall,
+                    List<Entry> entries, int legendIndex, CharSequence legendText) {
+        sets[index].setDrawCircles(isSmall);
+        sets[index].setValues(entries);
+        legendEntries[legendIndex].label.setText(legendText);
     }
 
     void update(boolean isSmall, float axisMax) {
         chart.zoom(0.01f, 0.01f, 0, 0);
-        axis.setAxisMaximum(axisMax);
+        yAxis.setAxisMaximum(axisMax);
         data.setDrawValues(isSmall);
         chart.setData(data);
         data.notifyDataChanged();

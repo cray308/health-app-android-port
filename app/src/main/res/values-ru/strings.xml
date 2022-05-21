@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="notifications">
-        <item>Закончил упражнение!</item>
         <item>Готовая схема!</item>
+        <item>Закончил упражнение!</item>
     </string-array>
     <plurals name="inputFieldError">
         <item quantity="one">Вход должен быть в диапазоне от %1$d до %2$d</item>
@@ -26,44 +26,43 @@
     <string name="workout2">Выносливость</string>
     <string name="workout3">Кондиционирование</string>
     <string name="workoutNotificationTitle">Обновление тренировки</string>
-    <string name="exerciseProgressHint">Упражнение %1$d из %2$d</string>
-    <string name="exerciseDurationMet">Достигнута минимальная продолжительность упражнений</string>
+    <string name="exerciseProgress">Упражнение %1$d из %2$d</string>
+    <string name="exerciseDuration">Достигнута минимальная продолжительность упражнений</string>
     <string name="cancel">Отмена</string>
     <string name="go">Ближайший</string>
-    <string name="finish">Готово</string>
     <string name="start">Начинать</string>
     <string name="end">Остановка</string>
-    <string name="weeklyWorkoutsHeader">Тренировки на Этой Неделе</string>
-    <string name="customWorkoutsHeader">Добавить Пользовательскую Тренировку</string>
-    <string name="workoutTypeTestMax">Проверьте Максимальные Веса</string>
-    <string name="homeAlertTitle">Отлично сделано!</string>
+    <string name="homeHeader0">Тренировки на Этой Неделе</string>
+    <string name="homeHeader1">Добавить Пользовательскую Тренировку</string>
+    <string name="homeTestMax">Проверьте Максимальные Веса</string>
+    <string name="homeAlert">Отлично сделано!</string>
     <string name="homeAlertMessage">Отличная работа по достижению вашей цели тренировки на этой неделе.</string>
     <string name="historySegment1">6 месяцев</string>
     <string name="historySegment2">1 год</string>
     <string name="historySegment3">2 года</string>
-    <string name="chartHeaderTotalWorkouts">Всего Тренировок</string>
-    <string name="chartHeaderWorkoutType">Время Активности по Типу</string>
-    <string name="chartHeaderLifts">Силовой Прогресс</string>
+    <string name="chartHeader0">Всего Тренировок</string>
+    <string name="chartHeader1">Время Активности по Типу</string>
+    <string name="chartHeader2">Силовой Прогресс</string>
     <string name="chartEmptyText">Данные недоступны</string>
     <string name="legend0">Среднее количество тренировок (%.2f)</string>
     <string name="legend1">%1$s (Среднее: %2$s)</string>
     <string name="legend2">%1$s (Среднее: %2$.1f)</string>
     <string name="hourMinFmt">%1$dч %2$dм</string>
     <string name="minFmt">%dм</string>
-    <string name="planPickerTitle">Изменить план тренировки</string>
+    <string name="planPicker">Изменить план тренировки</string>
     <string name="darkMode">Темный внешний вид</string>
     <string name="settingsSegment1">Нет</string>
     <string name="settingsSegment2">Основание</string>
     <string name="settingsSegment3">Продолжение</string>
-    <string name="maxWeightFormat">Максимальный вес %s</string>
-    <string name="bodyWeightHint">Масса тела</string>
-    <string name="settingsSaveButtonTitle">Сохранить настройки</string>
-    <string name="settingsDeleteButtonTitle">Удалить данные</string>
-    <string name="settingsAlertTitle">Ты уверен?</string>
-    <string name="settingsAlertMessageSave">Это сохранит предоставленные данные.</string>
-    <string name="settingsAlertMessageDelete">Это удалит всю историю тренировок.</string>
+    <string name="maxWeight">Максимальный вес %s</string>
+    <string name="bodyWeight">Масса тела</string>
+    <string name="settingsSave">Сохранить настройки</string>
+    <string name="settingsDelete">Удалить данные</string>
+    <string name="settingsAlert">Ты уверен?</string>
+    <string name="settingsMsgSave">Это сохранит предоставленные данные.</string>
+    <string name="settingsMsgDelete">Это удалит всю историю тренировок.</string>
     <string name="setupWorkoutTitle">Настроить Тренировку</string>
-    <string name="setupWorkoutPickerTitle">Выберите тренировку</string>
+    <string name="setupWorkoutPicker">Выберите тренировку</string>
     <string name="sets">Наборы</string>
     <string name="reps">Повторения</string>
     <string name="setupWorkoutMaxWeight">Максимальный процент веса</string>
@@ -72,19 +71,19 @@
     <string name="stepperDescription">Изменить количество выполненных повторений</string>
     <string name="exerciseHeader">Набор %1$d из %2$d</string>
     <string name="exerciseRest">Отдых: %d с</string>
-    <string name="exerciseReps">%1$s x %2$d</string>
-    <string name="exerciseRepsWeight">%1$s x %2$d с %3$.2f %4$s</string>
-    <string name="exerciseDurationMinutes">%1$s на %2$.1f мин</string>
-    <string name="exerciseDurationSeconds">%1$s на %2$d с</string>
-    <string name="exerciseDistance">%1$s на %2$d или %3$d м</string>
+    <string name="exReps">%1$s x %2$d</string>
+    <string name="exWeight">%1$s x %2$d с %3$.2f %4$s</string>
+    <string name="exMinutes">%1$s на %2$.1f мин</string>
+    <string name="exSeconds">%1$s на %2$d с</string>
+    <string name="exDistance">%1$s на %2$d или %3$d м</string>
     <string name="circuitProgress">Схема %1$d из %2$d</string>
-    <string name="circuitHeaderRounds">Раунд %1$d из %2$d</string>
-    <string name="circuitHeaderAMRAP">МКПВ течение %d мин</string>
-    <string name="circuitHeaderRoundsM">Схема %1$d из %2$d - Раунд %3$d из %4$d</string>
-    <string name="circuitHeaderAMRAPM">Схема %1$d из %2$d - МКПВ течение %3$d мин</string>
+    <string name="circuitRounds">Раунд %1$d из %2$d</string>
+    <string name="circuitAMRAP">МКПВ течение %d мин</string>
+    <string name="circuitRoundsM">Схема %1$d из %2$d - Раунд %3$d из %4$d</string>
+    <string name="circuitAMRAPM">Схема %1$d из %2$d - МКПВ течение %3$d мин</string>
     <string name="sets1">Набор 1</string>
     <string name="rounds1">Раунд 1</string>
-    <string name="sep">%1$s, %2$s</string>
+    <string name="separator">%1$s, %2$s</string>
 
     <string-array name="exNames">
         <item>Сидение на корточках</item>
@@ -187,4 +186,6 @@
         <item>Плиометрия Массы Тела</item>
         <item>Кинетическое Кондиционирование</item>
     </string-array>
+    <string name="save">Сохранить</string>
+    <string name="ok">ОК</string>
 </resources>

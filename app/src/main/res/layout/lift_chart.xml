@@ -6,35 +6,35 @@
     android:orientation="vertical">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chartView"
+        android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="350dp" />
 
     <LinearLayout
-        android:id="@+id/legendContainer"
+        android:id="@+id/legendStack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryLegendEntry
             android:id="@+id/firstEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartBlue" />
 
-        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryLegendEntry
             android:id="@+id/secondEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartGreen" />
 
-        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryLegendEntry
             android:id="@+id/thirdEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:formColor="@color/chartOrange" />
 
-        <com.example.healthAppAndroid.historyTab.HistoryChartLegendEntry
+        <com.example.healthAppAndroid.historyTab.HistoryLegendEntry
             android:id="@+id/fourthEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

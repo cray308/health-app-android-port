@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -34,7 +35,7 @@
             android:textStyle="bold" />
 
         <android.widget.Button
-            android:id="@+id/submitBtn"
+            android:id="@+id/submitButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -46,10 +47,10 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:maxLines="1"
-            android:text="@string/finish"
             android:textAllCaps="false"
-            android:textColor="@color/systemGray"
-            app:iconTint="@null" />
+            android:textColor="@color/blue_button_color"
+            app:iconTint="@null"
+            tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,7 +65,8 @@
             class="com.example.healthAppAndroid.core.TextValidator$InputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            app:min="1" />
 
         <TextView
             android:layout_width="match_parent"

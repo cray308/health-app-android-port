@@ -7,8 +7,8 @@
     android:orientation="vertical"
     tools:context=".historyTab.HistoryFragment">
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/rangePicker"
+    <com.example.healthAppAndroid.core.SegmentedControl
+        android:id="@+id/rangeControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/navBarColor"
@@ -16,45 +16,9 @@
         android:paddingTop="4dp"
         android:paddingRight="8dp"
         android:paddingBottom="4dp"
-        app:selectionRequired="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonLeft"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeMaxTextSize="13sp"
-            android:autoSizeMinTextSize="8sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
-            android:text="@string/historySegment1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonMid"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeMaxTextSize="13sp"
-            android:autoSizeMinTextSize="8sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
-            android:text="@string/historySegment2" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonRight"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoSizeMaxTextSize="13sp"
-            android:autoSizeMinTextSize="8sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
-            android:text="@string/historySegment3" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+        app:centerTitle="@string/historySegment2"
+        app:leftTitle="@string/historySegment1"
+        app:rightTitle="@string/historySegment3" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -73,11 +37,11 @@
             <com.example.healthAppAndroid.homeTab.addWorkout.HeaderView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:headerText="@string/chartHeaderTotalWorkouts"
+                app:headerText="@string/chartHeader0"
                 app:hideSeparator="true" />
 
             <com.example.healthAppAndroid.historyTab.TotalWorkoutsChart
-                android:id="@+id/totalWorkoutsContainer"
+                android:id="@+id/totalWorkoutsChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -85,10 +49,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                app:headerText="@string/chartHeaderWorkoutType" />
+                app:headerText="@string/chartHeader1" />
 
             <com.example.healthAppAndroid.historyTab.WorkoutTypeChart
-                android:id="@+id/workoutTypeContainer"
+                android:id="@+id/workoutTypeChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -96,10 +60,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                app:headerText="@string/chartHeaderLifts" />
+                app:headerText="@string/chartHeader2" />
 
             <com.example.healthAppAndroid.historyTab.LiftingChart
-                android:id="@+id/liftContainer"
+                android:id="@+id/liftChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

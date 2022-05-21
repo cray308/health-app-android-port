@@ -12,6 +12,7 @@
     <color name="systemGray">#FF8E8E93</color>
     <color name="systemGray5">#FFE5E5EA</color>
     <color name="navBarColor">#FDFBFB</color>
+    <color name="lightGray">#CC8E8E8E</color>
 
     <color name="systemBlue">#FF3D5AFE</color>
     <color name="systemGreen">#FF2E7D32</color>
