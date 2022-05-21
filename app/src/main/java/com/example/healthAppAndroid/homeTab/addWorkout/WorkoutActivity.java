@@ -17,7 +17,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
-import com.example.healthAppAndroid.core.AppCoordinator;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.Instant;
@@ -31,7 +30,7 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     private final static String key = "WorkoutActivityKey";
     public static final String notification = "FinishedWorkoutNotification";
-    public static final String userInfo = "totalWorkouts";
+    public static final String userInfo = "userInfo";
     private Workout workout;
     private LinearLayout groupsStack;
     private ExerciseContainer firstContainer;
@@ -74,15 +73,11 @@ public final class WorkoutActivity extends AppCompatActivity {
                 nextView.sendAccessibilityEvent(8);
             } else {
                 NotificationService.cleanup(this);
-                boolean longEnough = workout.setDuration();
+                workout.setDuration();
                 if (workout.isCompleted()) {
-                    handleFinishedWorkout(true, longEnough);
+                    handleFinishedWorkout(true);
                 } else {
-                    if (longEnough) {
-                        AppCoordinator.shared.addWorkoutData(
-                          (byte)-1, workout.type, workout.duration, null);
-                    }
-                    sendBroadcast((byte)0);
+                    sendBroadcast(new WorkoutData((byte)-1, workout.type, workout.duration, null));
                     finish();
                 }
             }
@@ -105,18 +100,14 @@ public final class WorkoutActivity extends AppCompatActivity {
 
         NotificationService.cleanup(this);
         if (workout.startTime != 0) {
-            boolean longEnough = workout.setDuration();
+            workout.setDuration();
             if (workout.isCompleted()) {
-                handleFinishedWorkout(false, longEnough);
+                handleFinishedWorkout(false);
             } else {
-                if (longEnough) {
-                    AppCoordinator.shared.addWorkoutData(
-                      (byte)-1, workout.type, workout.duration, null);
-                }
-                sendBroadcast((byte)0);
+                sendBroadcast(new WorkoutData((byte)-1, workout.type, workout.duration, null));
             }
         } else {
-            sendBroadcast((byte)0);
+            sendBroadcast(new WorkoutData((byte)-1, (byte)0, (short)0, null));
         }
         onBackPressed();
         return true;
@@ -170,7 +161,8 @@ public final class WorkoutActivity extends AppCompatActivity {
         switch (transition) {
             case Workout.Transition.completedWorkout:
                 NotificationService.cleanup(this);
-                handleFinishedWorkout(true, workout.setDuration());
+                workout.setDuration();
+                handleFinishedWorkout(true);
                 return;
 
             case Workout.Transition.finishedCircuitDeleteFirst:
@@ -213,22 +205,19 @@ public final class WorkoutActivity extends AppCompatActivity {
 
     void finishedExercise(int group, int index) { handleTap(group, index, Event.finishExercise); }
 
-    private void sendBroadcast(byte completed) {
+    private void sendBroadcast(Parcelable data) {
         Intent intent = new Intent(notification);
-        intent.putExtra(userInfo, completed);
+        intent.putExtra(userInfo, data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void handleFinishedWorkout(boolean close, boolean longEnough) {
-        byte completed = 0;
-        if (workout.testMax) longEnough = true;
-
-        if (longEnough) {
-            completed = AppCoordinator.shared.addWorkoutData(
-              workout.day, workout.type, workout.duration, weights[0] > 0 ? weights : null);
+    private void handleFinishedWorkout(boolean close) {
+        short[] lifts = null;
+        if (workout.testMax) {
+            lifts = weights;
+            workout.duration = (short)Math.max(workout.duration, 15);
         }
-
-        sendBroadcast(completed);
+        sendBroadcast(new WorkoutData(workout.day, workout.type, workout.duration, lifts));
         if (close) finish();
     }
 

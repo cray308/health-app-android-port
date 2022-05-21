@@ -16,11 +16,11 @@ import com.example.healthAppAndroid.core.WeekDataModel;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public final class HistoryFragment extends Fragment {
-    public static final class FetchHandler {
+    public static final class Block {
         private final HistoryFragment fragment;
         private final Object[] dataArr;
 
-        private FetchHandler(HistoryFragment fragment, Object[] arr) {
+        private Block(HistoryFragment fragment, Object[] arr) {
             this.fragment = fragment;
             dataArr = arr;
         }
@@ -51,7 +51,7 @@ public final class HistoryFragment extends Fragment {
 
     public static HistoryFragment init(Object[][] args) {
         HistoryFragment frag = new HistoryFragment();
-        args[1][0] = new FetchHandler(frag, args[0]);
+        args[1][0] = new Block(frag, args[0]);
         return frag;
     }
 

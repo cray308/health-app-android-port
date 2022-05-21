@@ -3,8 +3,7 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 import android.content.Context;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppCoordinator;
-import com.example.healthAppAndroid.core.AppUserData;
+import com.example.healthAppAndroid.core.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,13 +33,14 @@ final class Circuit {
         Params(WorkoutParams params, boolean[] isTestDay, int length) {
             short exSets = 1, exReps = 0, circuitReps = 0;
             if (params.type == WorkoutType.strength) {
-                short[] lifts = AppUserData.shared.liftArray;
+                MainActivity.UserData data = MainActivity.getUserData();
+                short[] lifts = data.liftArray;
                 float multiplier = params.weight / 100f;
                 weights[0] = multiplier * lifts[0];
                 if (params.index <= 1) {
                     weights[1] = multiplier * lifts[LiftType.bench];
                     if (params.index == 0) {
-                        int w = ExerciseManager.getBodyWeightToUse();
+                        int w = data.weightToUse();
                         int weight = ((int)((lifts[LiftType.pullUp] + w) * multiplier) - w);
                         weights[2] = Math.max(weight, 0);
                     } else {
@@ -50,7 +50,7 @@ final class Circuit {
                     for (int i = 1; i < 4; ++i) weights[i] = lifts[i];
                     isTestDay[0] = true;
                 }
-                if (AppCoordinator.shared.metric) {
+                if (MainActivity.metric) {
                     for (int i = 0; i < 4; ++i) weights[i] *= 0.453592f;
                 }
                 exReps = params.reps;
@@ -91,7 +91,7 @@ final class Circuit {
             ExerciseEntry.Params eParams = new ExerciseEntry.Params(params);
 
             if (_reps == 0) _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
-            if (AppCoordinator.onEmulator() && _type == Type.AMRAP) _reps = (short)(params.size > 1 ? 1 : 2);
+            if (MainActivity.onEmulator() && _type == 1) _reps = (short)(params.size > 1 ? 1 : 2);
 
             JSONArray foundExercises = dict.getJSONArray("E");
             int nExercises = foundExercises.length();
@@ -102,17 +102,17 @@ final class Circuit {
             if (_type == Type.AMRAP) {
                 String h;
                 if (multiple) {
-                    h = c.getString(R.string.circuitHeaderAMRAPM, params.index, params.size, _reps);
+                    h = c.getString(R.string.circuitAMRAPM, params.index, params.size, _reps);
                 } else {
-                    h = c.getString(R.string.circuitHeaderAMRAP, _reps);
+                    h = c.getString(R.string.circuitAMRAP, _reps);
                 }
                 headerStr.str.append(h);
             } else if (_reps > 1) {
                 String h;
                 if (multiple) {
-                    h = c.getString(R.string.circuitHeaderRoundsM, params.index, params.size, 1, _reps);
+                    h = c.getString(R.string.circuitRoundsM, params.index, params.size, 1, _reps);
                 } else {
-                    h = c.getString(R.string.circuitHeaderRounds, 1, _reps);
+                    h = c.getString(R.string.circuitRounds, 1, _reps);
                 }
                 headerStr.str.append(h);
                 int subIdx = h.indexOf(rounds1);

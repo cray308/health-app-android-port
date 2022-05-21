@@ -3,7 +3,7 @@ package com.example.healthAppAndroid.homeTab.addWorkout;
 import android.content.Context;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppCoordinator;
+import com.example.healthAppAndroid.core.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,10 +86,9 @@ final class Workout {
         return t;
     }
 
-    boolean setDuration() {
+    void setDuration() {
         duration = (short)(((int)((Instant.now().getEpochSecond() - startTime) / 60f)) + 1);
-        if (AppCoordinator.onEmulator()) duration *= 10;
-        return duration >= 15;
+        if (MainActivity.onEmulator()) duration *= 10;
     }
 
     boolean isCompleted() {

@@ -5,7 +5,7 @@ import android.icu.text.MeasureFormat;
 import android.icu.util.MeasureUnit;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppCoordinator;
+import com.example.healthAppAndroid.core.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +67,7 @@ final class ExerciseEntry {
         try {
             _type = (byte)dict.getInt(ExerciseManager.Keys.type);
             if (_reps == 0) _reps = (short)dict.getInt(ExerciseManager.Keys.reps);
-            if (AppCoordinator.onEmulator() && _type == Type.duration) _reps = (short)(params.type == WorkoutType.HIC ? 15 : 120);
+            if (MainActivity.onEmulator() && _type == 1) _reps = (short)(params.type == 3 ? 15 : 120);
 
             int rest = dict.getInt("B");
             if (rest != 0) _rest = c.getString(R.string.exerciseRest, rest);
@@ -84,19 +84,18 @@ final class ExerciseEntry {
             String title, name = exNames[dict.getInt(ExerciseManager.Keys.index)];
             if (_type == Type.reps) {
                 if (params.type == 0) {
-                    title = c.getString(R.string.exerciseRepsWeight,
-                                        name, _reps, params.weight, weightUnit);
+                    title = c.getString(R.string.exWeight, name, _reps, params.weight, weightUnit);
                 } else {
-                    title = c.getString(R.string.exerciseReps, name, _reps);
+                    title = c.getString(R.string.exReps, name, _reps);
                 }
             } else if (_type == Type.duration) {
                 if (_reps > 120) {
-                    title = c.getString(R.string.exerciseDurationMinutes, name, _reps / 60f);
+                    title = c.getString(R.string.exMinutes, name, _reps / 60f);
                 } else {
-                    title = c.getString(R.string.exerciseDurationSeconds, name, _reps);
+                    title = c.getString(R.string.exSeconds, name, _reps);
                 }
             } else {
-                title = c.getString(R.string.exerciseDistance, name, _reps, ((5 * _reps) >> 2));
+                title = c.getString(R.string.exDistance, name, _reps, ((5 * _reps) >> 2));
             }
             titleStr.str.append(title);
         } catch (JSONException ignored) {}

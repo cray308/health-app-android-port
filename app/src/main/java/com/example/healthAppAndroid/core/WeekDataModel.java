@@ -13,7 +13,7 @@ public final class WeekDataModel {
         public final short[] cumulativeDuration = {0, 0, 0, 0};
         public final short[] weightArray = {0, 0, 0, 0};
 
-        Week(PersistenceService.WeeklyData d, ZoneId zoneId, DateTimeFormatter formatter) {
+        Week(AppDB.WeeklyData d, ZoneId zoneId, DateTimeFormatter formatter) {
             short timeStrength = d.timeStrength;
             LocalDateTime tm = LocalDateTime.ofInstant(Instant.ofEpochSecond(d.start), zoneId);
             axisString = tm.format(formatter);

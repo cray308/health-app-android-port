@@ -21,10 +21,11 @@ import android.widget.LinearLayout;
 
 import com.example.healthAppAndroid.R;
 import com.example.healthAppAndroid.core.AppColors;
-import com.example.healthAppAndroid.core.AppUserData;
+import com.example.healthAppAndroid.core.MainActivity;
 import com.example.healthAppAndroid.homeTab.addWorkout.ExerciseManager;
 import com.example.healthAppAndroid.homeTab.addWorkout.HeaderView;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutActivity;
+import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutData;
 import com.example.healthAppAndroid.homeTab.addWorkout.WorkoutParams;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -44,8 +45,11 @@ public final class HomeFragment extends Fragment {
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context c, Intent intent) {
-            byte completed = intent.getByteExtra(WorkoutActivity.userInfo, (byte)0);
+            WorkoutData data = intent.getParcelableExtra(WorkoutActivity.userInfo);
             LocalBroadcastManager.getInstance(c).unregisterReceiver(receiver);
+            byte completed = 0;
+            MainActivity a = (MainActivity)getActivity();
+            if (a != null && data.duration >= 15) completed = a.addWorkoutData(data);
             if (completed == 0) return;
 
             int totalCompleted = 0;
@@ -102,7 +106,7 @@ public final class HomeFragment extends Fragment {
         weeklyWkContainer.setVisibility(View.GONE);
         weeklyWorkoutStack = view.findViewById(R.id.weeklyWorkoutsStack);
         customDiv = ((HeaderView)view.findViewById(R.id.customWorkoutsHeader)).divider;
-        createWorkoutsList(AppUserData.shared.currentPlan);
+        createWorkoutsList(MainActivity.getUserData());
     }
 
     private static int getTag(View v) {
@@ -112,17 +116,17 @@ public final class HomeFragment extends Fragment {
 
     private static void setTag(View v, int tag) { v.setId(tag + 1); }
 
-    public void createWorkoutsList(byte plan) {
+    public void createWorkoutsList(MainActivity.UserData data) {
         weeklyWorkoutStack.removeAllViews();
         Context c = getContext();
 
-        if (plan < 0 || AppUserData.shared.planStart > Instant.now().getEpochSecond()) {
+        if (data.currentPlan < 0 || data.planStart > Instant.now().getEpochSecond()) {
             weeklyWkContainer.setVisibility(View.GONE);
             customDiv.setVisibility(View.GONE);
             return;
         }
 
-        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(c, plan);
+        String[] workoutNames = ExerciseManager.getWeeklyWorkoutNames(c, data.currentPlan);
         DayOfWeek[] days = DayOfWeek.values();
         Locale l = Locale.getDefault();
 
@@ -138,7 +142,7 @@ public final class HomeFragment extends Fragment {
         }
         weeklyWkContainer.setVisibility(View.VISIBLE);
         customDiv.setVisibility(View.VISIBLE);
-        updateWorkoutsList(AppUserData.shared.completedWorkouts);
+        updateWorkoutsList(data.completedWorkouts);
     }
 
     public void updateWorkoutsList(byte completed) {

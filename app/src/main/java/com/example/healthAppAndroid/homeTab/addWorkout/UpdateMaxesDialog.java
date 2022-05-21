@@ -10,7 +10,7 @@ import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppCoordinator;
+import com.example.healthAppAndroid.core.MainActivity;
 import com.example.healthAppAndroid.core.TextValidator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -59,9 +59,8 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
 
         Button finishButton = view.findViewById(R.id.submitBtn);
         finishButton.setOnClickListener(view1 -> {
-            int extra = index == LiftType.pullUp ? ExerciseManager.getBodyWeightToUse() : 0;
-            float mf = AppCoordinator.shared.toSavedMass;
-            float initWeight = (validator.children[0].result * mf + extra) * 36;
+            int extra = index == LiftType.pullUp ? MainActivity.getUserData().weightToUse() : 0;
+            float initWeight = (validator.children[0].result * MainActivity.toSavedMass + extra) * 36;
             float reps = 37f - value;
             short weight = (short)(Math.round(initWeight / reps) - extra);
             WorkoutActivity activity = (WorkoutActivity)getActivity();
@@ -70,10 +69,9 @@ public final class UpdateMaxesDialog extends BottomSheetDialogFragment {
         validator = new TextValidator(finishButton);
 
         TextValidator.InputView input = view.findViewById(R.id.input);
-        int kb = AppCoordinator.shared.metric ? 8192 : 0;
         String name = getResources().getStringArray(R.array.exNames)[index].toLowerCase(l);
         input.field.setHint(getString(R.string.maxWeightFormat, name));
-        validator.addChild(0, 999, R.plurals.inputFieldError, kb, input);
+        validator.addChild(0, 999, R.plurals.inputFieldError, MainActivity.metric ? 8192 : 0, input);
         BottomSheetDialog dialog = (BottomSheetDialog)getDialog();
         if (dialog != null) {
             dialog.setCancelable(false);

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppUserData;
+import com.example.healthAppAndroid.core.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,7 +106,7 @@ public abstract class ExerciseManager {
     public static WorkoutParams getWeeklyWorkout(Context c, int index) {
         WorkoutParams params = new WorkoutParams((byte)index);
         DictWrapper data = createRootAndLibDict(c);
-        JSONArray currWeek = data.getCurrentWeekForPlan(AppUserData.shared.currentPlan);
+        JSONArray currWeek = data.getCurrentWeekForPlan(MainActivity.getUserData().currentPlan);
 
         try {
             JSONObject day = currWeek.getJSONObject(index);
@@ -135,10 +135,5 @@ public abstract class ExerciseManager {
             w = new Workout(c, new JSONArray(), params);
         }
         return w;
-    }
-
-    static int getBodyWeightToUse() {
-        int weight = AppUserData.shared.weight;
-        return weight < 0 ? 165 : weight;
     }
 }

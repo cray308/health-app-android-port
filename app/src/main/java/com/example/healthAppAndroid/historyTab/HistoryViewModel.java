@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import androidx.core.text.TextUtilsCompat;
 
 import com.example.healthAppAndroid.R;
-import com.example.healthAppAndroid.core.AppCoordinator;
+import com.example.healthAppAndroid.core.MainActivity;
 import com.example.healthAppAndroid.core.WeekDataModel;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
@@ -81,7 +81,7 @@ final class HistoryViewModel extends IndexAxisValueFormatter {
             lifts.entries.add(new ArrayList<>(results.size));
         }
 
-        float mf = AppCoordinator.shared.metric ? 0.453592f : 1;
+        float mf = MainActivity.metric ? 0.453592f : 1;
         int[] totalWorkoutsArr = {0, 0, 0}, maxWorkouts = {0, 0, 0}, innerLimits = {-1, 0, 1};
         int[] maxTime = {0, 0, 0}, maxWeight = {0, 0, 0};
         int[][] totalByType = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
