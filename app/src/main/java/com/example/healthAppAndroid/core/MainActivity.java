@@ -1,10 +1,8 @@
 package com.example.healthAppAndroid.core;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.content.SharedPreferences;
@@ -41,7 +39,6 @@ public final class MainActivity extends AppCompatActivity {
         private static final String tzOffset = "tzOffset";
         private static final String currentPlan = "currentPlan";
         private static final String completed = "completedWorkouts";
-        private static final String darkMode = "darkMode";
         private static final String bodyWeight = "weight";
         private static final String[] liftKeys = {"squatMax", "pullUpMax", "benchMax", "deadLiftMax"};
     }
@@ -52,7 +49,6 @@ public final class MainActivity extends AppCompatActivity {
     private final static long weekSeconds = 604800;
     public static float toSavedMass;
     public static boolean metric;
-    private static boolean changedMode = false;
 
     public final static class UserData {
         public long planStart;
@@ -61,7 +57,6 @@ public final class MainActivity extends AppCompatActivity {
         public short weight = -1;
         public byte currentPlan = -1;
         public byte completedWorkouts;
-        byte darkMode;
 
         private UserData(long weekStart) { this.weekStart = weekStart; }
 
@@ -91,7 +86,6 @@ public final class MainActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("AppDelPrefs", 0);
         String hasLaunchedKey = "hasLaunched";
         Object[][] args = {new Object[]{null}, new Object[]{null}};
-        boolean modern = Build.VERSION.SDK_INT > 28;
 
         if (sp.getBoolean(hasLaunchedKey, false)) {
             int[] planLengths = {8, 13};
@@ -101,7 +95,6 @@ public final class MainActivity extends AppCompatActivity {
             int savedTzOffset = prefs.getInt(Keys.tzOffset, 0);
             userData.currentPlan = (byte)prefs.getInt(Keys.currentPlan, -1);
             userData.completedWorkouts = (byte)prefs.getInt(Keys.completed, 0);
-            userData.darkMode = (byte)prefs.getInt(Keys.darkMode, -1);
 
             if ((tzDiff = savedTzOffset - tzOffset) != 0) {
                 userData.planStart += tzDiff;
@@ -130,11 +123,6 @@ public final class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (userData.darkMode >= 0 && modern) {
-                userData.darkMode = -1;
-                changes |= 32;
-            }
-
             userData.weight = (short)prefs.getInt(Keys.bodyWeight, -1);
             for (int i = 0; i < 4; ++i) {
                 userData.liftArray[i] = (short)prefs.getInt(Keys.liftKeys[i], 0);
@@ -147,7 +135,6 @@ public final class MainActivity extends AppCompatActivity {
                 if ((changes & 4) != 0) editor.putInt(Keys.tzOffset, tzOffset);
                 if ((changes & 8) != 0) editor.putInt(Keys.currentPlan, userData.currentPlan);
                 if ((changes & 16) != 0) editor.putInt(Keys.completed, userData.completedWorkouts);
-                if ((changes & 32) != 0) editor.putInt(Keys.darkMode, userData.darkMode);
                 editor.apply();
             }
             initDB();
@@ -155,13 +142,7 @@ public final class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean(hasLaunchedKey, true);
             editor.apply();
-            handleFirstLaunch(weekStart, tzOffset, modern);
-        }
-
-        if (savedInstanceState == null && !modern) {
-            int mode = userData.darkMode == 0
-                       ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
-            AppCompatDelegate.setDefaultNightMode(mode);
+            handleFirstLaunch(weekStart, tzOffset);
         }
 
         super.onCreate(null);
@@ -176,8 +157,7 @@ public final class MainActivity extends AppCompatActivity {
 
         fm = getSupportFragmentManager();
         children = new Fragment[]{new HomeFragment(), HistoryFragment.init(args), new SettingsFragment()};
-        index = changedMode ? 2 : 0;
-        changedMode = false;
+        index = 0;
         ((NavigationBarView)findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
             int newIndex = 0;
             int id = item.getItemId();
@@ -191,28 +171,22 @@ public final class MainActivity extends AppCompatActivity {
             index = newIndex;
             return true;
         });
-
-        for (int i = 0; i < 3; ++i) {
-            String tag = String.valueOf(i + 1);
-            FragmentTransaction t = fm.beginTransaction().add(R.id.container, children[i], tag);
-            if (i != index) t.hide(children[i]);
-            t.commit();
-        }
+        fm.beginTransaction().add(R.id.container, children[2], "3").hide(children[2]).commit();
+        fm.beginTransaction().add(R.id.container, children[1], "2").hide(children[1]).commit();
+        fm.beginTransaction().add(R.id.container, children[0], "1").commit();
 
         int diff = tzDiff;
         AsyncTask.execute(() -> runStartupJob(zoneId, weekStart, diff, args));
     }
 
-    private void handleFirstLaunch(long weekStart, int tzOffset, boolean modern) {
+    private void handleFirstLaunch(long weekStart, int tzOffset) {
         userData.planStart = weekStart;
-        userData.darkMode = (byte)(modern ? -1 : 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(Keys.planStart, weekStart);
         editor.putLong(Keys.weekStart, weekStart);
         editor.putInt(Keys.tzOffset, tzOffset);
         editor.putInt(Keys.currentPlan, -1);
         editor.putInt(Keys.completed, 0);
-        editor.putInt(Keys.darkMode, userData.darkMode);
         editor.putInt(Keys.bodyWeight, -1);
         editor.putInt(Keys.liftKeys[0], 0);
         editor.putInt(Keys.liftKeys[1], 0);
@@ -327,10 +301,10 @@ public final class MainActivity extends AppCompatActivity {
         return madeChange;
     }
 
-    void updateUserInfo(byte plan, byte darkMode, short[] newArr) {
+    void updateUserInfo(byte plan, short[] newArr) {
         SharedPreferences.Editor editor = prefs.edit();
-        int changes = plan == userData.currentPlan ? 0 : 1;
-        if (changes != 0) {
+        boolean madeChange = plan != userData.currentPlan;
+        if (madeChange) {
             userData.currentPlan = plan;
             editor.putInt(Keys.currentPlan, plan);
             if (plan >= 0) {
@@ -342,30 +316,17 @@ public final class MainActivity extends AppCompatActivity {
                 }
                 editor.putLong(Keys.planStart, userData.planStart);
             }
-        }
-
-        if (darkMode != userData.darkMode) {
-            changes |= 2;
-            userData.darkMode = darkMode;
-            editor.putInt(Keys.darkMode, darkMode);
+            ((HomeFragment)children[0]).createWorkoutsList(userData);
         }
 
         short newWeight = newArr[4];
         if (newWeight != userData.weight) {
-            changes |= 4;
+            madeChange = true;
             userData.weight = newWeight;
             editor.putInt(Keys.bodyWeight, newWeight);
         }
 
-        if (updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) || changes != 0) editor.apply();
-        if ((changes & 2) != 0) {
-            changedMode = true;
-            int mode = darkMode == 1
-                       ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-            AppCompatDelegate.setDefaultNightMode(mode);
-            return;
-        }
-        if ((changes & 1) != 0) ((HomeFragment)children[0]).createWorkoutsList(userData);
+        if (updateWeights(newArr, new short[]{0, 0, 0, 0}, editor) || madeChange) editor.apply();
     }
 
     void deleteAppData() {

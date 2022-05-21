@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import java.util.Locale;
 
 public final class SettingsFragment extends Fragment {
     private TextValidator validator;
-    private SwitchCompat switchView;
     private final int[] segmentIds = {R.id.buttonLeft, R.id.buttonMid, R.id.buttonRight};
     private int selected;
 
@@ -45,12 +43,6 @@ public final class SettingsFragment extends Fragment {
             }
         });
 
-        if (data.darkMode >= 0) {
-            view.findViewById(R.id.switchContainer).setVisibility(View.VISIBLE);
-            switchView = view.findViewById(R.id.switchView);
-            switchView.setChecked(data.darkMode == 1);
-        }
-
         Button saveButton = view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(view1 -> {
             MainActivity a = (MainActivity)getActivity();
@@ -62,9 +54,7 @@ public final class SettingsFragment extends Fragment {
                   short[] results = {0, 0, 0, 0, 0};
                   for (int i = 0; i < 5; ++i)
                       results[i] = (short)Math.round(validator.children[i].result * MainActivity.toSavedMass);
-                  byte dm = -1;
-                  if (switchView != null) dm = (byte)(switchView.isChecked() ? 1 : 0);
-                  if (a != null) a.updateUserInfo((byte)(selected - 1), dm, results);
+                  if (a != null) a.updateUserInfo((byte)(selected - 1), results);
               });
             builder.create().show();
         });
