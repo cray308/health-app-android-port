@@ -33,37 +33,6 @@
             app:rightTitle="@string/settingsSegment3" />
 
         <LinearLayout
-            android:id="@+id/switchContainer"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:background="@color/secondarySystemGroupedBackground"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/darkMode"
-                android:textColor="@color/label"
-                android:textSize="17sp" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/fieldStack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

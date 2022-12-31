@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import java.util.Locale;
 
 public final class SettingsFragment extends Fragment {
     private TextValidator validator;
-    private SwitchCompat darkModeSwitch;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
@@ -31,13 +29,6 @@ public final class SettingsFragment extends Fragment {
         UserData data = MainActivity.userData;
         SegmentedControl planControl = view.findViewById(R.id.planControl);
         planControl.setSelectedIndex(data.plan + 1);
-
-        if (data.darkMode >= 0) {
-            LinearLayout switchContainer = view.findViewById(R.id.switchContainer);
-            switchContainer.setVisibility(View.VISIBLE);
-            darkModeSwitch = (SwitchCompat)switchContainer.getChildAt(2);
-            darkModeSwitch.setChecked(data.darkMode == 1);
-        }
 
         boolean metric = Macros.isMetric(Locale.getDefault());
         Button saveButton = view.findViewById(R.id.saveButton);
@@ -53,10 +44,8 @@ public final class SettingsFragment extends Fragment {
                   for (int i = 0; i < 5; ++i) {
                       results[i] = Math.round(validator.children[i].result * toSavedMass);
                   }
-                  byte darkMode = -1;
-                  if (darkModeSwitch != null) darkMode = (byte)(darkModeSwitch.isChecked() ? 1 : 0);
                   if (activity != null)
-                      activity.updateUserInfo((byte)(planControl.selectedIndex - 1), darkMode, results);
+                      activity.updateUserInfo((byte)(planControl.selectedIndex - 1), results);
               }).create().show();
         });
 

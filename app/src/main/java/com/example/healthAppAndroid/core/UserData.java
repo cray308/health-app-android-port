@@ -17,7 +17,6 @@ public final class UserData {
         private static final String isDST = "isDST";
         private static final String plan = "currentPlan";
         private static final String completedWorkouts = "completedWorkouts";
-        private static final String darkMode = "darkMode";
         private static final String bodyWeight = "weight";
         private static final String[] lifts = {"squatMax", "pullUpMax", "benchMax", "deadLiftMax"};
     }
@@ -29,7 +28,6 @@ public final class UserData {
         private static final byte DST = 8;
         static final byte plan = 16;
         private static final byte completedWorkouts = 32;
-        static final byte darkMode = 64;
     }
 
     private static abstract class Plan {
@@ -68,13 +66,11 @@ public final class UserData {
     public int weight;
     public byte plan = -1;
     public byte completedWorkouts;
-    byte darkMode;
 
-    UserData(SharedPreferences prefs, boolean modern) {
+    UserData(SharedPreferences prefs) {
         this.prefs = prefs;
         TimeData timeData = new TimeData(Instant.now().getEpochSecond());
         weekStart = planStart = timeData.weekStart;
-        darkMode = (byte)(modern ? -1 : 0);
 
         prefs.edit().putLong(Keys.planStart, weekStart)
              .putLong(Keys.weekStart, weekStart)
@@ -82,7 +78,6 @@ public final class UserData {
              .putBoolean(Keys.isDST, timeData.isDST)
              .putInt(Keys.plan, -1)
              .putInt(Keys.completedWorkouts, 0)
-             .putInt(Keys.darkMode, darkMode)
              .putInt(Keys.bodyWeight, -1)
              .putInt(Keys.lifts[0], 0)
              .putInt(Keys.lifts[1], 0)
@@ -90,7 +85,7 @@ public final class UserData {
              .putInt(Keys.lifts[3], 0).apply();
     }
 
-    UserData(SharedPreferences prefs, TimeData[] timeDataRef, boolean modern) {
+    UserData(SharedPreferences prefs, TimeData[] timeDataRef) {
         this.prefs = prefs;
         TimeData timeData = new TimeData(Instant.now().getEpochSecond());
         timeDataRef[0] = timeData;
@@ -144,12 +139,6 @@ public final class UserData {
             }
         }
 
-        darkMode = (byte)prefs.getInt(Keys.darkMode, -1);
-        if (darkMode >= 0 && modern) {
-            darkMode = -1;
-            changes |= Mask.darkMode;
-        }
-
         if (changes != 0) {
             SharedPreferences.Editor editor = prefs.edit();
             if ((changes & Mask.weekStart) != 0) editor.putLong(Keys.weekStart, weekStart);
@@ -159,7 +148,6 @@ public final class UserData {
             if ((changes & Mask.plan) != 0) editor.putInt(Keys.plan, plan);
             if ((changes & Mask.completedWorkouts) != 0)
                 editor.putInt(Keys.completedWorkouts, completedWorkouts);
-            if ((changes & Mask.darkMode) != 0) editor.putInt(Keys.darkMode, darkMode);
             editor.apply();
         }
     }
@@ -192,10 +180,10 @@ public final class UserData {
 
     public int weightToUse() { return weight < 0 ? 165 : weight; }
 
-    byte update(byte newPlan, byte newDarkMode, int[] weights) {
+    boolean update(byte newPlan, int[] weights) {
         SharedPreferences.Editor editor = prefs.edit();
-        byte res = newPlan == plan ? 0 : Mask.plan;
-        boolean madeChange = res != 0;
+        boolean res = newPlan != plan;
+        boolean madeChange = res;
         if (madeChange) {
             plan = newPlan;
             editor.putInt(Keys.plan, newPlan);
@@ -204,13 +192,6 @@ public final class UserData {
                 setNewPlanStart();
                 editor.putLong(Keys.planStart, planStart);
             }
-        }
-
-        if (newDarkMode != darkMode) {
-            madeChange = true;
-            res |= Mask.darkMode;
-            darkMode = newDarkMode;
-            editor.putInt(Keys.darkMode, newDarkMode);
         }
 
         int newWeight = weights[4];

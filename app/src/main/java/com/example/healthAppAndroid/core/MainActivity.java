@@ -1,13 +1,11 @@
 package com.example.healthAppAndroid.core;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.example.healthAppAndroid.R;
@@ -27,12 +25,6 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     public static UserData userData;
-    private static boolean changedMode;
-
-    private static int nightMode() {
-        return userData.darkMode == 1
-               ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-    }
 
     private final Fragment[] tabs = {
       new HomeFragment(), new HistoryFragment(), new SettingsFragment()
@@ -40,22 +32,19 @@ public final class MainActivity extends AppCompatActivity {
     private int index;
 
     protected void onCreate(Bundle savedInstanceState) {
-        boolean modern = Build.VERSION.SDK_INT > 28;
         int tzDiff = 0, week = 0;
         SharedPreferences prefs = getSharedPreferences("HealthAppPrefs", MODE_PRIVATE);
         if (prefs.getLong(UserData.Keys.weekStart, 0) != 0) {
             UserData.TimeData[] timeData = {null};
-            userData = new UserData(prefs, timeData, modern);
+            userData = new UserData(prefs, timeData);
             tzDiff = timeData[0].tzDiff;
             week = timeData[0].week;
             PersistenceManager.init(this);
         } else {
-            userData = new UserData(prefs, modern);
+            userData = new UserData(prefs);
             NotificationService.setupAppNotifications(this);
             PersistenceManager.create(this);
         }
-
-        if (savedInstanceState == null && !modern) AppCompatDelegate.setDefaultNightMode(nightMode());
 
         super.onCreate(null);
         setContentView(R.layout.activity_main);
@@ -64,10 +53,6 @@ public final class MainActivity extends AppCompatActivity {
         ExerciseManager.init(week);
 
         FragmentManager fm = getSupportFragmentManager();
-
-        if (changedMode) index = 2;
-        changedMode = false;
-
         ((NavigationBarView)findViewById(R.id.bottom_nav)).setOnItemSelectedListener(item -> {
             int newIndex = Tab.home;
             int id = item.getItemId();
@@ -93,15 +78,8 @@ public final class MainActivity extends AppCompatActivity {
         new Thread(new PersistenceManager.StartupTask(block, userData.weekStart, tzDiff)).start();
     }
 
-    void updateUserInfo(byte plan, byte darkMode, int[] weights) {
-        byte updates = userData.update(plan, darkMode, weights);
-        if ((updates & UserData.Mask.darkMode) != 0) {
-            changedMode = true;
-            AppCompatDelegate.setDefaultNightMode(nightMode());
-            return;
-        }
-
-        if ((updates & UserData.Mask.plan) != 0)
+    void updateUserInfo(byte plan, int[] weights) {
+        if (userData.update(plan, weights))
             ((HomeFragment)tabs[Tab.home]).createWorkoutsList(userData);
     }
 

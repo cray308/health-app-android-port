@@ -50,7 +50,6 @@
     <string name="hourMinFmt">%1$dч %2$dм</string>
     <string name="minFmt">%dм</string>
     <string name="planPicker">Изменить план тренировки</string>
-    <string name="darkMode">Темный внешний вид</string>
     <string name="settingsSegment1">Нет</string>
     <string name="settingsSegment2">Основание</string>
     <string name="settingsSegment3">Продолжение</string>

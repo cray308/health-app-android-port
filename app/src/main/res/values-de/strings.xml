@@ -46,7 +46,6 @@
     <string name="hourMinFmt">%1$dSek. %2$dMin.</string>
     <string name="minFmt">%dMin.</string>
     <string name="planPicker">Trainingsplan ändern</string>
-    <string name="darkMode">Dunkles Aussehen</string>
     <string name="settingsSegment1">Keines</string>
     <string name="settingsSegment2">Gründung</string>
     <string name="settingsSegment3">Fortsetzung</string>

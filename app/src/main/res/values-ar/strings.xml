@@ -54,7 +54,6 @@
     <string name="hourMinFmt">\u202F%1$d س %2$d د\u202C</string>
     <string name="minFmt">\u202F%d د\u202C</string>
     <string name="planPicker">تغيير خطة التمرين</string>
-    <string name="darkMode">مظهر داكن</string>
     <string name="settingsSegment1">لا شيء</string>
     <string name="settingsSegment2">تأسيس</string>
     <string name="settingsSegment3">استمرار</string>

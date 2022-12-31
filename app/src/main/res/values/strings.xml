@@ -46,7 +46,6 @@
     <string name="hourMinFmt">%1$dh %2$dm</string>
     <string name="minFmt">%dm</string>
     <string name="planPicker">Change workout plan</string>
-    <string name="darkMode">Dark mode</string>
     <string name="settingsSegment1">None</string>
     <string name="settingsSegment2">Foundation</string>
     <string name="settingsSegment3">Continuation</string>
